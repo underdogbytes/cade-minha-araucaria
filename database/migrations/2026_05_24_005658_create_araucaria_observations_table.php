@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->decimal('latitude', 10, 8);
             $table->decimal('longitude', 10, 8);
-            $table->string('photo_url', 2048)->nullable();
+            $table->longText('photo_path');
             $table->enum('stage', ['seedling', 'sapling', 'adult', 'dead']);
             $table->enum('gender', ['male', 'female', 'unknown']);
             $table->timestamps();
