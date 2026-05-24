@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreAraucariaObservationRequest extends FormRequest
+class UpdateAraucariaObservationRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,11 +23,11 @@ class StoreAraucariaObservationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'latitude' => ['required', 'numeric', 'between:-90,90'],
-            'longitude' => ['required', 'numeric', 'between:-180,180'],
-            'photo_url' => ['required', 'image', 'mimes:jpeg,png,jpg', 'max:5120'],
-            'stage' => ['required', 'in:seedling,sapling,adult,dead'],
-            'gender' => ['required', 'in:male,female,unknown'],
+            'latitude'  => ['sometimes', 'numeric', 'between:-90,90'],
+            'longitude' => ['sometimes', 'numeric', 'between:-180,180'],
+            'photo_url' => ['sometimes', 'nullable', 'image', 'mimes:jpeg,png,jpg', 'max:5120'],
+            'stage'     => ['sometimes', 'in:seedling,sapling,adult,dead'],
+            'gender'    => ['sometimes', 'in:male,female,unknown'],
         ];
     }
 }
