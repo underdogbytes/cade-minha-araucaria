@@ -33,6 +33,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'pinhao_balance',
     ];
 
     /**
@@ -67,5 +68,20 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function araucariaObservations(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(AraucariaObservation::class);
+    }
+
+    public function actionHistories(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(ActionHistory::class);
+    }
+
+    public function virtualTrees(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(VirtualTree::class);
     }
 }
