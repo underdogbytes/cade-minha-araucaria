@@ -25,7 +25,7 @@ class UpdateAraucariaObservationRequest extends FormRequest
         return [
             'latitude'  => ['sometimes', 'numeric', 'between:-90,90'],
             'longitude' => ['sometimes', 'numeric', 'between:-180,180'],
-            'photo_url' => ['sometimes', 'nullable', 'image', 'mimes:jpeg,png,jpg', 'max:5120'],
+            'photo_path' => ['sometimes', 'nullable', 'image', 'mimes:jpeg,png,jpg', 'max:5120'],
             'stage'     => ['sometimes', 'in:seedling,sapling,adult,dead'],
             'gender'    => ['sometimes', 'in:male,female,unknown'],
         ];

@@ -155,7 +155,7 @@
                                 <b>Estágio:</b> ${estagioFormatado}<br>
                                 <b>Gênero:</b> ${generoFormatado}<br>
                                 <small style="color: #666;">Por: ${obs.observer}</small><br>
-                                <img src="${obs.photo_url}" alt="Foto da Araucária" style="width: 100%; max-width: 140px; margin-top: 8px; border-radius: 4px; border: 1px solid #ddd;">
+                                <img src="${obs.photo_path}" alt="Foto da Araucária" style="width: 100%; max-width: 140px; margin-top: 8px; border-radius: 4px; border: 1px solid #ddd;">
                             </div>
                             `);
                     });

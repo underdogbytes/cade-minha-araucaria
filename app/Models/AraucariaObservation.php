@@ -12,7 +12,7 @@ class AraucariaObservation extends Model
         'user_id',
         'latitude',
         'longitude',
-        'photo_url',
+        'photo_path',
         'stage',
         'gender',
     ];

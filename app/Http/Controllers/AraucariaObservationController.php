@@ -2,98 +2,201 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\AraucariaObservation;
 use App\Http\Requests\StoreAraucariaObservationRequest;
 use App\Http\Requests\UpdateAraucariaObservationRequest;
 use App\Http\Resources\AraucariaObservationResource;
+use App\Models\AraucariaObservation;
+
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\UploadedFile;
+
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\ImageManager;
+
 class AraucariaObservationController extends Controller
 {
     /**
-     * Retorna todas as observações cadastradas (Endpoint Público).
+     * Retorna todas as observações cadastradas.
      */
     public function index(): AnonymousResourceCollection
     {
-        $observations = AraucariaObservation::with('user')->latest()->get();
+        $observations = AraucariaObservation::with('user')
+            ->latest()
+            ->get();
+
         return AraucariaObservationResource::collection($observations);
     }
 
     /**
-     * Valida e armazena uma nova observação com upload de foto (Apenas Autenticados).
+     * Armazena uma nova observação.
      */
-    public function store(StoreAraucariaObservationRequest $request): JsonResponse
-    {
-        $validated = $request->validated();
-
-        if ($request->hasFile('photo_url')) {
-            // storage/app/public/observations/
-            $path = $request->file('photo_url')->store('observations', 'public');
-            $validated['photo_url'] = $path;
-        }
-
-        $observation = $request->user()->araucariaObservations()->create($validated);
-
-        return response()->json([
-            'message' => 'Observação de Araucária registrada com sucesso!',
-            'data' => new AraucariaObservationResource($observation)
-        ], 201);
-    }
-
-    /**
-     * Atualiza uma observação existente (Apenas o Criador).
-     */
-    public function update(UpdateAraucariaObservationRequest $request, AraucariaObservation $observation): JsonResponse
-    {
-        if ($observation->user_id !== $request->user()->id) {
-            return response()->json([
-                'message' => 'Esta ação não é autorizada.'
-            ], 403);
-        }
+    public function store(
+        StoreAraucariaObservationRequest $request
+    ): JsonResponse {
 
         $validated = $request->validated();
 
-        if ($request->hasFile('photo_url') && $request->file('photo_url')->isValid()) {
-            
-            if ($observation->photo_url) {
-                Storage::disk('public')->delete($observation->photo_url);
+        DB::beginTransaction();
+
+        try {
+
+            if ($request->hasFile('photo_path')) {
+                $validated['photo_path'] = $this->processImage(
+                    $request->file('photo_path')
+                );
             }
-            
-            $path = $request->file('photo_url')->store('observations', 'public');
-            $validated['photo_url'] = $path;
-        } else {
-            unset($validated['photo_url']);
+
+            $observation = $request
+                ->user()
+                ->araucariaObservations()
+                ->create($validated);
+
+            DB::commit();
+
+            return response()->json([
+                'message' => 'Observação de Araucária registrada com sucesso!',
+                'data' => new AraucariaObservationResource($observation),
+            ], 201);
+
+        } catch (\Throwable $e) {
+            DB::rollBack();
+
+            report($e);
+
+            return response()->json([
+                'message' => 'Erro ao registrar observação.',
+            ], 500);
         }
-
-        $observation->update($validated);
-
-        return response()->json([
-            'message' => 'Observação de Araucária atualizada com sucesso!',
-            'data' => new AraucariaObservationResource($observation->fresh())
-        ], 200);
     }
 
     /**
-     * Exclui uma observação existente (Apenas o Criador).
+     * Atualiza uma observação existente.
      */
-    public function destroy(Request $request, AraucariaObservation $observation): JsonResponse
-    {
+    public function update(
+        UpdateAraucariaObservationRequest $request,
+        AraucariaObservation $observation
+    ): JsonResponse {
+
         if ($observation->user_id !== $request->user()->id) {
             return response()->json([
-                'message' => 'Esta ação não é autorizada.'
+                'message' => 'Esta ação não é autorizada.',
             ], 403);
         }
 
-        if ($observation->photo_url) {
-            Storage::disk('public')->delete($observation->photo_url);
+        $validated = $request->validated();
+
+        DB::beginTransaction();
+
+        try {
+
+            if ($request->hasFile('photo_path')) {
+
+                if ($observation->photo_path) {
+                    Storage::disk('public')->delete(
+                        $observation->photo_path
+                    );
+                }
+
+                $validated['photo_path'] = $this->processImage(
+                    $request->file('photo_path')
+                );
+            }
+
+            $observation->update($validated);
+
+            DB::commit();
+
+            return response()->json([
+                'message' => 'Observação atualizada com sucesso!',
+                'data' => new AraucariaObservationResource(
+                    $observation->fresh()
+                ),
+            ]);
+
+        } catch (\Throwable $e) {
+
+            DB::rollBack();
+
+            report($e);
+
+            return response()->json([
+                'message' => 'Erro ao atualizar observação.',
+            ], 500);
+        }
+    }
+
+    /**
+     * Remove uma observação.
+     */
+    public function destroy(
+        Request $request,
+        AraucariaObservation $observation
+    ): JsonResponse {
+
+        if ($observation->user_id !== $request->user()->id) {
+            return response()->json([
+                'message' => 'Esta ação não é autorizada.',
+            ], 403);
         }
 
-        $observation->delete();
+        try {
 
-        return response()->json([
-            'message' => 'Observação de Araucária excluída com sucesso!'
-        ], 200);
+            if ($observation->photo_path) {
+                Storage::disk('public')->delete(
+                    $observation->photo_path
+                );
+            }
+
+            $observation->delete();
+
+            return response()->json([
+                'message' => 'Observação excluída com sucesso!',
+            ]);
+
+        } catch (\Throwable $e) {
+
+            report($e);
+
+            return response()->json([
+                'message' => 'Erro ao excluir observação.',
+            ], 500);
+        }
+    }
+
+   /**
+     * Processa, otimiza e converte a imagem para salvar no Banco de Dados (Base64).
+     */
+    private function processImage(
+        \Illuminate\Http\UploadedFile $file
+    ): string {
+
+        // 1. Inicializa o gerenciador da Versão 3
+        $manager = new \Intervention\Image\ImageManager(
+            new \Intervention\Image\Drivers\Gd\Driver()
+        );
+
+        // 2. Lê a imagem enviada
+        $image = $manager->read($file);
+
+        // 3. Redimensiona proporcionalmente para manter o banco leve
+        $image->scaleDown(
+            width: 1200,
+            height: 1200
+        );
+
+        // 4. Codifica como JPEG com 80% de qualidade
+        $encoded = $image->toJpeg(80);
+
+        // 5. Transforma os dados binários da imagem em uma string Base64 limpa
+        $base64String = base64_encode((string) $encoded);
+
+        // 6. Retorna o Data URL formatado para o banco de dados
+        return 'data:image/jpeg;base64,' . $base64String;
     }
 }

@@ -18,7 +18,7 @@ class AraucariaObservationResource extends JsonResource
             'id' => $this->id,
             'latitude' => (float) $this->latitude,
             'longitude' => (float) $this->longitude,
-            'photo_url' => Storage::disk('public')->url($this->photo_url),
+            'photo_path' => Storage::disk('public')->url($this->photo_path),
             'stage' => $this->stage,
             'gender' => $this->gender,
             'observer' => $this->user->username,

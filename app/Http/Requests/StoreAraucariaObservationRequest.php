@@ -25,9 +25,20 @@ class StoreAraucariaObservationRequest extends FormRequest
         return [
             'latitude' => ['required', 'numeric', 'between:-90,90'],
             'longitude' => ['required', 'numeric', 'between:-180,180'],
-            'photo_url' => ['required', 'image', 'mimes:jpeg,png,jpg', 'max:5120'],
+            'photo_path' => 'required|image|mimes:jpeg,png,jpg,webp|max:10240',
             'stage' => ['required', 'in:seedling,sapling,adult,dead'],
             'gender' => ['required', 'in:male,female,unknown'],
+        ];
+    }
+    /**
+     * Customiza as mensagens de erro de validação.
+     */
+    public function messages(): array
+    {
+        return [
+            'photo_path.required' => 'A foto da árvore é obrigatória. Se você selecionou uma imagem, ela pode ter excedido o limite máximo de upload do servidor.',
+            'photo_path.image'    => 'O arquivo enviado deve ser uma imagem válida.',
+            'photo_path.max'      => 'A imagem não pode ser maior que 20 MB.',
         ];
     }
 }
