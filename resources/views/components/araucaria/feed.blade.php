@@ -18,7 +18,7 @@
         class="bg-white dark:bg-gray-900 overflow-hidden shadow-xl sm:rounded-lg flex flex-col justify-between border border-gray-100 dark:border-gray-700">
 
         <div class="w-full h-48 overflow-hidden bg-gray-100 dark:bg-gray-800">
-            <img src="{{ Storage::url($obs.photo_url) }}" alt="Foto da Araucária"
+            <img src="{{ $obs->photo_path }}" alt="Foto da Araucária"
                 class="w-full h-full object-cover hover:scale-105 transition duration-300">
         </div>
 
