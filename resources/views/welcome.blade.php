@@ -16,55 +16,151 @@
             @vite(['resources/css/app.css', 'resources/js/app.js'])
         @else
         @endif
+
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+        <style>
+            .btn {
+                display: inline-block;
+                margin: 10px 5px;
+                padding: 10px 20px;
+                background: #1e4620;
+                color: white;
+                text-decoration: none;
+                border-radius: 4px;
+                font-weight: 500;
+            }
+
+           .btn-primary {
+                background: #336336;
+            }
+
+            .btn-primary:hover {
+                background: #35763a;
+            }
+
+            .btn-secondary {
+                background: #3b518e;
+            }
+
+            .btn-secondary:hover {
+                background: #4861a7;
+            }
+
+            h1 {
+                font-size: 2rem;
+                margin-bottom: 10px;
+                color: #1b4332;
+                padding: 0 20px;
+            }
+
+            .map-section {
+                padding: 60px 0 0 0;
+                /* Remove padding lateral */
+                background: #f4f9f4;
+                text-align: center;
+            }
+        
+            .map-section p {
+                color: #555;
+                padding: 0 20px;
+            }
+        
+            .map-wrapper {
+                width: 100%;
+                height: 500px;
+                margin-top: 40px;
+                box-shadow: inset 0 8px 10px -10px rgba(0, 0, 0, 0.15), inset 0 -8px 10px -10px rgba(0, 0, 0, 0.15);
+            }
+        
+            #map {
+                width: 100%;
+                height: 100%;
+            }
+        </style>
     </head>
-
     <body>
-        <header>
-            <!-- TODO: fazer navbar legal -->
-            @if (Route::has('login'))
-                <nav>
-                    @auth
-                        <a href="{{ url('/dashboard') }}">
-                            Dashboard
-                        </a>
-                    @else
-                        <a href="{{ route('login') }}">
-                            Entrar
-                        </a>
-
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}">
-                                Cadastrar-se
-                            </a>
-                        @endif
-                    @endauth
-                </nav>
-            @endif
-        </header>
         <main>
-            <section>
-                <!-- TODO: hero -->
-                <h1>Cade minha Araucária?</h1>
+            <section class="map-section" id="mapa-ancora">
+                <h1>Cadê minha Araucária?</h1>
                 <p>
-                    Suba registros de araucárias que encontrar pela sua região e
-                    ajude a mapear e proteger a espécie!
+                    Projeto para mapear, monitorar e proteger as Araucárias nativas da nossa região.
+                    <br>
+                    Cadastre-se para contribuir com observações, fotos e informações sobre as araucárias da sua região.
                 </p>
-            </section>
 
-            <section>
-                <!-- TODO: mapa interativo global ou descrever objetivos do projeto?? -->
-            </section>
+                @if (Route::has('login'))
+                    @auth
+                    <a class="btn btn-primary" href="{{ url('/dashboard') }}">
+                        Acessar página interna
+                    </a>
+                    @else
+                    <a class="btn btn-primary" href="{{ route('login') }}">
+                        Entrar
+                    </a>
+                
+                    @if (Route::has('register'))
+                    <a class="btn btn-secondary" href="{{ route('register') }}">
+                        Cadastrar-se
+                    </a>
+                    @endif
+                    @endauth
+                @endif
 
-            <section>
-                <!-- TODO: CTA -->
-                <a href="{{ route('register') }}">Cadastrar-se</a>
-                <a href="{{ route('login') }}">Entrar</a>
+                <p>Veja abaixo todas as árvores já registradas pela nossa comunidade:</p>
+
+                <div class="map-wrapper">
+                    <div id="map"></div>
+                </div>
             </section>
         </main>
 
         <footer>
-            <!-- TODO: coluna com nome e logo, coluna com links institucionais e coluna com links para contato -->
+            <p style="text-align: center; padding: 20px; color: #666;">
+                &copy; {{ date('Y') }} Cade minha Araucária.
+                Projeto de código aberto.
+                <br>
+                Contribua em:
+                <a href="github.com/underdogbytes/cade-minha-araucaria" target="_blank" style="color: #1e4620; text-decoration: none;">
+                    github.com/underdogbytes/cade-minha-araucaria
+                </a>  
+            </p>
         </footer>
-    </body>
 
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+        <script>
+            const map = L.map('map').setView([-25.4323, -49.2712], 12);
+    
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+    
+            fetch('/api/observations')
+                .then(response => response.json())
+                .then(response => {
+                    const observations = response.data || response;
+                    
+                    observations.forEach(obs => {
+                        const estágios = { seedling: 'Muda', sapling: 'Jovem', adult: 'Adulta', dead: 'Morta/Cortada' };
+                        const gêneros = { unknown: 'Desconhecido', male: 'Macho', female: 'Fêmea' };
+    
+                        const estagioFormatado = estágios[obs.stage] || obs.stage;
+                        const generoFormatado = gêneros[obs.gender] || obs.gender;
+    
+                        // Marcador com pop-up
+                        L.marker([obs.latitude, obs.longitude])
+                            .addTo(map)
+                            .bindPopup(`
+                            <div style="font-family: sans-serif; min-width: 150px;">
+                                <h4 style="margin: 0 0 5px 0; color: #1b4332;">Araucária Registrada</h4>
+                                <b>Estágio:</b> ${estagioFormatado}<br>
+                                <b>Gênero:</b> ${generoFormatado}<br>
+                                <small style="color: #666;">Por: ${obs.observer}</small><br>
+                                <img src="${obs.photo_url}" alt="Foto da Araucária" style="width: 100%; max-width: 140px; margin-top: 8px; border-radius: 4px; border: 1px solid #ddd;">
+                            </div>
+                            `);
+                    });
+                })
+                .catch(error => console.error('Erro ao alimentar o mapa da landing page:', error));
+        </script>
+    </body>
 </html>
