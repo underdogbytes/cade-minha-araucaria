@@ -1,3 +1,12 @@
+@php
+  $estagiosTraducao = [
+    'seedling' => 'Muda',
+    'sapling' => 'Jovem',
+    'adult' => 'Adulta',
+    'dead' => 'Morta'
+  ];
+@endphp
+
 <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-sm text-left">
   <thead class="bg-gray-50 dark:bg-gray-900 text-gray-700 dark:text-gray-300 uppercase text-xs">
     <tr>
@@ -19,7 +28,7 @@
       </td>
       <td class="px-6 py-4">{{ $obs->created_at->format('d/m/Y') }}</td>
       <td class="px-6 py-4 uppercase text-xs"><span
-          class="px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded">{{ $obs->stage }}</span>
+          class="px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded">{{ $estagiosTraducao[$obs->stage] ?? $obs->stage }}</span>
       </td>
       <td class="px-6 py-4 text-right space-x-2" x-data="{ confirmandoExclusao: false }">
         <div x-show="!confirmandoExclusao">
