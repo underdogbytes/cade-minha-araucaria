@@ -35,7 +35,7 @@
 
                 <div class="flex flex-wrap gap-2 mt-2">
                     <span
-                        class="px-2.5 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 uppercase tracking-wider">
+                        class="px-2.5 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-gray-300 uppercase tracking-wider">
                         {{ [
                                 'seedling' => 'Muda',
                                 'sapling' => 'Jovem',
@@ -45,7 +45,7 @@
                     </span>
 
                     <span
-                        class="px-2.5 py-1 text-xs font-medium rounded-full bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200 uppercase tracking-wider">
+                        class="px-2.5 py-1 text-xs font-medium rounded-full bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-gray-300 uppercase tracking-wider">
                       {{ [
                           'male' => '♂️ Macho',
                           'female' => '♀️ Fêmea',
