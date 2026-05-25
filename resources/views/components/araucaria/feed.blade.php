@@ -26,7 +26,7 @@
             <div>
                 <div class="flex justify-between items-center text-xs text-gray-400 dark:text-gray-500 mb-3">
                     <span class="font-semibold text-emerald-600 dark:text-emerald-400">
-                        🌲 @_{{ $obs->user->username }}
+                        🌲 Registrado por {{ $obs->user->username ? '@'.$obs->user->username : $obs->user->name }}
                     </span>
                     <span>
                         {{ $obs->created_at->format('d/m/Y H:i') }}
