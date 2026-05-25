@@ -25,8 +25,7 @@
           Latitude
         </label>
 
-        <input type="text" id="latitude" name="latitude" readonly required
-          class="bg-gray-100">
+        <input type="text" id="latitude" name="latitude" readonly required class="bg-gray-100">
       </div>
 
       <div class="form-group">
@@ -34,8 +33,7 @@
           Longitude
         </label>
 
-        <input type="text" id="longitude" name="longitude" readonly required
-          class="bg-gray-100">
+        <input type="text" id="longitude" name="longitude" readonly required class="bg-gray-100">
       </div>
 
       <div class="form-group">
