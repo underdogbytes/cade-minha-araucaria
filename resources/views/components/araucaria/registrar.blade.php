@@ -80,7 +80,7 @@
       </div>
 
       <button type="submit"
-        class="w-full mt-2 bg-emerald-600 hover:bg-emerald-700 font-bold py-2 px-4 rounded transition disabled:opacity-50">
+        class="w-full mt-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded transition disabled:opacity-50">
         Salvar Observação
       </button>
     </form>
