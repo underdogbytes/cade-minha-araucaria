@@ -13,8 +13,8 @@ $sufixo = $modo === 'criar' ? 'create' : 'edit';
       Clique no mapa para definir a localização exata da árvore.
     </p>
 
-    <form id="araucariaForm-{{ $sufixo }}" method="POST" :action="idEdicao ? '/observations/' + idEdicao : '/observations'"
-      enctype="multipart/form-data">
+    <form id="araucariaForm-{{ $sufixo }}" method="POST"
+      :action="idEdicao ? '/observations/' + idEdicao : '/observations'" enctype="multipart/form-data">
       @csrf
 
       <template x-if="idEdicao">
@@ -23,24 +23,15 @@ $sufixo = $modo === 'criar' ? 'create' : 'edit';
 
       <div class="form-group">
         <label for="latitude">Latitude</label>
-        <input type="text" id="latitude" name="latitude" readonly required x-model="editLat"
-          class="bg-gray-100">
+        <input type="text" id="latitude" name="latitude" readonly required x-model="editLat" class="bg-gray-100">
       </div>
 
       <div class="form-group">
         <label for="longitude">Longitude</label>
-        <input type="text" id="longitude" name="longitude" readonly required x-model="editLng"
-          class="bg-gray-100">
+        <input type="text" id="longitude" name="longitude" readonly required x-model="editLng" class="bg-gray-100">
       </div>
 
-      <div class="form-group">
-        <label for="photo_path">Foto da Árvore</label>
-        <input type="file" id="photo_path" name="photo_path" accept="image/png,image/jpeg,image/webp"
-          ::required="!idEdicao">
-        <template x-if="idEdicao">
-          <p class="text-xs text-gray-500 mt-1">Deixe em branco para manter a foto atual.</p>
-        </template>
-      </div>
+      <x-araucaria.form.photo ::required="!idEdicao" />
 
       <div class="form-group">
         <label for="stage">Estágio de Desenvolvimento</label>

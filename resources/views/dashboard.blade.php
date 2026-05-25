@@ -32,6 +32,7 @@
         editLng: '',
         editStage: 'adult',
         editGender: 'unknown',
+        editPhotoUrl: '',
         showAlert: false,
         alertMessage: '',
         alertType: 'success'
@@ -58,7 +59,16 @@
                     👤 Minhas Observações
                 </button>
     
-                <button @click="tab = 'create'; idEdicao = null; editLat = ''; editLng = ''; editStage = 'adult'; editGender = 'unknown'; document.getElementById('araucariaForm')?.reset(); $dispatch('mudar-aba', 'create')"
+                <button @click="
+                    tab = 'create';
+                    idEdicao = null;
+                    editLat = '';
+                    editLng = '';
+                    editStage = 'adult';
+                    editGender = 'unknown';
+                    editPhotoUrl = '';
+                    document.getElementById('araucariaForm')?.reset();
+                    $dispatch('mudar-aba', 'create')"
                     :class="tab === 'create' ? 'border-emerald-500 text-emerald-600 dark:text-emerald-400 font-semibold' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
                     class="py-3 px-4 border-b-2 text-sm font-medium transition duration-200 focus:outline-none bg-emerald-50 dark:bg-emerald-950/30 rounded-t-lg text-emerald-700">
                     ➕ Registrar Araucária
@@ -91,13 +101,13 @@
                             </button>
                         </div>
 
-                        <x-araucaria.registrar modo="editar" />
+                        <x-araucaria.form modo="editar" />
                     </div>
                 </div>
     
                 <div x-show="tab === 'create'" x-transition class="p-6 lg:p-8">
                     <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">Novo Registro</h3>
-                    <x-araucaria.registrar modo="criar" />
+                    <x-araucaria.form modo="criar" />
                 </div>
             </div>
         </div>

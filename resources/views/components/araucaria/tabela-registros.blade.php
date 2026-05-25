@@ -30,6 +30,7 @@
                 editLng = '{{ $obs->longitude }}';
                 editStage = '{{ $obs->stage }}';
                 editGender = '{{ $obs->gender }}';
+                editPhotoUrl = '{{ $obs->photo_path }}';
                 $dispatch('mudar-aba', 'edit'); 
             " class="text-emerald-600 hover:text-emerald-900 font-semibold">
           Editar
