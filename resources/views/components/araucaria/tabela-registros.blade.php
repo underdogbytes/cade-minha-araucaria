@@ -21,21 +21,43 @@
       <td class="px-6 py-4 uppercase text-xs"><span
           class="px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded">{{ $obs->stage }}</span>
       </td>
-      <td class="px-6 py-4 text-right space-x-2">
-        <a href="{{ route('observations.show', $obs->id) }}" class="text-blue-600 hover:text-blue-900 dark:text-blue-400">Ver</a>
-        <button type="button" @click="
-                subAba = 'editar';
-                idEdicao = '{{ $obs->id }}';
-                editLat = '{{ $obs->latitude }}';
-                editLng = '{{ $obs->longitude }}';
-                editStage = '{{ $obs->stage }}';
-                editGender = '{{ $obs->gender }}';
-                editPhotoUrl = '{{ $obs->photo_path }}';
-                $dispatch('mudar-aba', 'edit'); 
-            " class="text-emerald-600 hover:text-emerald-900 font-semibold">
-          Editar
-        </button>
-        <button class="text-red-600 hover:text-red-900 dark:text-red-400 font-medium">Excluir</button>
+      <td class="px-6 py-4 text-right space-x-2" x-data="{ confirmandoExclusao: false }">
+        <div x-show="!confirmandoExclusao">
+          <a href="{{ route('observations.show', $obs->id) }}" class="text-blue-600 hover:text-blue-900 dark:text-blue-400">Ver</a>
+          <button type="button" @click="
+                  subAba = 'editar';
+                  idEdicao = '{{ $obs->id }}';
+                  editLat = '{{ $obs->latitude }}';
+                  editLng = '{{ $obs->longitude }}';
+                  editStage = '{{ $obs->stage }}';
+                  editGender = '{{ $obs->gender }}';
+                  editPhotoUrl = '{{ $obs->photo_path }}';
+                  $dispatch('mudar-aba', 'edit'); 
+              " class="text-emerald-600 hover:text-emerald-900 font-semibold">
+            Editar
+          </button>
+          <button
+            type="button"
+            @click="confirmandoExclusao = true"
+            class="text-red-600 hover:text-red-900 font-semibold">
+            Excluir
+          </button>
+        </div>
+
+        <div x-show="confirmandoExclusao"
+          class="flex justify-end items-center space-x-2 text-xs bg-red-50 dark:bg-red-950/30 p-1.5 rounded" x-transition>
+          <span class="text-red-700 dark:text-red-300 font-medium">Tem certeza?</span>
+        
+          <button type="button" @click="deletarObservacao('{{ $obs->id }}', $el.closest('tr'))"
+            class="bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded font-bold transition shadow-sm">
+            Sim
+          </button>
+        
+          <button type="button" @click="confirmandoExclusao = false"
+            class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-2 py-1 rounded font-bold transition">
+            Não
+          </button>
+        </div>
       </td>
     </tr>
     @empty

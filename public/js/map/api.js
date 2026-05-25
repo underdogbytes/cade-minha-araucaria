@@ -41,3 +41,28 @@ export async function createObservation(form) {
 
   return data;
 }
+
+export async function deleteObservation(id) {
+  const csrfToken = document.querySelector('input[name="_token"]')?.value || '';
+
+  const response = await fetch(`/observations/${id}`, {
+    method: 'DELETE',
+    headers: {
+      'Accept': 'application/json',
+      'X-CSRF-TOKEN': csrfToken
+    },
+  });
+
+  let data = {};
+  try {
+    data = await response.json();
+  } catch {
+    throw new Error('Resposta inválida do servidor.');
+  }
+
+  if (!response.ok) {
+    throw new Error(data.message || 'Erro ao excluir observação.');
+  }
+
+  return data;
+}

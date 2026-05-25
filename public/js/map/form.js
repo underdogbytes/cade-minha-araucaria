@@ -1,5 +1,5 @@
 // form.js
-import { createObservation } from './api.js';
+import { createObservation, deleteObservation } from './api.js';
 import { addNewObservationToMap, clearClickMarker } from './map.js';
 
 let isSubmitting = false;
@@ -93,3 +93,36 @@ function toggleSubmitButton(button, loading) {
   button.disabled = loading;
   button.textContent = loading ? 'Salvando...' : 'Salvar Observação';
 }
+
+window.deletarObservacao = async function (id, elementoLinha) {
+  try {
+    console.log(`Disparando exclusão da araucária ID: ${id}`);
+
+    // 1. Faz a chamada para a API do Laravel
+    const response = await deleteObservation(id);
+    const successMessage = response.message || 'Registro excluído com sucesso!';
+
+    // 2. Dispara o alerta visual verde na tela (O mesmo que criamos antes!)
+    window.dispatchEvent(new CustomEvent('observation-saved', {
+      detail: { message: successMessage }
+    }));
+
+    // 3. Efeito visual: Faz a linha desaparecer suavemente antes de remover do HTML
+    if (elementoLinha) {
+      elementoLinha.style.transition = 'all 0.5s ease';
+      elementoLinha.style.opacity = '0';
+      elementoLinha.style.transform = 'scale(0.95)';
+
+      setTimeout(() => {
+        elementoLinha.remove();
+      }, 500);
+    }
+
+  } catch (error) {
+    console.error('Erro ao excluir:', error.message);
+    // Dispara o alerta vermelho de erro na tela
+    window.dispatchEvent(new CustomEvent('observation-error', {
+      detail: { message: error.message || 'Não foi possível excluir.' }
+    }));
+  }
+};
