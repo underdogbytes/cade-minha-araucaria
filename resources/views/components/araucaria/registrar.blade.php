@@ -17,7 +17,7 @@
       </div>
     @endif
 
-    <form id="araucariaForm" method="POST" action="/web/observations" enctype="multipart/form-data">
+    <form id="araucariaForm" method="POST" action="/observations" enctype="multipart/form-data">
       @csrf
 
       <div class="form-group">

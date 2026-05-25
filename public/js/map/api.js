@@ -12,10 +12,9 @@ export async function fetchObservations() {
   return response.json();
 }
 
-
 export async function createObservation(form) {
   const formData = new FormData(form);
-  const url = form.getAttribute('action') || '/web/observations';
+  const url = form.getAttribute('action') || '/observations';
   const tokenInput = form.querySelector('input[name="_token"]');
   const csrfToken = tokenInput ? tokenInput.value : '';
 

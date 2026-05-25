@@ -12,5 +12,5 @@ Route::middleware([
     'verified',
 ])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::post('/web/observations', [AraucariaObservationController::class, 'store'])->name('web.observations');
+    Route::post('/observations', [AraucariaObservationController::class, 'store'])->name('observations.store');
 });
