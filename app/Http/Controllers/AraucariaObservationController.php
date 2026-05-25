@@ -34,6 +34,14 @@ class AraucariaObservationController extends Controller
     }
 
     /**
+     * Exibe os detalhes de uma observação específica.
+     */
+    public function show(AraucariaObservation $observation)
+    {
+        return view('observations.show', compact('observation'));
+    }
+
+    /**
      * Armazena uma nova observação.
      */
     public function store(

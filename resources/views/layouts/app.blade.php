@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        <title>{{ config('app.name', 'Cadê minha Araucária?') }}</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -31,7 +31,9 @@
                 }
             }
         
-            #map {
+            #map,
+            #map-create,
+            #map-edit {
                 flex: 2;
                 min-height: 350px;
                 height: 100%;

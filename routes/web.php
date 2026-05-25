@@ -13,4 +13,6 @@ Route::middleware([
 ])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/observations', [AraucariaObservationController::class, 'store'])->name('observations.store');
+    Route::get('/observations/{observation}', [AraucariaObservationController::class, 'show'])->name('observations.show');
+    Route::put('/observations/{observation}', [AraucariaObservationController::class, 'update'])->name('observations.update');
 });

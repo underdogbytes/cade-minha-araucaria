@@ -14,7 +14,7 @@ export async function fetchObservations() {
 
 export async function createObservation(form) {
   const formData = new FormData(form);
-  const url = form.getAttribute('action') || '/observations';
+  const url = form.getAttribute('action') || '/api/observations';
   const tokenInput = form.querySelector('input[name="_token"]');
   const csrfToken = tokenInput ? tokenInput.value : '';
 
