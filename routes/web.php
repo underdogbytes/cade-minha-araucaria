@@ -17,3 +17,9 @@ Route::middleware([
     Route::put('/observations/{observation}', [AraucariaObservationController::class, 'update'])->name('observations.update');
     Route::delete('/observations/{observation}', [AraucariaObservationController::class, 'destroy']);
 });
+
+Route::get('/limpar-tudo', function() {
+    Artisan::call('route:clear');
+    Artisan::call('config:clear');
+    return "Caches limpos com sucesso!";
+});
