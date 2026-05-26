@@ -61,9 +61,9 @@
                   </span>
                 </div>
                 <div class="py-3 flex justify-between">
-                  <span class="font-medium text-gray-500">Data do Registro:</span>
+                  <span class="font-medium text-gray-500">Data da Observação:</span>
                   <span class="text-gray-800 dark:text-gray-200">
-                    {{ $observation->created_at->format('d/m/Y \à\s H:i') }}
+                    {{ $observation->observed_at->format('d/m/Y \à\s H:i') }}
                   </span>
                 </div>
                 <div class="py-3 flex justify-between">

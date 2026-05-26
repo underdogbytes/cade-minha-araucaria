@@ -28,6 +28,7 @@ class StoreAraucariaObservationRequest extends FormRequest
             'photo_path' => 'required|image|mimes:jpeg,png,jpg,webp|max:10240',
             'stage' => ['required', 'in:seedling,sapling,adult,dead'],
             'gender' => ['required', 'in:male,female,unknown'],
+            'observed_at' => ['required', 'date'],
         ];
     }
     /**

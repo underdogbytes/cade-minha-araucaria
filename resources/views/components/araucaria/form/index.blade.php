@@ -52,6 +52,11 @@ $sufixo = $modo === 'criar' ? 'create' : 'edit';
         </select>
       </div>
 
+      <div class="form-group">
+        <label for="observed_at">Data da Observação</label>
+        <input type="datetime-local" id="observed_at" name="observed_at" required x-model="editObservedAt">
+      </div>
+
       <div class="flex gap-2 mt-2">
         <button type="submit"
           class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded transition disabled:opacity-50">

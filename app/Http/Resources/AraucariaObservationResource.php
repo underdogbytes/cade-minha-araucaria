@@ -23,6 +23,7 @@ class AraucariaObservationResource extends JsonResource
             'gender' => $this->gender,
             'observer' => $this->user->username,
             'created_at' => $this->created_at->toIso8601String(),
+            'observed_at' => $this->observed_at->toIso8601String(),
         ];
     }
 }

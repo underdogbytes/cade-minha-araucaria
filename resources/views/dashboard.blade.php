@@ -33,6 +33,7 @@
         editStage: 'adult',
         editGender: 'unknown',
         editPhotoUrl: '',
+        editObservedAt: '',
         showAlert: false,
         alertMessage: '',
         alertType: 'success'

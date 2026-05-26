@@ -30,8 +30,8 @@ export function addObservationMarker(map, observation) {
   marker.bindPopup(`
     <div style="font-family: sans-serif; min-width: 150px;">
       <h4 style="margin: 0 0 5px 0; color: #1b4332;">Araucária Registrada</h4>
-      <b>Estágio:</b> ${estagioFormatado}<br>
-      <b>Gênero:</b> ${generoFormatado}<br>
+      <b>Estágio:</b> ${stage}<br>
+      <b>Gênero:</b> ${gender}<br>
       <a href="/observations/${araucariaId}"
           class="inline-block bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-2 py-1 rounded transition text-center w-full"
           style="color: white!important">

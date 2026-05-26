@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->longText('photo_path');
             $table->enum('stage', ['seedling', 'sapling', 'adult', 'dead']);
             $table->enum('gender', ['male', 'female', 'unknown']);
+            $table->timestamp('observed_at');
             $table->timestamps();
         });
     }

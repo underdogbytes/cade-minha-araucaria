@@ -28,6 +28,7 @@ class UpdateAraucariaObservationRequest extends FormRequest
             'photo_path' => ['sometimes', 'nullable', 'image', 'mimes:jpeg,png,jpg', 'max:5120'],
             'stage'     => ['sometimes', 'in:seedling,sapling,adult,dead'],
             'gender'    => ['sometimes', 'in:male,female,unknown'],
+            'observed_at' => ['sometimes', 'date'],
         ];
     }
 }

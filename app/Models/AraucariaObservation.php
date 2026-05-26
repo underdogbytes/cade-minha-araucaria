@@ -15,6 +15,11 @@ class AraucariaObservation extends Model
         'photo_path',
         'stage',
         'gender',
+        'observed_at'
+    ];
+
+    protected $casts = [
+        'observed_at' => 'datetime',
     ];
 
     public function user(): BelongsTo
