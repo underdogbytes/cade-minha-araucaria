@@ -19,9 +19,11 @@ Route::middleware([
 });
 
 Route::get('/limpar-tudo', function() {
-    Artisan::call('route:clear');
-    Artisan::call('config:clear');
-    return "Caches limpos com sucesso!";
+    \Artisan::call('config:clear');
+    \Artisan::call('config:cache');
+    \Artisan::call('route:clear');
+    \Artisan::call('view:clear');
+    return "Caches limpos com sucesso no servidor!";
 });
 
 Route::get('/gerar-link', function () {
