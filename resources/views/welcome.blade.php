@@ -145,22 +145,47 @@
     
                         const estagioFormatado = estágios[obs.stage] || obs.stage;
                         const generoFormatado = gêneros[obs.gender] || obs.gender;
+                        const araucariaId = obs.id;
+
+                        let fotoUrl = obs.photo_path;
+                        let imageHtml = '';
+                        
+                        if (fotoUrl) {
+                        if (fotoUrl.includes('data:image')) {
+                        const indiceBase64 = fotoUrl.indexOf('data:image');
+                            fotoUrl = fotoUrl.substring(indiceBase64);
+                        } else if (!fotoUrl.startsWith('http') && !fotoUrl.startsWith('/storage')) {
+                            fotoUrl = '/storage/' + fotoUrl;
+                        }
+                        
+                        imageHtml = `
+                        <img src="${fotoUrl}" alt="Araucária"
+                            style="width: 100%; max-width: 140px; margin-top: 8px; border-radius: 4px; border: 1px solid #ddd;">
+                        `;
+                        }
     
                         // Marcador com pop-up
                         L.marker([obs.latitude, obs.longitude])
-                            .addTo(map)
-                            .bindPopup(`
+                        .addTo(map)
+                        .bindPopup(`
                             <div style="font-family: sans-serif; min-width: 150px;">
                                 <h4 style="margin: 0 0 5px 0; color: #1b4332;">Araucária Registrada</h4>
                                 <b>Estágio:</b> ${estagioFormatado}<br>
                                 <b>Gênero:</b> ${generoFormatado}<br>
-                                <small style="color: #666;">Por: ${obs.observer}</small><br>
-                                <img src="${obs.photo_path}" alt="Foto da Araucária" style="width: 100%; max-width: 140px; margin-top: 8px; border-radius: 4px; border: 1px solid #ddd;">
+                                <a href="/observations/${araucariaId}"
+                                    class="inline-block bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-2 py-1 rounded transition text-center w-full"
+                                    style="color: white!important">
+                                    Ver detalhes completos →
+                                </a>
+                                ${imageHtml}
                             </div>
-                            `);
+                        `);
                     });
                 })
-                .catch(error => console.error('Erro ao alimentar o mapa da landing page:', error));
+                .catch(error => {
+                    // TODO: Melhorar tratamento de erro
+                    alert('Não foi possível carregar as observações. Por favor, tente novamente mais tarde.');
+                });
         </script>
     </body>
 </html>
