@@ -66,6 +66,13 @@
                     {{ $observation->created_at->format('d/m/Y \à\s H:i') }}
                   </span>
                 </div>
+                <div class="py-3 flex justify-between">
+                  <span class="font-medium text-gray-500">Registrado por:</span>
+                  <span class="text-gray-800 dark:text-gray-200">
+                    {{ $observation->user->username ? '@'.$observation->user->username : $observation->user->name }}
+                    {{-- TODO: user profile link --}}
+                  </span>
+                </div>
               </div>
             </div>
 
