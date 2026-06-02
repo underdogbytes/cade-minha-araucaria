@@ -68,12 +68,13 @@
             </div>
         </div>
     </div>
-    <div class="col-span-1 md:col-span-2 mt-4">
-        {{ $observations->links() }}
-    </div>
     @empty
     <div class="col-span-1 md:col-span-2 text-center py-12">
         <p class="text-gray-500 dark:text-gray-400">Nenhuma araucária registrada no feed até o momento.</p>
     </div>
     @endforelse
+</div>
+
+<div class="p-6 lg:p-8">
+    {{ $observations->links() }}
 </div>
