@@ -67,7 +67,9 @@
                 <span>Lng: {{ number_format($obs->longitude, 4) }}</span>
             </div>
         </div>
-
+    </div>
+    <div class="col-span-1 md:col-span-2 mt-4">
+        {{ $observations->links() }}
     </div>
     @empty
     <div class="col-span-1 md:col-span-2 text-center py-12">

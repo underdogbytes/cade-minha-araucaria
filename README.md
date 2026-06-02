@@ -33,7 +33,6 @@ Por favor, reporte vulnerabilidades de segurança abrindo uma issue :)
 ### UI/UX
 - Logo pro site;
 - Perfil de Usuário;
-- Paginação do Feed;
 
 ### Mapa
 - Novo ícone;

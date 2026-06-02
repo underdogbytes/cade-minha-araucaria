@@ -9,7 +9,7 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $observations = AraucariaObservation::with('user')->latest()->get();
+        $observations = AraucariaObservation::with('user')->latest()->paginate(10);
         return view('dashboard', compact('observations'));
     }
 }
