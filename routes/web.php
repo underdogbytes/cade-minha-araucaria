@@ -25,8 +25,3 @@ Route::get('/limpar-tudo', function() {
     \Artisan::call('view:clear');
     return "Caches limpos com sucesso no servidor!";
 });
-
-Route::get('/gerar-link', function () {
-    Artisan::call('storage:link');
-    return 'Link do Storage criado com sucesso!';
-});
