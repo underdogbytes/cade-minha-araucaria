@@ -55,21 +55,31 @@ Em terminais separados, execute:
 ```
 Se deu boa até aqui, vai tá tudo abrindo em http://127.0.0.1:8000 , amém
 
+---
+
+## Próximas features
+
+### Refatorações
+- [ ] Geolocalização nativa
+- [ ] Leitura de Metadados EXIF
+
+### Melhorias UI/UX
+- [ ] Criar identidade visual
+- [ ] Perfil customizado de usuário
+- [ ] Mapa principal unificado
+
+### Gamificação
+- [ ] Implementar joguinho de pinhões
+- [ ] Implementar joguinho de cultivo de rocaria
+
+### Sistema de Denúncias e Moderação
+- [ ] Modelar fluxo de denúncias (sepá UML antes de sair codando dessa vez kkkkkk)
+- [ ] Painel administrativo para moderação
+
+---
 
 ## Como contribuir
 Faça PRs curtos e explique o quê está implementando ou arrumando :D
 
 ## Vulnerabilidades de segurança
 Por favor, reporte vulnerabilidades de segurança abrindo uma issue :)
-
-## Planos Futuros
-### UI/UX
-- Logo pro site;
-- Perfil de Usuário;
-
-### Mapa
-- Novo ícone;
-
-### Araucárias
-- Adicionar propriedade Descrição/Notas;
-- Denúncias;
