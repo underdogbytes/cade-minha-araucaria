@@ -79,7 +79,17 @@ Se deu boa até aqui, vai tá tudo abrindo em http://127.0.0.1:8000 , amém
 ---
 
 ## Como contribuir
-Faça PRs curtos, resolvendo um problema de cada vez e explique o quê está implementando ou arrumando :D
+1. Faça o Fork do projeto;
+2. Cria uma branch para o que for resolver, por exemplo:
+```bash
+  # Se for implementação de algo novo:
+  git checkout -b feature/paranaue-legal
+
+  # Se for resolvendo bucha:
+  git checkout -b fix/to-resolvendo-essa-merda-aqui
+``` 
+3. Mantenha o PR curto, pelo amor de deus só sou eu aqui revisando código
+4. Explique o que está implementando ou arrumando :D
 
 ---
 
