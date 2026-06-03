@@ -83,5 +83,10 @@ Faça PRs curtos, resolvendo um problema de cada vez e explique o quê está imp
 
 ---
 
-## Vulnerabilidades de segurança
-Por favor, reporte vulnerabilidades de segurança abrindo uma issue :)
+## Vulnerabilidades e Segurança
+Se achar algo, reporte mandando pro e-mail: underdogbytes@gmail.com
+
+---
+
+É isso por hoje, obrigada por chegar até aqui
+₍^. .^₎⟆
