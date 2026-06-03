@@ -79,7 +79,9 @@ Se deu boa até aqui, vai tá tudo abrindo em http://127.0.0.1:8000 , amém
 ---
 
 ## Como contribuir
-Faça PRs curtos e explique o quê está implementando ou arrumando :D
+Faça PRs curtos, resolvendo um problema de cada vez e explique o quê está implementando ou arrumando :D
+
+---
 
 ## Vulnerabilidades de segurança
 Por favor, reporte vulnerabilidades de segurança abrindo uma issue :)
