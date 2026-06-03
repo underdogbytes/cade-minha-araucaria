@@ -2,6 +2,17 @@
 
 Plataforma web colaborativa para mapear, monitorar e proteger nossas araucárias (*Araucaria angustifolia*).
 
+---
+## Tecnologias
+
+- **Backend:** Laravel 12 (PHP 8.2+)
+- **Frontend:** Tailwind CSS, Alpine.js & Livewire (via Laravel Jetstream)
+- **Mapas & Geolocalização:** Leaflet.js
+- **Manipulação de Imagens:** Intervention Image (v3)
+- **Banco de Dados:** MySQL
+
+---
+
 ## Como rodar o projeto
 ### Instalações
 ```
