@@ -14,6 +14,10 @@ Plataforma web colaborativa para mapear, monitorar e proteger nossas araucárias
 ---
 
 ## Como rodar o projeto
+
+### Pré-requisitos
+Certifique-se de ter instalado em sua máquina o **PHP 8.2+**, **Composer**, **Node.js** e um servidor **MySQL**.
+
 ### Instalações
 ```
   composer install
