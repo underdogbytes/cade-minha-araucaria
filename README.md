@@ -1,5 +1,6 @@
 # 🌲 Cadê minha araucária?? 🧐
-Projeto para mapear e monitorar araucárias.
+
+Plataforma web colaborativa para mapear, monitorar e proteger nossas araucárias (*Araucaria angustifolia*).
 
 ## Como rodar o projeto
 ### Instalações
