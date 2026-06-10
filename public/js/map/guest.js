@@ -30,6 +30,10 @@ fetch(apiUrl)
     const markerList = [];
 
     observations.forEach(obs => {
+
+      // Ignorar por falta de coordenadas:
+      if(!obs.latitude || !obs.longitude) { return; }
+
       const formattedLifeStage = lifeStage[obs.stage] || obs.stage;
       const formattedGender = gender[obs.gender] || obs.gender;
       const araucariaId = obs.id;
