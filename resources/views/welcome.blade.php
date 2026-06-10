@@ -131,6 +131,6 @@
 
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
         <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
-        <script type="module" src="{{ asset('js/map/guest.js') }}"></script>
+        <script type="module" src="{{ asset('js/map/world-map.js') }}"></script>
     </body>
 </html>
