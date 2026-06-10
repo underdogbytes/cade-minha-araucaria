@@ -28,16 +28,13 @@ export function showErrorMessage(error) {
   }, 5000);
 }
 
-export function showSpinner(spinnerId) {
-  const spinner = document.getElementById(spinnerId);
-  if (spinner) {
-    spinner.style.display = 'block';
-  }
-}
-
 export function hideSpinner(spinnerId) {
-  const spinner = document.getElementById(spinnerId);
-  if (spinner) {
-    spinner.style.display = 'none';
+  const loader = document.getElementById(spinnerId);
+  if (loader) {
+    loader.classList.add('opacity-0');
+
+    setTimeout(() => {
+      loader.style.display = 'none';
+    }, 300);
   }
 }

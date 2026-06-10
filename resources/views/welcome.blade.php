@@ -110,12 +110,8 @@
 
                 <p>Veja abaixo todas as árvores já registradas pela nossa comunidade:</p>
 
-
                 <div class="map-wrapper">
-                    {{-- TODO: fazer um spiner melhor :p --}}
-                    <div id="mapSpinner">
-                        Carregando mapa...
-                    </div>
+                    <x-spinner message="Carregando mapa..." id="mapSpinner" />
                     <div id="map"></div>
                 </div>
             </section>

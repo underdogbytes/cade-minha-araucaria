@@ -1,4 +1,4 @@
-import { hideSpinner, showErrorMessage, showSpinner } from '../utils.js';
+import { hideSpinner, showErrorMessage } from '../utils.js';
 import { gender, generateMap, generateMarkerHTML, generatePhotoPath, lifeStage, makeTiles } from './utils/maps.js';
 
 const apiUrl = '/api/observations';
@@ -18,8 +18,6 @@ const markers = L.markerClusterGroup({
 });
 
 async function loadObservations() {
-  showSpinner('mapSpinner');
-
   try {
     const response = await fetch(apiUrl);
     if (!response.ok) throw new Error('Erro na requisição');
@@ -54,9 +52,9 @@ async function loadObservations() {
     map.addLayer(markers);
   } catch (error) {
     showErrorMessage(error);
+  } finally {
+    hideSpinner('mapSpinner');
   }
-
-  hideSpinner('mapSpinner');
 }
 
 loadObservations();
