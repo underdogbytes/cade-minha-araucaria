@@ -67,6 +67,7 @@ Se deu boa até aqui, vai tá tudo abrindo em http://127.0.0.1:8000 , amém
 - [ ] Criar identidade visual
 - [ ] Perfil customizado de usuário
 - [ ] Mapa principal unificado
+- [ ] Implementar um spinner/loading melhor
 
 ### Gamificação
 - [ ] Implementar joguinho de pinhões

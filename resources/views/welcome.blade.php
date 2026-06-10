@@ -110,7 +110,12 @@
 
                 <p>Veja abaixo todas as árvores já registradas pela nossa comunidade:</p>
 
+
                 <div class="map-wrapper">
+                    {{-- TODO: fazer um spiner melhor :p --}}
+                    <div id="mapSpinner">
+                        Carregando mapa...
+                    </div>
                     <div id="map"></div>
                 </div>
             </section>
@@ -130,78 +135,6 @@
 
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
         <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
-        <script>
-            const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 18,
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            });
-            
-            const latlng = L.latLng(-25.4323, -49.2712);
-
-            const map = L.map('map', {
-                center: latlng,
-                zoom: 12,
-                layers: [tiles]
-            });
-
-            const markers = L.markerClusterGroup();
-    
-            fetch('/api/observations')
-                .then(response => response.json())
-                .then(response => {
-                    const observations = response.data || response;
-                    
-                    observations.forEach(obs => {
-                        const estágios = { seedling: 'Muda', sapling: 'Jovem', adult: 'Adulta', dead: 'Morta/Cortada' };
-                        const gêneros = { unknown: 'Desconhecido', male: 'Macho', female: 'Fêmea' };
-    
-                        const estagioFormatado = estágios[obs.stage] || obs.stage;
-                        const generoFormatado = gêneros[obs.gender] || obs.gender;
-                        const araucariaId = obs.id;
-
-                        let fotoUrl = obs.photo_path;
-                        let imageHtml = '';
-                        
-                        if (fotoUrl) {
-                            if (fotoUrl.includes('data:image')) {
-                                const indiceBase64 = fotoUrl.indexOf('data:image');
-                                fotoUrl = fotoUrl.substring(indiceBase64);
-                            } else if (!fotoUrl.startsWith('http') && !fotoUrl.startsWith('/storage')) {
-                                fotoUrl = '/storage/' + fotoUrl;
-                            }
-                            
-                            imageHtml = `
-                                <img src="${fotoUrl}"
-                                    alt="Araucária"
-                                    style="width: 100%; max-width: 140px; margin-top: 8px; border-radius: 4px; border: 1px solid #ddd;"
-                                >
-                            `;
-                        }
-    
-                        const marker = L.marker([obs.latitude, obs.longitude])
-                            .bindPopup(`
-                                <div style="font-family: sans-serif; min-width: 150px;">
-                                    <h4 style="margin: 0 0 5px 0; color: #1b4332;">Araucária Registrada</h4>
-                                    <b>Estágio:</b> ${estagioFormatado}<br>
-                                    <b>Gênero:</b> ${generoFormatado}<br>
-                                    <a href="/observations/${araucariaId}"
-                                        class="inline-block bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-2 py-1 rounded transition text-center w-full"
-                                        style="color: white!important">
-                                        Ver detalhes completos →
-                                    </a>
-                                    ${imageHtml}
-                                </div>
-                            `);
-
-                        markers.addLayer(marker);
-                    });
-
-                    map.addLayer(markers);
-                })
-                .catch(error => {
-                    // TODO: Melhorar tratamento de erro
-                    alert('Não foi possível carregar as observações. Por favor, tente novamente mais tarde.');
-                });
-        </script>
+        <script type="module" src="{{ asset('js/map/guest.js') }}"></script>
     </body>
 </html>

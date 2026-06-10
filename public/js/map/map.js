@@ -1,5 +1,6 @@
 import { fetchObservations } from './api.js';
 import { addObservationMarker } from './markers.js';
+import { makeTiles } from './utils/maps.js';
 
 let maps = {};
 let clickMarkers = {};
@@ -13,10 +14,9 @@ export async function initMap(mapId = 'map') {
   }
 
   const map = L.map(mapId).setView([-25.4323, -49.2712], 12);
+  const tiles = makeTiles();
 
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors'
-  }).addTo(map);
+  tiles.addTo(map);
 
   map.on('click', (event) => handleMapClick(event, mapId));
 

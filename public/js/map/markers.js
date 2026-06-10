@@ -33,9 +33,9 @@ export function addObservationMarker(map, observation) {
       <b>Estágio:</b> ${stage}<br>
       <b>Gênero:</b> ${gender}<br>
       <a href="/observations/${araucariaId}"
-          class="inline-block bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-2 py-1 rounded transition text-center w-full"
-          style="color: white!important">
-          Ver detalhes completos →
+        class="inline-block bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-2 py-1 rounded transition text-center w-full"
+        style="color: white!important">
+        Ver detalhes completos →
       </a>
       <small style="color: #666;">Por: ${observerName}</small><br>
       ${ imageHtml }
