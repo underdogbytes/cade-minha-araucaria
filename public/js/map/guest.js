@@ -17,22 +17,21 @@ const markers = L.markerClusterGroup({
   }
 });
 
-showSpinner('mapSpinner');
-fetch(apiUrl)
-  .then(response => {
-    if(!response.ok) {
-      throw new Error('Erro ao carregar observações');
-    }
-    return response.json();
-  })
-  .then(({data}) => {
-    const observations = data;
+async function loadObservations() {
+  showSpinner('mapSpinner');
+
+  try {
+    const response = await fetch(apiUrl);
+    if (!response.ok) throw new Error('Erro na requisição');
+
+    const data = await response.json();
+    const observations = data.data;
     const markerList = [];
+    
 
     observations.forEach(obs => {
-
       // Ignorar por falta de coordenadas:
-      if(!obs.latitude || !obs.longitude) { return; }
+      if (!obs.latitude || !obs.longitude) { return; }
 
       const formattedLifeStage = lifeStage[obs.stage] || obs.stage;
       const formattedGender = gender[obs.gender] || obs.gender;
@@ -53,10 +52,11 @@ fetch(apiUrl)
 
     markers.addLayers(markerList);
     map.addLayer(markers);
-  })
-  .catch(error => {
-    showErrorMessage(error);  
-  })
-  .finally(() => {
-    hideSpinner('mapSpinner');
-  });
+  } catch (error) {
+    showErrorMessage(error);
+  }
+
+  hideSpinner('mapSpinner');
+}
+
+loadObservations();
