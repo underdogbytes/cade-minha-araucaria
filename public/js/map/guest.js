@@ -27,6 +27,7 @@ fetch(apiUrl)
   })
   .then(({data}) => {
     const observations = data;
+    const markerList = [];
 
     observations.forEach(obs => {
       const formattedLifeStage = lifeStage[obs.stage] || obs.stage;
@@ -43,9 +44,10 @@ fetch(apiUrl)
       const markerHTML = generateMarkerHTML(formattedLifeStage, formattedGender, araucariaId, imageHtml);
       const marker = L.marker([obs.latitude, obs.longitude]).bindPopup(markerHTML);
 
-      markers.addLayer(marker);
+      markerList.push(marker);
     });
 
+    markers.addLayers(markerList);
     map.addLayer(markers);
   })
   .catch(error => {
