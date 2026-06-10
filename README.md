@@ -59,25 +59,25 @@ Se deu boa até aqui, vai tá tudo abrindo em http://127.0.0.1:8000 , amém
 
 ## Próximas features
 
-### Refatorações
-- [ ] Geolocalização nativa
-- [ ] Leitura de Metadados EXIF
+> Para ler tudo que foi lançado, confere o CHANGELOG.md na raiz do projeto :p
 
-### Melhorias UI/UX
-- [ ] Criar identidade visual
-- [ ] Perfil customizado de usuário
-- [ ] Mapa principal unificado
-- [ ] Implementar um spinner/loading melhor
+- [ ] **Melhoria na UI/UX do Mapa:**
+  - [ ] Leitura de Metadados EXIF;
+  - [ ] Geolocalização nativa;
+  - [x] Agrupamento de marcadores (Marker Clusters); - Lançado na `v1.1.0`
+  - [x] Implementar spinner/loading; - Lançado na `v1.1.0`
+- [ ] **Painel Administrativo**
+  - [ ] Modelar fluxo de denúncias (sepá UML antes de sair codando dessa vez kkkkkk)
+  - [ ] Perfil customizado de usuário
+  - [ ] Painel administrativo para moderação
+- [ ] **Design**
+  - [ ] Paleta de cores;
+  - [ ] Criar identidade visual;
+  - [ ] Pixel artes de pinhões;
+- [ ] **Gamificação**
+  - [ ] Joguinho de pinhões
+  - [ ] Joguinho de cultivo de Rocaria
 
-### Gamificação
-- [ ] Implementar joguinho de pinhões
-- [ ] Implementar joguinho de cultivo de rocaria
-
-### Sistema de Denúncias e Moderação
-- [ ] Modelar fluxo de denúncias (sepá UML antes de sair codando dessa vez kkkkkk)
-- [ ] Painel administrativo para moderação
-
----
 
 ## Como contribuir
 1. Faça o Fork do projeto;
