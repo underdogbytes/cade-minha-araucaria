@@ -62,8 +62,8 @@ Se deu boa até aqui, vai tá tudo abrindo em http://127.0.0.1:8000 , amém
 > Para ler tudo que foi lançado, confere o CHANGELOG.md na raiz do projeto :p
 
 - [ ] **Melhoria na UI/UX do Mapa:**
-  - [ ] Leitura de Metadados EXIF;
   - [ ] Geolocalização nativa;
+  - [X] Leitura de Metadados EXIF; - Lançado na `v1.1.1`
   - [x] Agrupamento de marcadores (Marker Clusters); - Lançado na `v1.1.0`
   - [x] Implementar spinner/loading; - Lançado na `v1.1.0`
 - [ ] **Painel Administrativo**
