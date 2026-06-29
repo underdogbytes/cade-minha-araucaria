@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.1] - 2026-06-29
+
+### Adicionado
+- Captura latitude e longitude automaticamente se o usuário permitir;
+
+
 ## [1.1.0] - 2026-06-09
 
 ### Adicionado
