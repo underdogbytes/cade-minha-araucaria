@@ -19,6 +19,7 @@
         "vite": "^7.0.7"
     },
     "dependencies": {
+        "exifreader": "^4.41.0",
         "leaflet.markercluster": "^1.5.3"
     }
 }
