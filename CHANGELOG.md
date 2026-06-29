@@ -4,6 +4,7 @@
 
 ### Adicionado
 - Captura latitude e longitude automaticamente se o usuário permitir;
+- Isolamento de lógica de alertas
 
 
 ## [1.1.0] - 2026-06-09
