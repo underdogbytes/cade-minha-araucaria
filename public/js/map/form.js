@@ -197,13 +197,13 @@ export async function processPhotoExif(isChecked, file, mapId) {
       }
 
     } else {
-      alert('Esta foto não contém dados de GPS (localização).');
+      dispatchAlert('error', 'Esta foto não contém dados de GPS (localização).');
       limparCamposLocalizacao(mapId);
       limparCampoDataHora();
       limparPinsMapa(mapId)
     }
   } catch (error) {
-    // TODO: tratamento de erro
+    dispatchAlert('error', 'Erro inesperado, tente mais tarde.');
   }
 }
 
