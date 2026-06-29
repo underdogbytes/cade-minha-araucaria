@@ -1,38 +1,50 @@
 import js from '@eslint/js';
-import pluginVue from 'eslint-plugin-vue';
 
 export default [
-    {
-        ignores: [
-            'node_modules/**',
-            'dist/**',
-            'build/**',
-            'vendor/**',
-            'public/**',
-            'storage/**',
-            'bootstrap/cache/**',
-        ],
+  // 1. Arquivos e pastas ignorados pelo Lint:
+  {
+    ignores: [
+      'node_modules/**',
+      'dist/**',
+      'build/**',
+      'vendor/**',
+      'public/**',
+      'storage/**',
+      'bootstrap/cache/**',
+    ],
+  },
+  // 2. Definições de ambiente e variáveis globais:
+  {
+    files: ['**/*.{js,jsx,mjs,cjs}'],
+    languageOptions: {
+      ecmaVersion: 2021,
+      sourceType: 'module',
+      globals: {
+        console: 'readonly',
+        process: 'readonly',
+        window: 'readonly',
+        document: 'readonly',
+        navigator: 'readonly',
+        Alpine: 'readonly',
+        ExifReader: 'readonly',
+      },
     },
-    {
-        files: ['**/*.{js,jsx,mjs,cjs,vue}'],
-        languageOptions: {
-            ecmaVersion: 2021,
-            sourceType: 'module',
-            globals: {
-                console: 'readonly',
-                process: 'readonly',
-                window: 'readonly',
-                document: 'readonly',
-                navigator: 'readonly',
-            },
-        },
+  },
+  // 3. Regras recomendadas do JavaScript clássico:
+  js.configs.recommended,
+  // 4. Customizações de regras:
+  {
+    rules: {
+      // Transforma variáveis não usadas em avisos (ignora se começar com _)
+      'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+
+      // Permite console.log em desenvolvimento, mas avisa/barra se for para produção
+      'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+
+      // Boas práticas extras de segurança e qualidade:
+      'no-undef': 'error',       // Proíbe o uso de variáveis não declaradas
+      'no-const-assign': 'error',// Impede reatribuir uma constante
+      'no-duplicate-imports': 'warn', // Evita fazer múltiplos imports do mesmo arquivo
     },
-    js.configs.recommended,
-    ...pluginVue.configs['flat/essential'],
-    {
-        rules: {
-            'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
-            'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
-        },
-    },
+  },
 ];
