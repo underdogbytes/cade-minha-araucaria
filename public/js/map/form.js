@@ -1,4 +1,5 @@
 // form.js
+import { dispatchAlert } from './alerts.js';
 import { createObservation, deleteObservation } from './api.js';
 import { addNewObservationToMap, clearClickMarker } from './map.js';
 
@@ -39,9 +40,7 @@ async function handleGlobalSubmit(event) {
       addNewObservationToMap(observation, currentMapId);
     }
 
-    window.dispatchEvent(new CustomEvent('observation-saved', {
-      detail: { message: successMessage, observation }
-    }));
+    dispatchAlert('saved', successMessage);
 
     // ✨ Se for CRIAÇÃO, limpa tudo para o próximo registro
     if (form.id === 'araucariaForm-create') {
@@ -57,9 +56,8 @@ async function handleGlobalSubmit(event) {
     // Limpa o estado de clique antigo se houver, mantendo os dados salvos na tela
 
   } catch (error) {
-    window.dispatchEvent(new CustomEvent('observation-error', {
-      detail: { message: error.message || 'Erro inesperado.' }
-    }));
+    let message = error.message || 'Erro inesperado.';
+    dispatchAlert('error', message);
   } finally {
     isSubmitting = false;
     toggleSubmitButton(submitButton, false);
@@ -96,18 +94,11 @@ function toggleSubmitButton(button, loading) {
 
 window.deletarObservacao = async function (id, elementoLinha) {
   try {
-    console.log(`Disparando exclusão da araucária ID: ${id}`);
-
-    // 1. Faz a chamada para a API do Laravel
     const response = await deleteObservation(id);
     const successMessage = response.message || 'Registro excluído com sucesso!';
 
-    // 2. Dispara o alerta visual verde na tela (O mesmo que criamos antes!)
-    window.dispatchEvent(new CustomEvent('observation-saved', {
-      detail: { message: successMessage }
-    }));
+    dispatchAlert('saved', successMessage);
 
-    // 3. Efeito visual: Faz a linha desaparecer suavemente antes de remover do HTML
     if (elementoLinha) {
       elementoLinha.style.transition = 'all 0.5s ease';
       elementoLinha.style.opacity = '0';
@@ -119,10 +110,7 @@ window.deletarObservacao = async function (id, elementoLinha) {
     }
 
   } catch (error) {
-    console.error('Erro ao excluir:', error.message);
-    // Dispara o alerta vermelho de erro na tela
-    window.dispatchEvent(new CustomEvent('observation-error', {
-      detail: { message: error.message || 'Não foi possível excluir.' }
-    }));
+    let message = error.message || 'Não foi possível excluir.';
+    dispatchAlert('error', message);
   }
 };
