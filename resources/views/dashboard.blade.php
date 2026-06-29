@@ -34,6 +34,9 @@
         editGender: 'unknown',
         editPhotoUrl: '',
         editObservedAt: '',
+        exifLat: null,
+        exifLng: null,
+        exifDate: null,
         showAlert: false,
         alertMessage: '',
         alertType: 'success'

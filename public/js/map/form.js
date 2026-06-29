@@ -126,3 +126,97 @@ window.deletarObservacao = async function (id, elementoLinha) {
     }));
   }
 };
+
+export function limparCamposLocalizacao(mapId) {
+  const latInput = document.getElementById('latitude');
+  const lngInput = document.getElementById('longitude');
+  if (latInput) latInput.value = '';
+  if (lngInput) lngInput.value = '';
+
+  latInput?.dispatchEvent(new Event('input', { bubbles: true }));
+  lngInput?.dispatchEvent(new Event('input', { bubbles: true }));
+
+  if (window.clearClickMarker) {
+    window.clearClickMarker(mapId);
+  }
+}
+
+export function limparCampoDataHora() {
+  const dateInput = document.getElementById('observed_at');
+  if (dateInput) {
+    dateInput.value = '';
+    dateInput.dispatchEvent(new Event('input', { bubbles: true }));
+    dateInput.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+}
+
+export function limparPinsMapa(mapId) {
+  if (window.clearClickMarker) {
+    window.clearClickMarker(mapId);
+  }
+}
+export async function processPhotoExif(isChecked, file, mapId) {
+  // Quando desmarcado:
+  if (!isChecked) {
+    limparCamposLocalizacao(mapId);
+    limparCampoDataHora();
+    limparPinsMapa(mapId);
+
+    return
+  }
+
+  if (!file) return;
+
+  try {
+    if (!window.ExifReader) return
+
+    const tags = await window.ExifReader.load(file, { expanded: true });
+    
+    // Data e hora da foto
+    const dateTimeTag = tags.exif?.DateTimeOriginal || tags.DateTimeOriginal;
+    if (dateTimeTag && dateTimeTag.description) {
+      const dateString = dateTimeTag.description;
+      const isoDateString = dateString.replace(/^(\d{4}):(\d{2}):(\d{2})/, '$1-$2-$3').replace(' ', 'T');
+      if (isoDateString.length >= 16) {
+        const dateInput = document.getElementById('observed_at');
+        if (dateInput) {
+          dateInput.value = isoDateString.substring(0, 16);
+          dateInput.dispatchEvent(new Event('input', { bubbles: true }));
+          dateInput.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+      }
+    }
+
+    // Localização GPS
+    if (tags.gps && tags.gps.Latitude !== undefined && tags.gps.Longitude !== undefined) {
+      const lat = Number(tags.gps.Latitude).toFixed(6);
+      const lng = Number(tags.gps.Longitude).toFixed(6);
+      
+      const latInput = document.getElementById('latitude');
+      const lngInput = document.getElementById('longitude');
+      if (latInput) {
+        latInput.value = lat;
+        latInput.dispatchEvent(new Event('input', { bubbles: true }));
+        latInput.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+      if (lngInput) {
+          lngInput.value = lng;
+          lngInput.dispatchEvent(new Event('input', { bubbles: true }));
+          lngInput.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+      if (window.updateMarkerPosition) {
+        window.updateMarkerPosition(lat, lng, mapId);
+      }
+
+    } else {
+      alert('Esta foto não contém dados de GPS (localização).');
+      limparCamposLocalizacao(mapId);
+      limparCampoDataHora();
+      limparPinsMapa(mapId)
+    }
+  } catch (error) {
+    // TODO: tratamento de erro
+  }
+}
+
+window.processPhotoExif = processPhotoExif;

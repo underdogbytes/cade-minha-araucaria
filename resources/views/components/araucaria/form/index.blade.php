@@ -21,17 +21,44 @@ $sufixo = $modo === 'criar' ? 'create' : 'edit';
         <input type="hidden" name="_method" value="PUT">
       </template>
 
+      <x-araucaria.form.photo ::required="!idEdicao" />
+
+      <div class="form-group">
+        <label for="dataexif" class="font-medium text-gray-700 dark:text-gray-300 cursor-pointer">
+          Usar dados EXIF da foto para definir a localização?
+        </label>
+        <input
+          type="checkbox"
+          id="dataexif"
+          name="dataexif"
+          class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500" style="max-width: 1.5rem; max-height: 1.5rem;"
+          @change="(async () => {
+            const currentMapId = idEdicao ? 'map-edit' : 'map-create';
+
+            const sufixo = idEdicao ? 'edit' : 'create';
+            const fileInput = document.querySelector(`#araucariaForm-${sufixo} #photo_path`);
+            const file = fileInput ? fileInput.files[0] : null;
+        
+            if (window.processPhotoExif) {
+              await window.processPhotoExif($event.target.checked, file, currentMapId);
+              
+              editLat = document.getElementById('latitude').value;
+              editLng = document.getElementById('longitude').value;
+              editObservedAt = document.getElementById('observed_at').value;
+            }
+          })()">
+        <span>Aceito usar os dados EXIF da foto</span>
+      </div>
+
       <div class="form-group">
         <label for="latitude">Latitude</label>
-        <input type="text" id="latitude" name="latitude" readonly required x-model="editLat" class="bg-gray-100">
+        <input type="text" id="latitude" name="latitude" required x-model="editLat" class="bg-gray-100">
       </div>
-
+      
       <div class="form-group">
         <label for="longitude">Longitude</label>
-        <input type="text" id="longitude" name="longitude" readonly required x-model="editLng" class="bg-gray-100">
+        <input type="text" id="longitude" name="longitude" required x-model="editLng" class="bg-gray-100">
       </div>
-
-      <x-araucaria.form.photo ::required="!idEdicao" />
 
       <div class="form-group">
         <label for="stage">Estágio de Desenvolvimento</label>

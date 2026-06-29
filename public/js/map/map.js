@@ -156,3 +156,57 @@ export function initializeEditMarker(mapId = 'map-edit') {
   editMarker.on('moveend', (e) => handleMarkerMove(e, mapId));
   clickMarkers[mapId] = editMarker;
 }
+
+export function updateMarkerFromInputs(mapId) {
+  const map = maps[mapId];
+  if (!map) return;
+
+  const sufixo = mapId === 'map-edit' ? 'edit' : 'create';
+  const form = document.getElementById(`araucariaForm-${sufixo}`);
+  if (!form) return;
+
+  const latInput = form.querySelector('#latitude');
+  const lngInput = form.querySelector('#longitude');
+  if (!latInput || !lngInput || !latInput.value || !lngInput.value) return;
+
+  const lat = Number(latInput.value);
+  const lng = Number(lngInput.value);
+
+  if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
+
+  const latlng = L.latLng(lat, lng);
+  map.setView(latlng, 15);
+
+  if (clickMarkers[mapId]) {
+    clickMarkers[mapId].setLatLng(latlng);
+  } else {
+    const clickMarker = L.marker(latlng, {
+      draggable: true,
+    }).addTo(map);
+    clickMarker.on('moveend', (e) => handleMarkerMove(e, mapId));
+    clickMarkers[mapId] = clickMarker;
+  }
+}
+
+window.updateMarkerFromInputs = updateMarkerFromInputs;
+window.clearClickMarker = clearClickMarker;
+
+export function updateMarkerPosition(lat, lng, mapId) {
+  const map = maps[mapId];
+  if (!map) return;
+
+  const latlng = L.latLng(Number(lat), Number(lng));
+  map.setView(latlng, 15);
+
+  if (clickMarkers[mapId]) {
+    clickMarkers[mapId].setLatLng(latlng);
+  } else {
+    const clickMarker = L.marker(latlng, {
+      draggable: true,
+    }).addTo(map);
+    clickMarker.on('moveend', (e) => handleMarkerMove(e, mapId));
+    clickMarkers[mapId] = clickMarker;
+  }
+}
+
+window.updateMarkerPosition = updateMarkerPosition;
