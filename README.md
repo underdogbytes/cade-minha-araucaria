@@ -57,26 +57,30 @@ Se deu boa até aqui, vai tá tudo abrindo em http://127.0.0.1:8000 , amém
 
 ---
 
-## Próximas features
+## Cronograma de Desenvolvimeto
 
-> Para ler tudo que foi lançado, confere o CHANGELOG.md na raiz do projeto :p
+> Leia o [CHANGELOG.md](./CHANGELOG.md) na raiz do projeto para ler o que foi lançado em cada versão.
 
-- [ ] **Melhoria na UI/UX do Mapa:**
-  - [ ] Geolocalização nativa;
-  - [X] Leitura de Metadados EXIF; - Lançado na `v1.1.1`
-  - [x] Agrupamento de marcadores (Marker Clusters); - Lançado na `v1.1.0`
-  - [x] Implementar spinner/loading; - Lançado na `v1.1.0`
-- [ ] **Painel Administrativo**
-  - [ ] Modelar fluxo de denúncias (sepá UML antes de sair codando dessa vez kkkkkk)
-  - [ ] Perfil customizado de usuário
-  - [ ] Painel administrativo para moderação
-- [ ] **Design**
-  - [ ] Paleta de cores;
-  - [ ] Criar identidade visual;
-  - [ ] Pixel artes de pinhões;
-- [ ] **Gamificação**
-  - [ ] Joguinho de pinhões
-  - [ ] Joguinho de cultivo de Rocaria
+### Próximas tarefas
+- **Melhoria na UI/UX do Mapa:**
+  - Geolocalização nativa para inicializar mapa na região onde user mora;
+- **Painel Administrativo**
+  - Adicionar flag para denunciar foto;
+  - Modelar fluxo de denúncias (sepá UML antes de sair codando dessa vez kkkkkk);
+  - Painel administrativo para moderação;
+  - Perfil customizado de usuário;
+- **Design**
+  - Paleta de cores;
+  - Criar identidade visual;
+  - Pixel artes de pinhões;
+  - Desenhar favicon;
+  - Melhorar UI/UX landing page;
+- **Gamificação**
+  - Joguinho de pinhões;
+  - Joguinho de cultivo de Rocaria;
+- **Qualidade de Código**
+  - Adicionar script de formatação;
+  - Testes do CRUD;
 
 
 ## Como contribuir
