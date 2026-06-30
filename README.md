@@ -66,9 +66,11 @@ Se deu boa até aqui, vai tá tudo abrindo em http://127.0.0.1:8000 , amém
   - Geolocalização nativa para inicializar mapa na região onde user mora;
 - **Painel Administrativo**
   - Adicionar flag para denunciar foto;
-  - Modelar fluxo de denúncias (sepá UML antes de sair codando dessa vez kkkkkk);
+  - Modelar fluxo de denúncias (UML);
+  - Implementar fluxo de denúncias;
   - Painel administrativo para moderação;
   - Perfil customizado de usuário;
+  - Adicionar tab no painel interno para exibir mapa global;
 - **Design**
   - Paleta de cores;
   - Criar identidade visual;
