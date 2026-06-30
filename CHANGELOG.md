@@ -5,6 +5,7 @@
 ### Adicionado
 - Refatoração formulário;
 - Paginação API de 15 itens;
+- Configuração ESLint;
 
 
 ## [1.1.1] - 2026-06-29
