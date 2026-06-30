@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.1.3] - 2026-06-30
+
+### Modificado
+- Remoção links de navegação/tabs e título no cabeçalho
+
 ## [1.1.2] - 2026-06-30
 
 ### Adicionado
