@@ -93,7 +93,12 @@
 
                 <div x-show="tab === 'mapa-mundi'" x-transition class="p-6 lg:p-8">
                     <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">Todas as Araucárias</h3>
-                    Mapa
+                    
+                    {{--// TODO: unificar mapa global --}}
+                    <div class="map-wrapper">
+                        <x-spinner message="Carregando mapa..." id="mapSpinner" />
+                        <div id="map"></div>
+                    </div>
                 </div>
     
                 <div x-show="tab === 'my-obs'" x-transition class="p-6 lg:p-8">
