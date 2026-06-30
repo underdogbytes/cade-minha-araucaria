@@ -1,4 +1,4 @@
-import { setupFormListener } from './form.js';
+import { setupFormListener } from './form/index.js';
 import { initializeEditMarker, initMap, invalidateMapSize } from './map.js';
 
 document.addEventListener('DOMContentLoaded', () => {

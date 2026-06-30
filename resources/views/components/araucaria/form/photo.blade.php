@@ -32,9 +32,10 @@
         const sufixo = idEdicao ? 'edit' : 'create';
         const checkboxAtual = document.querySelector(`#araucariaForm-${sufixo} #dataexif`);
         const isChecked = checkboxAtual ? checkboxAtual.checked : false;
+        const form = document.getElementById(`araucariaForm-${sufixo}`);
 
-        if (window.processPhotoExif) {
-          await window.processPhotoExif(isChecked, file, currentMapId);
+        if (window.handleSelecaoImagem) {
+          await window.handleSelecaoImagem(isChecked, file, form, currentMapId);
           
           if (isChecked) {
             editLat = document.getElementById('latitude').value;
