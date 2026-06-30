@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.1.2] - 2026-06-30
+
+### Adicionado
+- Refatoração formulário;
+
 ## [1.1.1] - 2026-06-29
 
 ### Adicionado
