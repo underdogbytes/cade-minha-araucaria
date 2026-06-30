@@ -68,7 +68,7 @@
                     document.getElementById('araucariaForm')?.reset();
                     $dispatch('mudar-aba', 'create')"
                     :class="tab === 'create' ? 'border-emerald-500 text-emerald-600 dark:text-emerald-400 font-semibold' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
-                    class="py-3 px-4 border-b-2 text-sm font-medium transition duration-200 focus:outline-none bg-emerald-50 dark:bg-emerald-950/30 rounded-t-lg text-emerald-700">
+                    class="py-3 px-4 border-b-2 text-sm font-medium transition duration-200 focus:outline-none">
                     ➕ Registrar Araucária
                 </button>
             </div>
