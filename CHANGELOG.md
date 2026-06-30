@@ -3,7 +3,8 @@
 ## [1.1.3] - 2026-06-30
 
 ### Modificado
-- Remoção links de navegação/tabs e título no cabeçalho
+- Remoção links de navegação/tabs e título no cabeçalho;
+- Correção cor de fundo de tab "Registrar Araucária";
 
 ## [1.1.2] - 2026-06-30
 
