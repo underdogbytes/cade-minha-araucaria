@@ -25,7 +25,7 @@ $sufixo = $modo === 'criar' ? 'create' : 'edit';
 
       <div class="form-group">
         <label for="dataexif" class="font-medium text-gray-700 dark:text-gray-300 cursor-pointer">
-          Usar dados EXIF da foto para definir a localização?
+          Preencher usando dados EXIF da foto?
         </label>
         <input
           type="checkbox"
@@ -33,14 +33,13 @@ $sufixo = $modo === 'criar' ? 'create' : 'edit';
           name="dataexif"
           class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500" style="max-width: 1.5rem; max-height: 1.5rem;"
           @change="(async () => {
-            const currentMapId = idEdicao ? 'map-edit' : 'map-create';
-
             const sufixo = idEdicao ? 'edit' : 'create';
             const fileInput = document.querySelector(`#araucariaForm-${sufixo} #photo_path`);
             const file = fileInput ? fileInput.files[0] : null;
+            const form = document.getElementById(`araucariaForm-${sufixo}`);
         
-            if (window.processPhotoExif) {
-              await window.processPhotoExif($event.target.checked, file, currentMapId);
+            if (window.handleSelecaoImagem) {
+              await window.handleSelecaoImagem($event.target.checked, file, form, `map-${sufixo}`);
               
               editLat = document.getElementById('latitude').value;
               editLng = document.getElementById('longitude').value;

@@ -22,13 +22,18 @@ use Intervention\Image\ImageManager;
 class AraucariaObservationController extends Controller
 {
     /**
-     * Retorna todas as observações cadastradas.
+     * Retorna todas as observações cadastradas com paginação.
      */
-    public function index(): AnonymousResourceCollection
+    public function index(Request $request): AnonymousResourceCollection
     {
+        $perPage = min(
+            (int) $request->query('per_page', 15),
+            100
+        );
+
         $observations = AraucariaObservation::with('user')
             ->latest()
-            ->get();
+            ->paginate($perPage);
 
         return AraucariaObservationResource::collection($observations);
     }

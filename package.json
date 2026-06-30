@@ -4,7 +4,10 @@
     "type": "module",
     "scripts": {
         "build": "vite build",
-        "dev": "vite"
+        "dev": "vite",
+        "lint": "eslint .",
+        "lint:fix": "eslint . --fix",
+        "lint:check": "eslint resources/"
     },
     "devDependencies": {
         "@tailwindcss/forms": "^0.5.7",
@@ -13,6 +16,8 @@
         "autoprefixer": "^10.4.16",
         "axios": "^1.11.0",
         "concurrently": "^9.0.1",
+        "eslint": "^9.0.0",
+        "eslint-plugin-vue": "^9.0.0",
         "laravel-vite-plugin": "^2.0.0",
         "postcss": "^8.4.32",
         "tailwindcss": "^3.4.0",
