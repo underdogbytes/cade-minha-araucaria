@@ -51,6 +51,12 @@
                     🌲 Feed da Comunidade
                 </button>
     
+                <button @click="tab = 'mapa-mundi'" ; $dispatch('mudar-aba', 'mapa-mundi' )
+                    :class="tab === 'mapa-mundi' ? 'border-emerald-500 text-emerald-600 dark:text-emerald-400 font-semibold' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                    class="py-3 px-4 border-b-2 text-sm font-medium transition duration-200 focus:outline-none">
+                    🌎 Araucárias do Mundo
+                </button>
+
                 <button @click="tab = 'my-obs'; subAba = 'tabela'; $dispatch('mudar-aba', 'my-obs')"
                     :class="tab === 'my-obs' ? 'border-emerald-500 text-emerald-600 dark:text-emerald-400 font-semibold' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
                     class="py-3 px-4 border-b-2 text-sm font-medium transition duration-200 focus:outline-none">
@@ -77,6 +83,16 @@
     
                 <div x-show="tab === 'feed'" x-transition>
                     <x-araucaria.feed :observations="$observations" />
+                </div>
+
+                <div x-show="tab === 'mapa-mundi'" x-transition class="p-6 lg:p-8">
+                    <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">Todas as Araucárias</h3>
+                    
+                    {{--// TODO: unificar mapa global --}}
+                    <div class="map-wrapper">
+                        <x-spinner message="Carregando mapa..." id="mapSpinner" />
+                        <div id="map"></div>
+                    </div>
                 </div>
     
                 <div x-show="tab === 'my-obs'" x-transition class="p-6 lg:p-8">
