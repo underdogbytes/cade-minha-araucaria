@@ -2,6 +2,9 @@
 
 ## [1.1.5] - 2026-07-02
 
+### Adicionado
+- Página de perfil de usuário;
+
 ### Modificado
 - Tradução texto default de configurações de perfil para PT-BR;
 
