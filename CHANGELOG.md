@@ -1,10 +1,15 @@
 # Changelog
 
-## [1.1.3] - 2026-06-30
+## [1.1.3] - 2026-07-01
+
+### Adicionado
+- Teste PHPUnit;
+- Mapa na parte interna;
 
 ### Modificado
 - Remoção links de navegação/tabs e título no cabeçalho;
 - Correção cor de fundo de tab "Registrar Araucária";
+- Rotas web e api;
 
 ## [1.1.2] - 2026-06-30
 
