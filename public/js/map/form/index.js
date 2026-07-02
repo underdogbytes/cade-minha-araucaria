@@ -8,6 +8,8 @@ let isSubmitting = false;
 export function setupFormListener() {
   window.removeEventListener('submit', handleGlobalSubmit);
   window.addEventListener('submit', handleGlobalSubmit);
+  window.removeEventListener('submit', handleReportSubmit);
+  window.addEventListener('submit', handleReportSubmit);
 }
 
 async function handleGlobalSubmit(event) {
@@ -68,6 +70,52 @@ function toggleSubmitButton(button, loading) {
   if (!button) return;
   button.disabled = loading;
   button.textContent = loading ? 'Salvando...' : 'Salvar Observação';
+}
+
+async function handleReportSubmit(event) {
+  const form = event.target.closest('form');
+
+  if (!form || form.id !== 'report-form') {
+    return;
+  }
+
+  event.preventDefault();
+
+  const submitButton = form.querySelector('button[type="submit"]');
+  const originalLabel = submitButton?.textContent ?? 'Denunciar';
+  const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
+
+  submitButton.disabled = true;
+  submitButton.textContent = 'Enviando...';
+
+  try {
+    const response = await fetch(form.action, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-CSRF-TOKEN': csrfToken,
+      },
+      body: new FormData(form),
+      credentials: 'same-origin',
+    });
+
+    const data = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      throw new Error(data.message || 'Não foi possível enviar a denúncia.');
+    }
+
+    dispatchAlert('saved', data.message || 'Denúncia enviada com sucesso!');
+    form.reset();
+    const toggleButton = document.getElementById('report-toggle');
+    toggleButton?.click();
+  } catch (error) {
+    dispatchAlert('error', error.message || 'Erro ao enviar a denúncia.');
+  } finally {
+    submitButton.disabled = false;
+    submitButton.textContent = originalLabel;
+  }
 }
 
 window.deletarObservacao = async function (id, elementoLinha) {
