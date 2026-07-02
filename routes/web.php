@@ -17,9 +17,11 @@ Route::middleware([
     Route::put('/observations/{observation}', [AraucariaObservationController::class, 'update'])->name('observations.update');
     Route::delete('/observations/{observation}', [AraucariaObservationController::class, 'destroy']);
     Route::post('/observations/report/{observation}', [AraucariaObservationController::class, 'report'])->name('observations.report');
-    Route::get('/moderation/observations', [AraucariaObservationController::class, 'moderationIndex'])->name('observations.moderation.index');
-    Route::post('/moderation/observations/{report}/delete', [AraucariaObservationController::class, 'moderationDelete'])->name('observations.moderation.delete');
-    Route::post('/moderation/observations/{report}/assign', [AraucariaObservationController::class, 'moderationAssign'])->name('observations.moderation.assign');
+    Route::middleware(['role:admin,staff'])->group(function () {
+        Route::get('/moderation/observations', [AraucariaObservationController::class, 'moderationIndex'])->name('observations.moderation.index');
+        Route::post('/moderation/observations/{report}/delete', [AraucariaObservationController::class, 'moderationDelete'])->name('observations.moderation.delete');
+        Route::post('/moderation/observations/{report}/assign', [AraucariaObservationController::class, 'moderationAssign'])->name('observations.moderation.assign');
+    });
 });
 
 Route::get('/limpar-tudo', function() {

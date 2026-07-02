@@ -81,7 +81,7 @@ class AraucariaObservationTest extends TestCase
     {
         $owner = User::factory()->create();
         $reporter = User::factory()->create();
-        $moderator = User::factory()->create();
+        $moderator = User::factory()->create(['role' => 'admin']);
         $newOwner = User::factory()->create();
 
         $observation = AraucariaObservation::create([
