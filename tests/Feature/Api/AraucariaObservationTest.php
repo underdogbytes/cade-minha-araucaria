@@ -4,6 +4,7 @@ namespace Tests\Feature\Api;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\RateLimiter;
 use Tests\TestCase;
 
 class AraucariaObservationTest extends TestCase
@@ -42,5 +43,22 @@ class AraucariaObservationTest extends TestCase
         $response->assertJsonPath('data.latitude', -25.4284);
         $response->assertJsonPath('data.stage', 'adult');
         $response->assertJsonPath('data.gender', 'female');
+    }
+
+    public function test_api_requests_are_rate_limited_after_excessive_attempts(): void
+    {
+        RateLimiter::clear('api');
+
+        for ($attempt = 0; $attempt < 61; $attempt++) {
+            $response = $this->getJson('/api/observations');
+
+            if ($attempt === 60) {
+                $response->assertStatus(429);
+                $response->assertJsonPath('message', 'Muitas requisições. Tente novamente em alguns instantes.');
+                return;
+            }
+        }
+
+        $this->fail('A API não retornou 429 após exceder o limite de requisições.');
     }
 }

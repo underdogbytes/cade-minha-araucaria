@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.1.4] - 2026-07-02
+
+### Adicionado
+- Rate Limiting e respectivo teste;
+
 ## [1.1.3] - 2026-07-01
 
 ### Adicionado
