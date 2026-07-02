@@ -238,7 +238,7 @@ class AraucariaObservationController extends Controller
             ->latest()
             ->get();
 
-        return view('observations.moderation', compact('reports'));
+        return view('observations.moderation.index', compact('reports'));
     }
 
     public function moderationDelete(AraucariaObservationReport $report)
