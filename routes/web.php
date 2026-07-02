@@ -16,6 +16,13 @@ Route::middleware([
     Route::get('/observations/{observation}', [AraucariaObservationController::class, 'show'])->name('observations.show');
     Route::put('/observations/{observation}', [AraucariaObservationController::class, 'update'])->name('observations.update');
     Route::delete('/observations/{observation}', [AraucariaObservationController::class, 'destroy']);
+    Route::post('/observations/report/{observation}', [AraucariaObservationController::class, 'report'])->name('observations.report');
+    Route::middleware(['role:admin,staff'])->group(function () {
+        Route::get('/moderation/observations', [AraucariaObservationController::class, 'moderationIndex'])->name('observations.moderation.index');
+        Route::post('/moderation/observations/{report}/delete', [AraucariaObservationController::class, 'moderationDelete'])->name('observations.moderation.delete');
+        Route::post('/moderation/observations/{report}/assign', [AraucariaObservationController::class, 'moderationAssign'])->name('observations.moderation.assign');
+        Route::post('/moderation/observations/{report}/update-status', [AraucariaObservationController::class, 'moderationUpdateStatus'])->name('observations.moderation.update-status');
+    });
 });
 
 Route::get('/limpar-tudo', function() {

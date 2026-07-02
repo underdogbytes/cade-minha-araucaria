@@ -3,9 +3,12 @@
 ## [1.1.4] - 2026-07-02
 
 ### Adicionado
+- Restringido acesso por roles;
+- Fluxo de Denúncias (botão no card e páginas de moderação);
 
 ### Modificado
 - Rate Limiting e respectivo teste;
+- Alterações menores de estilo (posicionamento e consistência de alertas);
 
 ## [1.1.3] - 2026-07-01
 

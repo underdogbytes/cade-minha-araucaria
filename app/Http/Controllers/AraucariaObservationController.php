@@ -6,6 +6,7 @@ use App\Http\Requests\StoreAraucariaObservationRequest;
 use App\Http\Requests\UpdateAraucariaObservationRequest;
 use App\Http\Resources\AraucariaObservationResource;
 use App\Models\AraucariaObservation;
+use App\Models\AraucariaObservationReport;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -41,7 +42,6 @@ class AraucariaObservationController extends Controller
         DB::beginTransaction();
 
         try {
-
             if ($request->hasFile('photo_path')) {
                 $validated['photo_path'] = $this->processImage(
                     $request->file('photo_path')
@@ -90,7 +90,6 @@ class AraucariaObservationController extends Controller
         DB::beginTransaction();
 
         try {
-
             if ($request->hasFile('photo_path')) {
 
                 if ($observation->photo_path) {
@@ -142,7 +141,6 @@ class AraucariaObservationController extends Controller
         }
 
         try {
-
             if ($observation->photo_path) {
                 Storage::disk('public')->delete(
                     $observation->photo_path
@@ -194,5 +192,116 @@ class AraucariaObservationController extends Controller
 
         // 6. Retorna o Data URL formatado para o banco de dados
         return 'data:image/jpeg;base64,' . $base64String;
+    }
+
+    /**
+     * Reporta uma observação.
+    */
+    public function report(Request $request, AraucariaObservation $observation)
+    {
+        $request->validate([
+            'reason' => 'required|string|in:inappropriate_image,ownership,other',
+            'details' => 'nullable|string|max:144',
+        ]);
+
+        try {
+            $observation->reports()->create([
+                'user_id' => $request->user()->id,
+                'reason' => $request->input('reason'),
+                'details' => $request->input('details'),
+                'status' => 'pending',
+            ]);
+
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'message' => 'Observação denunciada com sucesso!',
+                ], 201);
+            }
+
+            return redirect()->back()->with('status', 'Observação denunciada com sucesso!');
+
+        } catch (\Throwable $e) {
+            report($e);
+
+            return response()->json([
+                'message' => 'Erro ao reportar observação.',
+            ], 500);
+        }
+    }
+
+    public function moderationIndex()
+    {
+        $groupedReports = AraucariaObservationReport::with(['observation.user', 'user'])
+            ->latest()
+            ->get()
+            ->groupBy('araucaria_observation_id');
+
+        return view('observations.moderation.index', compact('groupedReports'));
+    }
+
+    public function moderationDelete(Request $request, AraucariaObservationReport $report)
+    {
+        try {
+            $report->observation->delete();
+
+            return redirect()->back()->with('status', 'Imagem excluída com sucesso.');
+
+        } catch (\Throwable $e) {
+            report($e);
+
+            return redirect()->back()->with('error', 'Erro ao remover imagem.');
+        }
+
+    }
+
+    public function moderationAssign(Request $request, AraucariaObservationReport $report)
+    {
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+        ]);
+
+        try {
+            $report->observation->update([
+                'user_id' => $request->input('user_id'),
+            ]);
+
+            $report->update([
+                'status' => 'assigned',
+            ]);
+
+            return redirect()->back()->with('status', 'Observação atribuída com sucesso.');
+        } catch (\Throwable $e) {
+            report($e);
+
+            return redirect()->back()->with('error', 'Erro ao atribuir observação.');
+        }
+    }
+
+    public function moderationUpdateStatus(Request $request, AraucariaObservationReport $report)
+    {
+        $request->validate([
+            'status' => 'required|in:pending,in_progress,resolved',
+        ]);
+
+        try {
+            $report->update([
+                'status' => $request->input('status'),
+            ]);
+
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'message' => 'Status da denúncia atualizado com sucesso!',
+                ], 201);
+            }
+
+            return redirect()->back()->with('status', 'Status da denúncia atualizado com sucesso.');
+        } catch (\Throwable $e) {
+            report($e);
+
+            return response()->json([
+                'message' => 'Erro ao atualizar status da denúncia.',
+            ], 500);
+            return redirect()->back()->with('error', 'Erro ao atualizar status da denúncia.');
+        }
     }
 }
