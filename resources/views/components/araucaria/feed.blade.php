@@ -34,14 +34,6 @@
                 </div>
 
                 <div class="flex flex-wrap gap-2 mt-2">
-                    <form action="{{ route('observations.report', $obs) }}" method="POST" class="ml-auto">
-                        @csrf
-                        <input type="hidden" name="reason" value="inappropriate_image">
-                        <button type="submit" class="text-xs font-medium text-amber-600 hover:text-amber-800 dark:text-amber-400 dark:hover:text-amber-300">
-                            🚩 Denunciar
-                        </button>
-                    </form>
-
                     <span
                         class="px-2.5 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-gray-300 uppercase tracking-wider">
                         {{ [
