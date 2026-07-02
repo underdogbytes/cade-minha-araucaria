@@ -2,9 +2,10 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AraucariaObservationController;
+use App\Http\Controllers\Api\AraucariaObservationController;
 
 Route::get('/observations', [AraucariaObservationController::class, 'index']);
+Route::get('/observations/{observation}', [AraucariaObservationController::class, 'show']);
 
 Route::get('/user', function (Request $request) {
     return $request->user();
