@@ -108,6 +108,7 @@
                     @endauth
                 @endif
 
+                {{-- // TODO: unificar mapa global --}}
                 <p>Veja abaixo todas as árvores já registradas pela nossa comunidade:</p>
 
                 <div class="map-wrapper">
