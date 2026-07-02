@@ -61,28 +61,7 @@ Se deu boa até aqui, vai tá tudo abrindo em http://127.0.0.1:8000 , amém
 
 > Leia o [CHANGELOG.md](./CHANGELOG.md) na raiz do projeto para ler o que foi lançado em cada versão.
 
-### Próximas tarefas
-- **Melhoria na UI/UX do Mapa:**
-  - Geolocalização nativa para inicializar mapa na região onde user mora;
-- **Painel Administrativo**
-  - Adicionar flag para denunciar foto;
-  - Modelar fluxo de denúncias (UML);
-  - Implementar fluxo de denúncias;
-  - Painel administrativo para moderação;
-  - Perfil customizado de usuário;
-- **Design**
-  - Paleta de cores;
-  - Criar identidade visual;
-  - Pixel artes de pinhões;
-  - Desenhar favicon;
-  - Melhorar UI/UX landing page;
-- **Gamificação**
-  - Joguinho de pinhões;
-  - Joguinho de cultivo de Rocaria;
-- **Qualidade de Código**
-  - Adicionar script de formatação;
-  - Testes do CRUD;
-
+> Leia o [PLANOPACOTE.md](./PLANOPACOTE.md) na raiz do projeto para ler o que está previsto nos próximos lançamentos.
 
 ## Como contribuir
 1. Faça o Fork do projeto;
