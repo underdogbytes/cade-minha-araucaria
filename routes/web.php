@@ -5,6 +5,10 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AraucariaObservationController;
 
 Route::get('/', function () { return view('welcome'); });
+Route::get('/perfil/{username}', function ($username) {
+    $user = \App\Models\User::where('username', $username)->firstOrFail();
+    return view('profile.show', ['user' => $user]);
+})->name('profile.username');
 
 Route::middleware([
     'auth:sanctum',
@@ -23,12 +27,4 @@ Route::middleware([
         Route::post('/moderation/observations/{report}/assign', [AraucariaObservationController::class, 'moderationAssign'])->name('observations.moderation.assign');
         Route::post('/moderation/observations/{report}/update-status', [AraucariaObservationController::class, 'moderationUpdateStatus'])->name('observations.moderation.update-status');
     });
-});
-
-Route::get('/limpar-tudo', function() {
-    \Artisan::call('config:clear');
-    \Artisan::call('config:cache');
-    \Artisan::call('route:clear');
-    \Artisan::call('view:clear');
-    return "Caches limpos com sucesso no servidor!";
 });

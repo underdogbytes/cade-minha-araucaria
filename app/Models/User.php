@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -85,5 +86,17 @@ class User extends Authenticatable
     public function virtualTrees(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(VirtualTree::class);
+    }
+
+    protected static function booted(): void
+    {
+        static::creating(function ($user) {
+            if (empty($user->username)) {
+                do {
+                    $slug = Str::lower(Str::random(8));
+                } while (self::where('username', $slug)->exists());
+                $user->username = $slug;
+            }
+        });
     }
 }

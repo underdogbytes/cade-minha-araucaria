@@ -1,7 +1,8 @@
 <x-app-layout>
-    @include('profile.partials.header', ['user' => Auth::user()])
+    @include('profile.partials.header', ['user' => $user])
 
-    <div x-data="{ tab: 'feed' }" class="mt-4 max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
+    @auth
+        <div x-data="{ tab: 'feed' }" class="mt-4 max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
         <!-- Tabs -->
         <ul class="flex border-b mb-4">
             <li @click="tab = 'settings'" :class="tab === 'settings' ? 'border-b-2 border-indigo-500' : ''"
@@ -13,13 +14,16 @@
                 Fotos
             </li>
         </ul>
-
+    
         <!-- Tab Contents -->
         <div x-show="tab === 'feed'">
-            <x-profile.feed :observations="Auth::user()->araucariaObservations" />
+            <x-profile.feed :observations="$user->araucariaObservations" />
         </div>
         <div x-show="tab === 'settings'">
             @include('profile.partials.settings')
         </div>
     </div>
+    @else
+        <x-profile.feed :observations="$user->araucariaObservations" />
+    @endauth
 </x-app-layout>
