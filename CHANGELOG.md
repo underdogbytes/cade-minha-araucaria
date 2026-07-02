@@ -5,7 +5,7 @@
 ### Adicionado
 
 ### Modificado
-
+- Rate Limiting e respectivo teste;
 
 ## [1.1.3] - 2026-07-01
 

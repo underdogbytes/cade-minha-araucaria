@@ -57,6 +57,12 @@ Se deu boa até aqui, vai tá tudo abrindo em http://127.0.0.1:8000 , amém
 
 ---
 
+### Testes
+Foi usado PHPUnit para os testes.
+```bash
+  php artisan test tests/Feature/Api/AraucariaObservationTest.php
+```
+
 ## Cronograma de Desenvolvimeto
 
 > Leia o [CHANGELOG.md](./CHANGELOG.md) na raiz do projeto para ler o que foi lançado em cada versão.
