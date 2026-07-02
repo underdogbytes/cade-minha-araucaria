@@ -54,14 +54,12 @@
                   'seedling' => 'Muda',
                   'sapling' => 'Jovem',
                   'adult' => 'Adulta',
-                  'dead' => 'Morta /
-                              Cortada'
+                  'dead' => 'Morta / Cortada'
                 ];
                 $generos = [
                   'unknown' => 'Não identificado',
                   'male' => 'Macho (Dá Pólen)',
-                  'female' => 'Fêmea (Dá
-                              Pinhão)'
+                  'female' => 'Fêmea (Dá Pinhão)'
                 ];
               @endphp
 
@@ -122,7 +120,7 @@
 
               <div class="space-y-3 mt-3" id="report-form-container" x-show="openReport" style="display: none;">
                 <form id="report-form" action="{{ route('observations.report', $observation) }}" method="POST"
-                  class="space-y-3">
+                  class="space-y-3" onsubmit="return confirm('Você tem certeza que deseja denunciar?');">
                   @csrf
                   <label class="block text-sm font-medium text-gray-700 dark:text-gray-200">
                     Motivo da denúncia
