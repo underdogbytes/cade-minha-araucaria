@@ -13,6 +13,22 @@
 
   <div class="py-12">
     <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
+      <div x-data="{ alerta: { mostrar: false, tipo: 'success', mensagem: '' } }"
+        @observation-saved.window="alerta.mostrar = true; alerta.tipo = 'success'; alerta.mensagem = $event.detail.message; setTimeout(() => alerta.mostrar = false, 5000);"
+        @observation-error.window="alerta.mostrar = true; alerta.tipo = 'error'; alerta.mensagem = $event.detail.message; setTimeout(() => alerta.mostrar = false, 5000);">
+        <div x-show="alerta.mostrar" x-transition :class="alerta.tipo === 'success' ? 'bg-emerald-500' : 'bg-red-500'"
+          class="fixed top-5 right-5 z-50 text-white px-6 py-3 rounded-lg shadow-xl font-semibold flex items-center space-x-2">
+          <span x-text="alerta.tipo === 'success' ? '✅' : '❌'"></span>
+          <span x-text="alerta.mensagem"></span>
+        </div>
+      </div>
+
+      @if (session('status'))
+        <div class="rounded-md bg-emerald-50 p-4 mb-6 text-sm text-emerald-700">
+          ✅ {{ session('status') }}
+        </div>
+      @endif
+
       <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg p-6">
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -83,9 +99,40 @@
               O mapeamento colaborativo ajuda pesquisadores e a comunidade a monitorar a preservação da espécie :D
             </div>
 
+            <div class="py-3" x-data="{ openReport: false }">
+              <button id="report-toggle" type="button" @click="openReport = !openReport"
+                class="ml-2 text-sm font-medium text-amber-600 hover:text-amber-800 dark:text-amber-400 dark:hover:text-amber-300 transition">
+                🚩 Denunciar*
+              </button>
+              <br>
+              <span class="text-xs text-gray-500 dark:text-gray-400">
+                * Caso ela viole as regras da plataforma ou contenha conteúdo impróprio.
+                A moderação irá analisar a denúncia e tomar as medidas cabíveis.
+              </span>
+
+              <div class="space-y-3 mt-3" id="report-form-container" x-show="openReport" style="display: none;">
+                <form id="report-form" action="{{ route('observations.report', $observation) }}" method="POST" class="space-y-3">
+                  @csrf
+                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-200">
+                    Motivo da denúncia
+                    <select name="reason" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500">
+                      <option value="inappropriate_image">Imagem imprópria</option>
+                      <option value="ownership">Autoria</option>
+                      <option value="other">Outros</option>
+                    </select>
+                  </label>
+                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-200">
+                    Detalhes
+                    <textarea name="details" maxlength="144" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500" placeholder="Máximo 144 caracteres"></textarea>
+                  </label>
+                  <button type="submit" class="text-red-600 hover:text-red-800 dark:hover:text-red-400 text-sm font-medium transition">
+                    Denunciar observação
+                  </button>
+                </form>
+              </div>
+            </div>
           </div>
         </div>
-
       </div>
     </div>
   </div>

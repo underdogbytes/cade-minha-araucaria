@@ -6,6 +6,7 @@ use App\Http\Requests\StoreAraucariaObservationRequest;
 use App\Http\Requests\UpdateAraucariaObservationRequest;
 use App\Http\Resources\AraucariaObservationResource;
 use App\Models\AraucariaObservation;
+use App\Models\AraucariaObservationReport;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -194,5 +195,73 @@ class AraucariaObservationController extends Controller
 
         // 6. Retorna o Data URL formatado para o banco de dados
         return 'data:image/jpeg;base64,' . $base64String;
+    }
+
+    /**
+     * Reporta uma observação.
+    */
+    public function report(Request $request, AraucariaObservation $observation)
+    {
+        $request->validate([
+            'reason' => 'required|string|in:inappropriate_image,ownership,other',
+            'details' => 'nullable|string|max:144',
+        ]);
+
+        try {
+            $observation->reports()->create([
+                'user_id' => $request->user()->id,
+                'reason' => $request->input('reason'),
+                'details' => $request->input('details'),
+                'status' => 'pending',
+            ]);
+
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'message' => 'Observação denunciada com sucesso!',
+                ], 201);
+            }
+
+            return redirect()->back()->with('status', 'Observação denunciada com sucesso!');
+
+        } catch (\Throwable $e) {
+            report($e);
+
+            return response()->json([
+                'message' => 'Erro ao reportar observação.',
+            ], 500);
+        }
+    }
+
+    public function moderationIndex()
+    {
+        $reports = AraucariaObservationReport::with(['observation.user', 'user'])
+            ->latest()
+            ->get();
+
+        return view('observations.moderation', compact('reports'));
+    }
+
+    public function moderationDelete(AraucariaObservationReport $report)
+    {
+        $report->observation->delete();
+
+        return redirect()->back()->with('status', 'Observação removida da moderação e denúncias excluídas.');
+    }
+
+    public function moderationAssign(Request $request, AraucariaObservationReport $report)
+    {
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+        ]);
+
+        $report->observation->update([
+            'user_id' => $request->input('user_id'),
+        ]);
+
+        $report->update([
+            'status' => 'assigned',
+        ]);
+
+        return redirect()->back()->with('status', 'Observação atribuída com sucesso.');
     }
 }

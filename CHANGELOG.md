@@ -3,6 +3,7 @@
 ## [1.1.4] - 2026-07-02
 
 ### Adicionado
+- Fluxo de Denúncias
 
 ### Modificado
 
