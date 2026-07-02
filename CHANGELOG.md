@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.4] - 2026-07-02
+
+### Adicionado
+
+### Modificado
+
+
 ## [1.1.3] - 2026-07-01
 
 ### Adicionado
