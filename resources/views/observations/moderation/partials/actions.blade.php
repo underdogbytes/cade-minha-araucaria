@@ -4,6 +4,7 @@
     Escolha uma ação para esta observação.
   </span>
 
+  @include('observations.moderation.partials.form-status', ['report' => $report])
   @include('observations.moderation.partials.form-attribute', ['report' => $report])
   @include('observations.moderation.partials.form-delete', ['report' => $report])
 </div>

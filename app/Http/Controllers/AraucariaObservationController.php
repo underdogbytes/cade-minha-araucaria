@@ -265,4 +265,17 @@ class AraucariaObservationController extends Controller
 
         return redirect()->back()->with('status', 'Observação atribuída com sucesso.');
     }
+
+    public function moderationUpdateStatus(Request $request, AraucariaObservationReport $report)
+    {
+        $request->validate([
+            'status' => 'required|in:pending,in_progress,resolved',
+        ]);
+
+        $report->update([
+            'status' => $request->input('status'),
+        ]);
+
+        return redirect()->back()->with('status', 'Status da denúncia atualizado com sucesso.');
+    }
 }

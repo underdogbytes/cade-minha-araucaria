@@ -21,6 +21,7 @@ Route::middleware([
         Route::get('/moderation/observations', [AraucariaObservationController::class, 'moderationIndex'])->name('observations.moderation.index');
         Route::post('/moderation/observations/{report}/delete', [AraucariaObservationController::class, 'moderationDelete'])->name('observations.moderation.delete');
         Route::post('/moderation/observations/{report}/assign', [AraucariaObservationController::class, 'moderationAssign'])->name('observations.moderation.assign');
+        Route::post('/moderation/observations/{report}/update-status', [AraucariaObservationController::class, 'moderationUpdateStatus'])->name('observations.moderation.update-status');
     });
 });
 
