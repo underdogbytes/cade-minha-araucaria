@@ -6,7 +6,7 @@
 - Fluxo de Denúncias
 
 ### Modificado
-
+- Alterações menores de estilo
 
 ## [1.1.3] - 2026-07-01
 
