@@ -42,7 +42,6 @@ class AraucariaObservationController extends Controller
         DB::beginTransaction();
 
         try {
-
             if ($request->hasFile('photo_path')) {
                 $validated['photo_path'] = $this->processImage(
                     $request->file('photo_path')
@@ -91,7 +90,6 @@ class AraucariaObservationController extends Controller
         DB::beginTransaction();
 
         try {
-
             if ($request->hasFile('photo_path')) {
 
                 if ($observation->photo_path) {
@@ -143,7 +141,6 @@ class AraucariaObservationController extends Controller
         }
 
         try {
-
             if ($observation->photo_path) {
                 Storage::disk('public')->delete(
                     $observation->photo_path
@@ -242,11 +239,19 @@ class AraucariaObservationController extends Controller
         return view('observations.moderation.index', compact('groupedReports'));
     }
 
-    public function moderationDelete(AraucariaObservationReport $report)
+    public function moderationDelete(Request $request, AraucariaObservationReport $report)
     {
-        $report->observation->delete();
+        try {
+            $report->observation->delete();
 
-        return redirect()->back()->with('status', 'Observação removida da moderação e denúncias excluídas.');
+            return redirect()->back()->with('status', 'Imagem excluída com sucesso.');
+
+        } catch (\Throwable $e) {
+            report($e);
+
+            return redirect()->back()->with('error', 'Erro ao remover imagem.');
+        }
+
     }
 
     public function moderationAssign(Request $request, AraucariaObservationReport $report)
@@ -255,15 +260,21 @@ class AraucariaObservationController extends Controller
             'user_id' => 'required|exists:users,id',
         ]);
 
-        $report->observation->update([
-            'user_id' => $request->input('user_id'),
-        ]);
+        try {
+            $report->observation->update([
+                'user_id' => $request->input('user_id'),
+            ]);
 
-        $report->update([
-            'status' => 'assigned',
-        ]);
+            $report->update([
+                'status' => 'assigned',
+            ]);
 
-        return redirect()->back()->with('status', 'Observação atribuída com sucesso.');
+            return redirect()->back()->with('status', 'Observação atribuída com sucesso.');
+        } catch (\Throwable $e) {
+            report($e);
+
+            return redirect()->back()->with('error', 'Erro ao atribuir observação.');
+        }
     }
 
     public function moderationUpdateStatus(Request $request, AraucariaObservationReport $report)
@@ -274,13 +285,22 @@ class AraucariaObservationController extends Controller
 
         try {
             $report->update([
-            'status' => $request->input('status'),
+                'status' => $request->input('status'),
             ]);
-            
+
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'message' => 'Status da denúncia atualizado com sucesso!',
+                ], 201);
+            }
+
             return redirect()->back()->with('status', 'Status da denúncia atualizado com sucesso.');
         } catch (\Throwable $e) {
             report($e);
 
+            return response()->json([
+                'message' => 'Erro ao atualizar status da denúncia.',
+            ], 500);
             return redirect()->back()->with('error', 'Erro ao atualizar status da denúncia.');
         }
     }
