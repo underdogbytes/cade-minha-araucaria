@@ -1,8 +1,6 @@
 # Cronograma
 
 ## Previsto no próximo pacote (v1.1.5):
-- Página de perfil usuário;
-- Exibição de pinhões de usuário;
 - Favicon;
 - Pinhão no mapa;
 - Website:

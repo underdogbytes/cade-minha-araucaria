@@ -4,6 +4,7 @@
 
 ### Adicionado
 - Página de perfil de usuário;
+- Exibição de pinhões de usuário;
 
 ### Modificado
 - Tradução texto default de configurações de perfil para PT-BR;
