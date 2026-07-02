@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreAraucariaObservationRequest;
 use App\Http\Requests\UpdateAraucariaObservationRequest;
 use App\Http\Resources\AraucariaObservationResource;
@@ -10,23 +11,34 @@ use App\Models\AraucariaObservation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Http\UploadedFile;
-
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
-
-use Intervention\Image\Drivers\Gd\Driver;
-use Intervention\Image\ImageManager;
 
 class AraucariaObservationController extends Controller
 {
     /**
-     * Exibe os detalhes de uma observação específica.
+     * Retorna todas as observações cadastradas com paginação.
      */
-    public function show(AraucariaObservation $observation)
+    public function index(Request $request): AnonymousResourceCollection
     {
-        return view('observations.show', compact('observation'));
+        $perPage = min(
+            (int) $request->query('per_page', 15),
+            100
+        );
+
+        $observations = AraucariaObservation::with('user')
+            ->latest()
+            ->paginate($perPage);
+
+        return AraucariaObservationResource::collection($observations);
+    }
+
+    /**
+     * Retorna os detalhes de uma observação específica.
+     */
+    public function show(AraucariaObservation $observation): AraucariaObservationResource
+    {
+        return new AraucariaObservationResource($observation->load('user'));
     }
 
     /**
