@@ -272,10 +272,16 @@ class AraucariaObservationController extends Controller
             'status' => 'required|in:pending,in_progress,resolved',
         ]);
 
-        $report->update([
+        try {
+            $report->update([
             'status' => $request->input('status'),
-        ]);
+            ]);
+            
+            return redirect()->back()->with('status', 'Status da denúncia atualizado com sucesso.');
+        } catch (\Throwable $e) {
+            report($e);
 
-        return redirect()->back()->with('status', 'Status da denúncia atualizado com sucesso.');
+            return redirect()->back()->with('error', 'Erro ao atualizar status da denúncia.');
+        }
     }
 }
