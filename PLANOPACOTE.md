@@ -1,7 +1,17 @@
-# Plano de Ação do Pacote v1.1.5
+# Cronograma
 
-Previsto no próximo pacote:
+## Previsto no próximo pacote (v1.1.5):
 - Página de perfil usuário;
+- Exibição de pinhões de usuário;
+- Favicon;
+- Pinhão no mapa;
+- Website:
+  - Footer;
+  - Seção "Nossos Resultados":
+    - Quantos usuários;
+    - Quantas araucárias registradas;
+  - Página Quem Somos;
+  - Página Contato;
 
 
 ## Tarefas relativamente pequenas para próximos pacotes
