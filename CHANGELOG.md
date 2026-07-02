@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.1.5] - 2026-07-02
+
+### Modificado
+- Tradução texto default de configurações de perfil para PT-BR;
+
 ## [1.1.4] - 2026-07-02
 
 ### Adicionado
