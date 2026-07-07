@@ -3,7 +3,7 @@
     <span class="font-semibold text-amber-600">Total de Denúncias: {{ $reportsGroup->count() }}</span>
   </div>
   <h3 class="mt-2 text-lg font-semibold text-gray-900 dark:text-white">
-    <a href="/users/{{ $report->observation?->user?->id }}" target="_blank">
+    <a href="{{ route('profile.username', $report->observation?->user->username) }}" target="_blank">
       Usuário denunciado:<br>{{ $report->observation?->user?->name ?? 'Usuário removido' }}
     </a>
   </h3>
@@ -37,7 +37,7 @@
             <div class="flex items-center gap-2 text-gray-600 dark:text-gray-400 mb-1">
               <span class="font-semibold text-amber-600">{{ ucfirst($r->reason) }}</span>
               <span>•</span>
-              <a href="/users/{{ $r->user->id ?? '' }}" class="text-emerald-600 dark:text-emerald-400 hover:underline">
+              <a href="{{ route('profile.username', $r->user->username) }}" class="text-emerald-600 dark:text-emerald-400 hover:underline">
                 {{ $r->user?->name ?? 'usuário removido' }}
               </a>
             </div>

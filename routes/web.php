@@ -3,12 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AraucariaObservationController;
+use App\Http\Controllers\UserProfileController;
 
 Route::get('/', function () { return view('welcome'); });
-Route::get('/perfil/{username}', function ($username) {
-    $user = \App\Models\User::where('username', $username)->firstOrFail();
-    return view('profile.show', ['user' => $user]);
-})->name('profile.username');
+Route::get('/perfil/{username}', [UserProfileController::class, 'showByUsername'])->name('profile.username');
 
 Route::middleware([
     'auth:sanctum',

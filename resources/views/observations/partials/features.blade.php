@@ -4,17 +4,17 @@
   </h3>
 
   @php
-  $estagios = [
-    'seedling' => 'Muda',
-    'sapling' => 'Jovem',
-    'adult' => 'Adulta',
-    'dead' => 'Morta'
-  ];
-  $generos = [
-    'unknown' => 'Não identificado',
-    'male' => 'Macho (Dá Pólen)',
-    'female' => 'Fêmea (Dá Pinhão)'
-  ];
+    $estagios = [
+      'seedling' => 'Muda',
+      'sapling' => 'Jovem',
+      'adult' => 'Adulta',
+      'dead' => 'Morta'
+    ];
+    $generos = [
+      'unknown' => 'Não identificado',
+      'male' => 'Macho (Dá Pólen)',
+      'female' => 'Fêmea (Dá Pinhão)'
+    ];
   @endphp
 
   <div class="border-t border-gray-100 dark:border-gray-700 divide-y divide-gray-100 dark:divide-gray-700 text-sm">
@@ -45,8 +45,9 @@
     <div class="py-3 flex justify-between">
       <span class="font-medium text-gray-500">Registrado por:</span>
       <span class="text-gray-800 dark:text-gray-200">
-        <a href="{{ route('profile.show', $observation->user) }}"
-          class="text-emerald-600 dark:text-emerald-400 hover:underline">
+''        <a
+            href="{{ route('profile.username', $observation->user->username) }}"
+            class="text-emerald-600 dark:text-emerald-400 hover:underline">
           {{ $observation->user->username ? '@' . $observation->user->username : $observation->user->name }}
         </a>
       </span>
