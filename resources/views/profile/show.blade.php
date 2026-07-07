@@ -19,7 +19,9 @@
     
         <!-- Tab Contents -->
         <div x-show="tab === 'feed'">
-            <x-profile.feed :observations="$user->araucariaObservations" />
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+                <x-profile.feed :observations="$user->araucariaObservations" />
+            </div>
         </div>
         <div x-show="tab === 'settings'">
             @include('profile.partials.settings')
