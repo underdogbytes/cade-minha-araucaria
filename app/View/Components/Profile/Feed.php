@@ -22,6 +22,6 @@ class Feed extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.profile.feed');
+        return view('components.profile.post');
     }
 }

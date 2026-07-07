@@ -20,7 +20,7 @@
         <!-- Tab Contents -->
         <div x-show="tab === 'feed'">
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-                <x-profile.feed :observations="$user->araucariaObservations" />
+                <x-profile.post :observations="$user->araucariaObservations" />
             </div>
         </div>
         <div x-show="tab === 'settings'">
@@ -28,6 +28,6 @@
         </div>
     </div>
     @else
-        <x-profile.feed :observations="$user->araucariaObservations" />
+        <x-profile.post :observations="$user->araucariaObservations" />
     @endauth
 </x-app-layout>
