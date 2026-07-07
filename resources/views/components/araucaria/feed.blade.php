@@ -54,7 +54,6 @@
                   </span>
 
                   <a href="/observations/{{ $obs->id }}"
-                    target="_blank"
                     class="ml-auto text-sm text-emerald-600 dark:text-emerald-400 hover:underline">
                       Ver Detalhes
                   </a>
