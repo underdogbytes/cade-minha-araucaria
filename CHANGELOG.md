@@ -8,6 +8,10 @@
 
 ### Modificado
 - Tradução texto default de configurações de perfil para PT-BR;
+- Componentização em:
+  - Formulário denúncia;
+  - Header interno;
+  - Alerta toast;
 
 ## [1.1.4] - 2026-07-02
 
