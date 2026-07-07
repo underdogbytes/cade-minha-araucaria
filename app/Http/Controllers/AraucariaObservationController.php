@@ -55,6 +55,11 @@ class AraucariaObservationController extends Controller
 
             DB::commit();
 
+            // Atualiza o saldo de pinhões do usuário
+            $user = $request->user();
+            $user->increment('pinhao_balance', 1);
+            $user->save();
+
             return response()->json([
                 'message' => 'Observação de Araucária registrada com sucesso!',
                 'data' => new AraucariaObservationResource($observation),

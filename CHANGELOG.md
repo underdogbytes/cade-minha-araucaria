@@ -5,6 +5,7 @@
 ### Adicionado
 - Página de perfil de usuário;
 - Exibição de pinhões de usuário;
+- Ganho de pinhão por publicação;
 
 ### Modificado
 - Tradução texto default de configurações de perfil para PT-BR;
