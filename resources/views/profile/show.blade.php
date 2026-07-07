@@ -28,6 +28,8 @@
         </div>
     </div>
     @else
-        <x-profile.post :observations="$user->araucariaObservations" />
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+            <x-profile.post :observations="$user->araucariaObservations" />
+        </div>
     @endauth
 </x-app-layout>
