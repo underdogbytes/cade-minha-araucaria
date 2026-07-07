@@ -15,17 +15,19 @@
       <span>Seus pinhões: {{ $user->pinhao_balance }}</span>
       <br>
       <span>
-        @if ($user->username)
-          <a
-            href="{{ route('profile.username', $user->username) }}"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="text-indigo-500 hover:text-indigo-700">
-            Ver seu perfil público
-          </a>
-        @else
-          Você ainda não tem um nome de usuário definido. Vá em Configurações para definir um e ter uma URL de perfil personalizada.
-        @endif
+        @auth
+          @if ($user->username)
+            <a
+              href="{{ route('profile.username', $user->username) }}"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-indigo-500 hover:text-indigo-700">
+              Ver seu perfil público
+            </a>
+          @else
+            Você ainda não tem um nome de usuário definido. Vá em Configurações para definir um e ter uma URL de perfil personalizada.
+          @endif
+        @endauth
       </span>
     </div>
   </div>
