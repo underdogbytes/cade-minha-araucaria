@@ -4,14 +4,16 @@
     @auth
         <div x-data="{ tab: 'feed' }" class="mt-4 max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
         <!-- Tabs -->
-        <ul class="flex border-b mb-4">
-            <li @click="tab = 'settings'" :class="tab === 'settings' ? 'border-b-2 border-indigo-500' : ''"
-                class="mr-4 cursor-pointer py-2 px-4">
-                Configurações
-            </li>
-            <li @click="tab = 'feed'" :class="tab === 'feed' ? 'border-b-2 border-indigo-500' : ''"
+        <ul class="flex border-b mb-6">
+            <li @click="tab = 'feed'"
+                :class="tab === 'feed' ? 'border-b-2 border-indigo-500' : ''"
                 class="cursor-pointer py-2 px-4">
                 Fotos
+            </li>
+            <li @click="tab = 'settings'"
+                :class="tab === 'settings' ? 'border-b-2 border-indigo-500' : ''"
+                class="cursor-pointer py-2 px-4 mr-4">
+                Configurações
             </li>
         </ul>
     
