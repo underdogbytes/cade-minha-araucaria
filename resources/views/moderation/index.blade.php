@@ -1,16 +1,5 @@
 <x-app-layout>
   <x-slot name="header">
-    <div
-      x-data="{ alerta: { mostrar: {{ session('status') ? 'true' : 'false' }}, tipo: 'success', mensagem: '{{ session('status') ?? '' }}' } }"
-      @observation-saved.window="alerta.mostrar = true; alerta.tipo = 'success'; alerta.mensagem = $event.detail.message; setTimeout(() => alerta.mostrar = false, 5000);"
-      @observation-error.window="alerta.mostrar = true; alerta.tipo = 'error'; alerta.mensagem = $event.detail.message; setTimeout(() => alerta.mostrar = false, 5000);"
-      x-init="if (alerta.mostrar) setTimeout(() => alerta.mostrar = false, 5000)">
-      <div x-show="alerta.mostrar" x-transition :class="alerta.tipo === 'success' ? 'bg-emerald-500' : 'bg-red-500'"
-        class="fixed top-5 right-5 z-50 text-white px-6 py-3 rounded-lg shadow-xl font-semibold flex items-center space-x-2">
-        <span x-text="alerta.tipo === 'success' ? '✅' : '❌'"></span>
-        <span x-text="alerta.mensagem"></span>
-      </div>
-    </div>
     <div class="flex justify-between items-center py-6">
       <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
         Painel de Moderação
@@ -21,6 +10,8 @@
       </a>
     </div>
   </x-slot>
+
+  <x-toast-alert />
 
   <div class="py-12">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
