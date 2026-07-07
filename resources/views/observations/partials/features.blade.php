@@ -45,7 +45,7 @@
     <div class="py-3 flex justify-between">
       <span class="font-medium text-gray-500">Registrado por:</span>
       <span class="text-gray-800 dark:text-gray-200">
-''        <a
+        <a
             href="{{ route('profile.username', $observation->user->username) }}"
             class="text-emerald-600 dark:text-emerald-400 hover:underline">
           {{ $observation->user->username ? '@' . $observation->user->username : $observation->user->name }}
