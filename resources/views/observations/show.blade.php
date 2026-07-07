@@ -1,6 +1,6 @@
 <x-app-layout>
   <x-slot name="header">
-    <div class="flex justify-between items-center">
+    <div class="flex justify-between items-center py-6">
       <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
         Registro de Araucária — {{ $observation->created_at->format('d/m/Y') }}
       </h2>
@@ -24,12 +24,8 @@
         </div>
       </div>
 
-
-
       <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg p-6">
-
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-
           <div
             class="flex flex-col items-center justify-top bg-gray-50 dark:bg-gray-900 rounded-xl p-2 border border-gray-100 dark:border-gray-700">
             @if($observation->photo_path)
@@ -89,8 +85,11 @@
                 <div class="py-3 flex justify-between">
                   <span class="font-medium text-gray-500">Registrado por:</span>
                   <span class="text-gray-800 dark:text-gray-200">
-                    {{ $observation->user->username ? '@' . $observation->user->username : $observation->user->name }}
-                    {{-- TODO: user profile link --}}
+                    <a
+                      href="{{ route('profile.show', $observation->user) }}"
+                      class="text-emerald-600 dark:text-emerald-400 hover:underline">
+                      {{ $observation->user->username ? '@' . $observation->user->username : $observation->user->name }}
+                    </a>
                   </span>
                 </div>
               </div>

@@ -1,6 +1,7 @@
 <x-app-layout>
   <x-slot name="header">
-    <div x-data="{ alerta: { mostrar: {{ session('status') ? 'true' : 'false' }}, tipo: 'success', mensagem: '{{ session('status') ?? '' }}' } }"
+    <div
+      x-data="{ alerta: { mostrar: {{ session('status') ? 'true' : 'false' }}, tipo: 'success', mensagem: '{{ session('status') ?? '' }}' } }"
       @observation-saved.window="alerta.mostrar = true; alerta.tipo = 'success'; alerta.mensagem = $event.detail.message; setTimeout(() => alerta.mostrar = false, 5000);"
       @observation-error.window="alerta.mostrar = true; alerta.tipo = 'error'; alerta.mensagem = $event.detail.message; setTimeout(() => alerta.mostrar = false, 5000);"
       x-init="if (alerta.mostrar) setTimeout(() => alerta.mostrar = false, 5000)">
@@ -10,7 +11,7 @@
         <span x-text="alerta.mensagem"></span>
       </div>
     </div>
-    <div class="flex justify-between items-center">
+    <div class="flex justify-between items-center py-6">
       <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
         Painel de Moderação
       </h2>
@@ -33,8 +34,8 @@
           @php $report = $reportsGroup->first(); @endphp
           <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
             <div class="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-6">
-              @include('observations.moderation.partials.details', ['report' => $report, 'reportsGroup' => $reportsGroup])
-              @include('observations.moderation.partials.actions', ['report' => $report])
+              @include('moderation.partials.details', ['report' => $report, 'reportsGroup' => $reportsGroup])
+              @include('moderation.partials.actions', ['report' => $report])
             </div>
           </div>
         @endforeach

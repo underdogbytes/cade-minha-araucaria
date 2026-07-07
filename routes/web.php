@@ -21,10 +21,12 @@ Route::middleware([
     Route::put('/observations/{observation}', [AraucariaObservationController::class, 'update'])->name('observations.update');
     Route::delete('/observations/{observation}', [AraucariaObservationController::class, 'destroy']);
     Route::post('/observations/report/{observation}', [AraucariaObservationController::class, 'report'])->name('observations.report');
+
+    // Moderação
     Route::middleware(['role:admin,staff'])->group(function () {
-        Route::get('/moderation/observations', [AraucariaObservationController::class, 'moderationIndex'])->name('observations.moderation.index');
-        Route::post('/moderation/observations/{report}/delete', [AraucariaObservationController::class, 'moderationDelete'])->name('observations.moderation.delete');
-        Route::post('/moderation/observations/{report}/assign', [AraucariaObservationController::class, 'moderationAssign'])->name('observations.moderation.assign');
-        Route::post('/moderation/observations/{report}/update-status', [AraucariaObservationController::class, 'moderationUpdateStatus'])->name('observations.moderation.update-status');
+        Route::get('/moderation/observations', [AraucariaObservationController::class, 'moderationIndex'])->name('moderation.index');
+        Route::post('/moderation/observations/{report}/delete', [AraucariaObservationController::class, 'moderationDelete'])->name('moderation.delete');
+        Route::post('/moderation/observations/{report}/assign', [AraucariaObservationController::class, 'moderationAssign'])->name('moderation.assign');
+        Route::post('/moderation/observations/{report}/update-status', [AraucariaObservationController::class, 'moderationUpdateStatus'])->name('moderation.update-status');
     });
 });

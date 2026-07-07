@@ -120,9 +120,9 @@ class AraucariaObservationTest extends TestCase
             'status' => 'pending',
         ]);
 
-        $this->actingAs($moderator)->get(route('observations.moderation.index'))->assertOk();
+        $this->actingAs($moderator)->get(route('moderation.index'))->assertOk();
 
-        $this->actingAs($moderator)->post(route('observations.moderation.delete', $report))->assertRedirect();
+        $this->actingAs($moderator)->post(route('moderation.delete', $report))->assertRedirect();
         $this->assertDatabaseMissing('araucaria_observations', ['id' => $observation->id]);
 
         $observation = AraucariaObservation::create([
@@ -143,7 +143,7 @@ class AraucariaObservationTest extends TestCase
             'status' => 'pending',
         ]);
 
-        $this->actingAs($moderator)->post(route('observations.moderation.assign', $report), [
+        $this->actingAs($moderator)->post(route('moderation.assign', $report), [
             'user_id' => $newOwner->id,
         ])->assertRedirect();
 

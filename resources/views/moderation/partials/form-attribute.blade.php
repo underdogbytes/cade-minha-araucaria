@@ -1,6 +1,6 @@
 <form 
   method="POST"
-  action="{{ route('observations.moderation.assign', $report) }}"
+  action="{{ route('moderation.assign', $report) }}"
   class="space-y-2"
   onsubmit="return confirm('Você tem certeza que deseja atribuir a outro usuário?');">
   @csrf

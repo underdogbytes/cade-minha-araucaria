@@ -236,7 +236,7 @@ class AraucariaObservationController extends Controller
             ->get()
             ->groupBy('araucaria_observation_id');
 
-        return view('observations.moderation.index', compact('groupedReports'));
+        return view('moderation.index', compact('groupedReports'));
     }
 
     public function moderationDelete(Request $request, AraucariaObservationReport $report)

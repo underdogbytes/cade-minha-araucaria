@@ -1,6 +1,6 @@
 <form
   method="POST"
-  action="{{ route('observations.moderation.update-status', $report) }}"
+  action="{{ route('moderation.update-status', $report) }}"
   class="space-y-2"
   onsubmit="return confirm('Você tem certeza que deseja atribuir esse status?');">
   @csrf
