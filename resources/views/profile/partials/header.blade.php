@@ -12,11 +12,15 @@
         {{ $user->name }}
         {{ $user->username ? " || @ {$user->username}" : '' }}
       </h2>
-      <span>Seus pinhões: {{ $user->pinhao_balance }}</span>
+        @auth
+          @if (auth()->user()->id === $user->id)
+            <span>Seus pinhões: {{ $user->pinhao_balance }}</span>
+          @endif
+        @endauth
       <br>
       <span>
         @auth
-          @if ($user->username)
+          @if (auth()->user()->id === $user->id)
             <a
               href="{{ route('profile.username', $user->username) }}"
               target="_blank"
@@ -24,8 +28,6 @@
               class="text-indigo-500 hover:text-indigo-700">
               Ver seu perfil público
             </a>
-          @else
-            Você ainda não tem um nome de usuário definido. Vá em Configurações para definir um e ter uma URL de perfil personalizada.
           @endif
         @endauth
       </span>
