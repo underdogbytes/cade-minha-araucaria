@@ -1,6 +1,6 @@
 <form
   method="POST"
-  action="{{ route('observations.moderation.delete', $report) }}"
+  action="{{ route('moderation.delete', $report) }}"
   class="space-y-2"
   onsubmit="return confirm('Você tem certeza que deseja exluir?');">
   @csrf

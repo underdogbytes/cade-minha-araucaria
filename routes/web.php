@@ -5,6 +5,10 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AraucariaObservationController;
 
 Route::get('/', function () { return view('welcome'); });
+Route::get('/perfil/{username}', function ($username) {
+    $user = \App\Models\User::where('username', $username)->firstOrFail();
+    return view('profile.show', ['user' => $user]);
+})->name('profile.username');
 
 Route::middleware([
     'auth:sanctum',
@@ -17,18 +21,12 @@ Route::middleware([
     Route::put('/observations/{observation}', [AraucariaObservationController::class, 'update'])->name('observations.update');
     Route::delete('/observations/{observation}', [AraucariaObservationController::class, 'destroy']);
     Route::post('/observations/report/{observation}', [AraucariaObservationController::class, 'report'])->name('observations.report');
-    Route::middleware(['role:admin,staff'])->group(function () {
-        Route::get('/moderation/observations', [AraucariaObservationController::class, 'moderationIndex'])->name('observations.moderation.index');
-        Route::post('/moderation/observations/{report}/delete', [AraucariaObservationController::class, 'moderationDelete'])->name('observations.moderation.delete');
-        Route::post('/moderation/observations/{report}/assign', [AraucariaObservationController::class, 'moderationAssign'])->name('observations.moderation.assign');
-        Route::post('/moderation/observations/{report}/update-status', [AraucariaObservationController::class, 'moderationUpdateStatus'])->name('observations.moderation.update-status');
-    });
-});
 
-Route::get('/limpar-tudo', function() {
-    \Artisan::call('config:clear');
-    \Artisan::call('config:cache');
-    \Artisan::call('route:clear');
-    \Artisan::call('view:clear');
-    return "Caches limpos com sucesso no servidor!";
+    // Moderação
+    Route::middleware(['role:admin,staff'])->group(function () {
+        Route::get('/moderation/observations', [AraucariaObservationController::class, 'moderationIndex'])->name('moderation.index');
+        Route::post('/moderation/observations/{report}/delete', [AraucariaObservationController::class, 'moderationDelete'])->name('moderation.delete');
+        Route::post('/moderation/observations/{report}/assign', [AraucariaObservationController::class, 'moderationAssign'])->name('moderation.assign');
+        Route::post('/moderation/observations/{report}/update-status', [AraucariaObservationController::class, 'moderationUpdateStatus'])->name('moderation.update-status');
+    });
 });

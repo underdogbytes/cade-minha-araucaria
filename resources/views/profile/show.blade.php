@@ -1,45 +1,33 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Profile') }}
-        </h2>
-    </x-slot>
+    @include('profile.partials.header', ['user' => $user])
 
-    <div>
-        <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
-            @if (Laravel\Fortify\Features::canUpdateProfileInformation())
-                @livewire('profile.update-profile-information-form')
-
-                <x-section-border />
-            @endif
-
-            @if (Laravel\Fortify\Features::enabled(Laravel\Fortify\Features::updatePasswords()))
-                <div class="mt-10 sm:mt-0">
-                    @livewire('profile.update-password-form')
-                </div>
-
-                <x-section-border />
-            @endif
-
-            @if (Laravel\Fortify\Features::canManageTwoFactorAuthentication())
-                <div class="mt-10 sm:mt-0">
-                    @livewire('profile.two-factor-authentication-form')
-                </div>
-
-                <x-section-border />
-            @endif
-
-            <div class="mt-10 sm:mt-0">
-                @livewire('profile.logout-other-browser-sessions-form')
+    @auth
+        <div x-data="{ tab: 'feed' }" class="mt-4 max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
+        <!-- Tabs -->
+        <ul class="flex border-b mb-6">
+            <li @click="tab = 'feed'"
+                :class="tab === 'feed' ? 'border-b-2 border-indigo-500' : ''"
+                class="cursor-pointer py-2 px-4">
+                Fotos
+            </li>
+            <li @click="tab = 'settings'"
+                :class="tab === 'settings' ? 'border-b-2 border-indigo-500' : ''"
+                class="cursor-pointer py-2 px-4 mr-4">
+                Configurações
+            </li>
+        </ul>
+    
+        <!-- Tab Contents -->
+        <div x-show="tab === 'feed'">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+                <x-profile.post :observations="$user->araucariaObservations" />
             </div>
-
-            @if (Laravel\Jetstream\Jetstream::hasAccountDeletionFeatures())
-                <x-section-border />
-
-                <div class="mt-10 sm:mt-0">
-                    @livewire('profile.delete-user-form')
-                </div>
-            @endif
+        </div>
+        <div x-show="tab === 'settings'">
+            @include('profile.partials.settings')
         </div>
     </div>
+    @else
+        <x-profile.post :observations="$user->araucariaObservations" />
+    @endauth
 </x-app-layout>

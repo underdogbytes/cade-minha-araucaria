@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.1.5] - 2026-07-07
+
+### Adicionado
+- Página de perfil de usuário;
+- Exibição de pinhões de usuário;
+- Ganho de pinhão por publicação;
+
+### Modificado
+- Tradução texto default de configurações de perfil para PT-BR;
+- Componentização em:
+  - Formulário denúncia;
+  - Header interno;
+  - Alerta toast;
+
 ## [1.1.4] - 2026-07-02
 
 ### Adicionado
