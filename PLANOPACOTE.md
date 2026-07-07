@@ -1,27 +1,41 @@
-# Plano de Ação do Pacote v1.1.5
+# Plano de Ação
 
-Previsto no próximo pacote:
+## Previsto no Pacote v1.1.5
 - Página de perfil usuário;
 
+## Próximos passos
 
-## Tarefas relativamente pequenas para próximos pacotes
-- **Melhoria na UI/UX do Mapa:**
-  - Geolocalização nativa para inicializar mapa na região onde user mora;
-- **Painel Administrativo**
-  - Perfil customizado de usuário;
-- **Design**
-  - Paleta de cores;
-  - Criar identidade visual;
-  - Pixel artes de pinhões;
-  - Desenhar favicon;
-  - Melhorar UI/UX landing page;
-- **Gamificação**
-  - Joguinho de pinhões;
-  - Joguinho de cultivo de Rocaria;
-- **Qualidade de Código**
-  - Adicionar script de formatação;
-  - Testes do CRUD;
+### UI/UX, Design
+- **Geolocalização Nativa:** Inicializar o mapa automaticamente na região do usuário.
+- **Landing Page:** Melhorias gerais de UI/UX.
+- **Identidade Visual:** Definição de paleta de cores, criação de favicon e desenvolvimento de pixel art de pinhões.
 
+### Painel Interno
+- Criação de perfil customizado de usuário.
+
+### Gamificação
+- Joguinho de pinhões;
+- Joguinho de cultivo de Rocaria;
+
+### Qualidade de Código
+- Adicionar script de formatação;
+- Testes do CRUD;
+
+### Features core
+- Adicionar as colunas na tabela Araucária:
+  - Altura estimada;
+  - Diâmetro estimado;
+    - Isso habilitar cálculo de biomassa e emissão de carbono (acho preciso pesquisar mais);
+  - Estágio (a discutir);
+- Várias fotos de uma vez (permitindo casca, folhas, pinhas, árvore completa);
+- Idade estimada
+- Tags de risco/ameaçada por:
+  - Incêndio, pressão do corte ilegal de madeira, doenças, avanço urbano;
+- Marcação de "Verificada por especialistas" (para ter o rótulo de “Confiável para pesquisa” após validação de especialistas);
+- Permitir que os usuários "adotem" ou acompanhem as árvores que mapearam;
+- Enviar lembretes sazonais para fotografar novamente a mesma árvore (fenologia, alterações na saúde, crescimento);
+- Exibir comparações de "antes e depois" na página de perfil da árvore;
+- Monitorar taxas de sobrevivência em todo o conjunto de dados (pra validar o impacto do projeto);
 
 ## Tarefas mais complexas a serem feitas entre hoje e a volta de Cristo
 
@@ -46,3 +60,6 @@ Previsto no próximo pacote:
 - Pipeline CI/CD (build, test e deploy);
 - Padronizar ambientes;
 - Documentar procedimento rollback e incident response;
+
+## Questões em aberto
+- Como lidar com a duplicata de árvores?
