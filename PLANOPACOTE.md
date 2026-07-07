@@ -1,7 +1,4 @@
-# Plano de Ação
-
-## Previsto no Pacote v1.1.5
-- Página de perfil usuário;
+# Cronograma
 
 ## Próximos passos
 

@@ -55,6 +55,11 @@ class AraucariaObservationController extends Controller
 
             DB::commit();
 
+            // Atualiza o saldo de pinhões do usuário
+            $user = $request->user();
+            $user->increment('pinhao_balance', 1);
+            $user->save();
+
             return response()->json([
                 'message' => 'Observação de Araucária registrada com sucesso!',
                 'data' => new AraucariaObservationResource($observation),
@@ -236,7 +241,7 @@ class AraucariaObservationController extends Controller
             ->get()
             ->groupBy('araucaria_observation_id');
 
-        return view('observations.moderation.index', compact('groupedReports'));
+        return view('moderation.index', compact('groupedReports'));
     }
 
     public function moderationDelete(Request $request, AraucariaObservationReport $report)
