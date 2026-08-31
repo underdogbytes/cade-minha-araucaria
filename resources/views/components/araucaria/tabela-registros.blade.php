@@ -72,7 +72,7 @@
     </tr>
     @empty
     <tr>
-      <td colspan="4" class="px-6 py-8 text-center text-gray-500">
+      <td colspan="5" class="px-6 py-8 text-center text-gray-500">
         Você ainda não registrou nenhuma araucária :(
       </td>
     </tr>

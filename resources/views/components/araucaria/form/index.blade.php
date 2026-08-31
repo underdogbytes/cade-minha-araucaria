@@ -24,44 +24,48 @@ $sufixo = $modo === 'criar' ? 'create' : 'edit';
       <x-araucaria.form.photo ::required="!idEdicao" />
 
       <div class="form-group">
-        <label for="dataexif" class="font-medium text-gray-700 dark:text-gray-300 cursor-pointer">
+        <label for="dataexif-{{ $sufixo }}" class="font-medium text-gray-700 dark:text-gray-300 cursor-pointer">
           Preencher usando dados EXIF da foto?
         </label>
         <input
           type="checkbox"
-          id="dataexif"
+          id="dataexif-{{ $sufixo }}"
           name="dataexif"
           class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500" style="max-width: 1.5rem; max-height: 1.5rem;"
           @change="(async () => {
             const sufixo = idEdicao ? 'edit' : 'create';
-            const fileInput = document.querySelector(`#araucariaForm-${sufixo} #photo_path`);
-            const file = fileInput ? fileInput.files[0] : null;
             const form = document.getElementById(`araucariaForm-${sufixo}`);
+            if (!form) return;
+            const fileInput = form.querySelector('[name=\'photo_path\']') || form.querySelector('input[type=\'file\']');
+            const file = fileInput ? fileInput.files[0] : null;
         
             if (window.handleSelecaoImagem) {
               await window.handleSelecaoImagem($event.target.checked, file, form, `map-${sufixo}`);
               
-              editLat = document.getElementById('latitude').value;
-              editLng = document.getElementById('longitude').value;
-              editObservedAt = document.getElementById('observed_at').value;
+              const latEl = form.querySelector('[name=\'latitude\']');
+              const lngEl = form.querySelector('[name=\'longitude\']');
+              const obsEl = form.querySelector('[name=\'observed_at\']');
+              if (latEl) editLat = latEl.value;
+              if (lngEl) editLng = lngEl.value;
+              if (obsEl) editObservedAt = obsEl.value;
             }
           })()">
         <span>Aceito usar os dados EXIF da foto</span>
       </div>
 
       <div class="form-group">
-        <label for="latitude">Latitude</label>
-        <input type="text" id="latitude" name="latitude" required x-model="editLat" class="bg-gray-100">
+        <label for="latitude-{{ $sufixo }}">Latitude</label>
+        <input type="text" id="latitude-{{ $sufixo }}" name="latitude" required x-model="editLat" class="bg-gray-100">
       </div>
       
       <div class="form-group">
-        <label for="longitude">Longitude</label>
-        <input type="text" id="longitude" name="longitude" required x-model="editLng" class="bg-gray-100">
+        <label for="longitude-{{ $sufixo }}">Longitude</label>
+        <input type="text" id="longitude-{{ $sufixo }}" name="longitude" required x-model="editLng" class="bg-gray-100">
       </div>
 
       <div class="form-group">
-        <label for="stage">Estágio de Desenvolvimento</label>
-        <select id="stage" name="stage" required x-model="editStage">
+        <label for="stage-{{ $sufixo }}">Estágio de Desenvolvimento</label>
+        <select id="stage-{{ $sufixo }}" name="stage" required x-model="editStage">
           <option value="seedling">Muda</option>
           <option value="sapling">Jovem</option>
           <option value="adult">Adulta</option>
@@ -70,8 +74,8 @@ $sufixo = $modo === 'criar' ? 'create' : 'edit';
       </div>
 
       <div class="form-group">
-        <label for="gender">Gênero</label>
-        <select id="gender" name="gender" required x-model="editGender">
+        <label for="gender-{{ $sufixo }}">Gênero</label>
+        <select id="gender-{{ $sufixo }}" name="gender" required x-model="editGender">
           <option value="unknown">Desconhecido</option>
           <option value="male">Macho (Produz Pólen)</option>
           <option value="female">Fêmea (Produz Pinhas)</option>
@@ -79,8 +83,8 @@ $sufixo = $modo === 'criar' ? 'create' : 'edit';
       </div>
 
       <div class="form-group">
-        <label for="observed_at">Data da Observação</label>
-        <input type="datetime-local" id="observed_at" name="observed_at" required x-model="editObservedAt">
+        <label for="observed_at-{{ $sufixo }}">Data da Observação</label>
+        <input type="datetime-local" id="observed_at-{{ $sufixo }}" name="observed_at" required x-model="editObservedAt">
       </div>
 
       <div class="flex gap-2 mt-2">

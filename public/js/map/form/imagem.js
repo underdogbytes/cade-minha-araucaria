@@ -4,14 +4,13 @@ import { atualizaCoordenadas } from './mapa.js';
 import { atualizaDataHora } from './validacao.js';
 
 export async function handleSelecaoImagem(isChecked, file, formElement, mapId) {
-  // Verifica se o user permitiu acessar os dados EXIF:
-  if (!isChecked) return;
-
-  // Limpa formulário:
+  // Limpa o estado no formulário e no mapa para garantir consistência
   limparDadosEXIF(formElement, mapId);
 
+  // Se o usuário não marcou a checkbox ou não selecionou arquivo, encerra limpo
+  if (!isChecked || !file) return;
+
   try {
-    // Verifica se há dados EXIF:
     const data = await extrairDadosEXIF(file);
     if (!data || (!data.coords && !data.date)) {
       dispatchAlert('error', 'Esta foto não contém dados de localização ou data.');
@@ -22,18 +21,19 @@ export async function handleSelecaoImagem(isChecked, file, formElement, mapId) {
     if (data.date) { atualizaDataHora(formElement, data.date); }
 
     // Coordenadas:
-    if (data.coords) { atualizaCoordenadas(formElement, data.coords, mapId) }
+    if (data.coords) { atualizaCoordenadas(formElement, data.coords, mapId); }
   } catch (error) {
-    // TODO: jogar erro pro arquivo de log
-    // console.log(error);
-    dispatchAlert('error', 'Erro ao processar imagem.');
+    console.error('[EXIF Image Handler Error]:', error);
+    dispatchAlert('error', error.message || 'Erro ao processar metadados da imagem.');
   }
 }
 
-window.handleSelecaoImagem = handleSelecaoImagem;
+if (typeof window !== 'undefined') {
+  window.handleSelecaoImagem = handleSelecaoImagem;
+}
 
 export function validarImagem(form) {
-  const input = form.querySelector('#photo_path') || form.querySelector('#photo');
+  const input = form.querySelector('[name="photo_path"]') || form.querySelector('input[type="file"]');
   const isEdit = form.id === 'araucariaForm-edit';
 
   if (!input?.files?.length) {

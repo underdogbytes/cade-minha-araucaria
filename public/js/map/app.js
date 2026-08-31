@@ -5,10 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
   setupFormListener();
 });
 
-document.addEventListener('DOMContentLoaded', () => {
-  setupFormListener();
-});
-
 window.addEventListener('mudar-aba', async event => {
   const abaAtiva = event.detail;
   let mapId = null;

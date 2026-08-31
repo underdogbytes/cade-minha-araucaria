@@ -27,20 +27,25 @@
 
       if (file) {
         editPhotoUrl = URL.createObjectURL(file);
-        const currentMapId = idEdicao ? 'map-edit' : 'map-create';
-        
         const sufixo = idEdicao ? 'edit' : 'create';
-        const checkboxAtual = document.querySelector(`#araucariaForm-${sufixo} #dataexif`);
-        const isChecked = checkboxAtual ? checkboxAtual.checked : false;
+        const currentMapId = `map-${sufixo}`;
+        
         const form = document.getElementById(`araucariaForm-${sufixo}`);
+        if (!form) return;
+
+        const checkboxAtual = form.querySelector('[name=\'dataexif\']') || form.querySelector('#dataexif');
+        const isChecked = checkboxAtual ? checkboxAtual.checked : false;
 
         if (window.handleSelecaoImagem) {
           await window.handleSelecaoImagem(isChecked, file, form, currentMapId);
           
           if (isChecked) {
-            editLat = document.getElementById('latitude').value;
-            editLng = document.getElementById('longitude').value;
-            editObservedAt = document.getElementById('observed_at').value;
+            const latEl = form.querySelector('[name=\'latitude\']');
+            const lngEl = form.querySelector('[name=\'longitude\']');
+            const obsEl = form.querySelector('[name=\'observed_at\']');
+            if (latEl) editLat = latEl.value;
+            if (lngEl) editLng = lngEl.value;
+            if (obsEl) editObservedAt = obsEl.value;
           }
         }
       }

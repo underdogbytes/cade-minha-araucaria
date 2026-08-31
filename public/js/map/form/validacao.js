@@ -1,5 +1,7 @@
 export function atualizaDataHora(formElement, dataHora) {
-  const dateInput = formElement.querySelector('[name="observed_at"]') || document.getElementById('observed_at');
+  if (!formElement) return;
+
+  const dateInput = formElement.querySelector('[name="observed_at"]') || formElement.querySelector('[id^="observed_at"]');
   if (dateInput) {
     dateInput.value = dataHora;
     dateInput.dispatchEvent(new Event('input', { bubbles: true }));
@@ -9,10 +11,9 @@ export function atualizaDataHora(formElement, dataHora) {
 export function limparCampo(formElement, itemId) {
   if (!formElement) return;
 
-  const elemento = formElement.querySelector(`#${itemId}`) || formElement.querySelector(`[name="${itemId}"]`);
+  const elemento = formElement.querySelector(`[name="${itemId}"]`) || formElement.querySelector(`#${itemId}`) || formElement.querySelector(`[id^="${itemId}"]`);
   if (!elemento) return;
 
-  if (elemento) elemento.value = '';
-
-  elemento?.dispatchEvent(new Event('input', { bubbles: true }))
+  elemento.value = '';
+  elemento.dispatchEvent(new Event('input', { bubbles: true }));
 }

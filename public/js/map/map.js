@@ -53,19 +53,17 @@ function handleMapClick(event, mapId) {
 function handleMarkerMove(event, mapId) {
   const position = event.target.getLatLng();
 
-  updateCoordinates(position.lat, position.lng);
+  updateCoordinates(position.lat, position.lng, mapId);
 }
 
 function updateCoordinates(lat, lng, mapId) {
-  // Descobre qual o sufixo do formulário correspondente ao mapa clicado
   const sufixo = mapId === 'map-edit' ? 'edit' : 'create';
   const form = document.getElementById(`araucariaForm-${sufixo}`);
 
   if (!form) return;
 
-  // Busca os inputs especificamente de dentro daquele formulário
-  const latInput = form.querySelector('#latitude');
-  const lngInput = form.querySelector('#longitude');
+  const latInput = form.querySelector('[name="latitude"]') || form.querySelector('[id^="latitude"]');
+  const lngInput = form.querySelector('[name="longitude"]') || form.querySelector('[id^="longitude"]');
 
   if (!latInput || !lngInput) return;
 
@@ -91,7 +89,7 @@ async function loadExistingPoints(map) {
     }
 
   } catch (error) {
-    // TODO
+    console.error('[Map Service Error] Falha ao carregar observações existentes:', error);
   }
 }
 
@@ -127,8 +125,8 @@ export function initializeEditMarker(mapId = 'map-edit') {
   const formEdit = document.getElementById('araucariaForm-edit');
   if (!formEdit) return;
 
-  const latInput = formEdit.querySelector('#latitude');
-  const lngInput = formEdit.querySelector('#longitude');
+  const latInput = formEdit.querySelector('[name="latitude"]') || formEdit.querySelector('[id^="latitude"]');
+  const lngInput = formEdit.querySelector('[name="longitude"]') || formEdit.querySelector('[id^="longitude"]');
 
   if (!latInput || !lngInput || !latInput.value || !lngInput.value) {
     return;
@@ -141,10 +139,8 @@ export function initializeEditMarker(mapId = 'map-edit') {
     return;
   }
 
-  // Center map to the edit location
   map.setView([lat, lng], 15);
 
-  // Place the click marker at the edit location
   if (clickMarkers[mapId]) {
     map.removeLayer(clickMarkers[mapId]);
   }
@@ -165,8 +161,8 @@ export function updateMarkerFromInputs(mapId) {
   const form = document.getElementById(`araucariaForm-${sufixo}`);
   if (!form) return;
 
-  const latInput = form.querySelector('#latitude');
-  const lngInput = form.querySelector('#longitude');
+  const latInput = form.querySelector('[name="latitude"]') || form.querySelector('[id^="latitude"]');
+  const lngInput = form.querySelector('[name="longitude"]') || form.querySelector('[id^="longitude"]');
   if (!latInput || !lngInput || !latInput.value || !lngInput.value) return;
 
   const lat = Number(latInput.value);
@@ -188,9 +184,6 @@ export function updateMarkerFromInputs(mapId) {
   }
 }
 
-window.updateMarkerFromInputs = updateMarkerFromInputs;
-window.clearClickMarker = clearClickMarker;
-
 export function updateMarkerPosition(lat, lng, mapId) {
   const map = maps[mapId];
   if (!map) return;
@@ -209,4 +202,8 @@ export function updateMarkerPosition(lat, lng, mapId) {
   }
 }
 
-window.updateMarkerPosition = updateMarkerPosition;
+if (typeof window !== 'undefined') {
+  window.updateMarkerFromInputs = updateMarkerFromInputs;
+  window.clearClickMarker = clearClickMarker;
+  window.updateMarkerPosition = updateMarkerPosition;
+}
