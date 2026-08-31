@@ -34,7 +34,7 @@
                     🌲 Feed da Comunidade
                 </button>
     
-                <button @click="tab = 'mapa-mundi'" ; $dispatch('mudar-aba', 'mapa-mundi' )
+                <button @click="tab = 'mapa-mundi'; $dispatch('mudar-aba', 'mapa-mundi')"
                     :class="tab === 'mapa-mundi' ? 'border-emerald-500 text-emerald-600 dark:text-emerald-400 font-semibold' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
                     class="py-3 px-4 border-b-2 text-sm font-medium transition duration-200 focus:outline-none">
                     🌎 Araucárias do Mundo
