@@ -39,14 +39,12 @@
         if (window.handleSelecaoImagem) {
           await window.handleSelecaoImagem(isChecked, file, form, currentMapId);
           
-          if (isChecked) {
-            const latEl = form.querySelector('[name=\'latitude\']');
-            const lngEl = form.querySelector('[name=\'longitude\']');
-            const obsEl = form.querySelector('[name=\'observed_at\']');
-            if (latEl) editLat = latEl.value;
-            if (lngEl) editLng = lngEl.value;
-            if (obsEl) editObservedAt = obsEl.value;
-          }
+          const latEl = form.querySelector('[name=\'latitude\']');
+          const lngEl = form.querySelector('[name=\'longitude\']');
+          const obsEl = form.querySelector('[name=\'observed_at\']');
+          editLat = latEl ? latEl.value : '';
+          editLng = lngEl ? lngEl.value : '';
+          editObservedAt = obsEl ? obsEl.value : '';
         }
       }
     })()"

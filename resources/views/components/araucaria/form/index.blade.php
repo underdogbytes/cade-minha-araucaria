@@ -45,9 +45,9 @@ $sufixo = $modo === 'criar' ? 'create' : 'edit';
               const latEl = form.querySelector('[name=\'latitude\']');
               const lngEl = form.querySelector('[name=\'longitude\']');
               const obsEl = form.querySelector('[name=\'observed_at\']');
-              if (latEl) editLat = latEl.value;
-              if (lngEl) editLng = lngEl.value;
-              if (obsEl) editObservedAt = obsEl.value;
+              editLat = latEl ? latEl.value : '';
+              editLng = lngEl ? lngEl.value : '';
+              editObservedAt = obsEl ? obsEl.value : '';
             }
           })()">
         <span>Aceito usar os dados EXIF da foto</span>
