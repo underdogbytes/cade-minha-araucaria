@@ -38,6 +38,7 @@ class AraucariaObservationController extends Controller
     ): JsonResponse {
 
         $validated = $request->validated();
+        $validated['observed_at'] = $validated['observed_at'] ?? now();
 
         DB::beginTransaction();
 

@@ -152,4 +152,30 @@ class AraucariaObservationTest extends TestCase
             'user_id' => $newOwner->id,
         ]);
     }
+
+    public function test_store_observation_fallbacks_to_current_timestamp_when_observed_at_is_omitted(): void
+    {
+        \Illuminate\Support\Facades\Storage::fake('public');
+        $user = User::factory()->create();
+        $file = \Illuminate\Http\UploadedFile::fake()->image('araucaria.jpg', 600, 600);
+
+        $response = $this->actingAs($user)->postJson('/api/observations', [
+            'latitude' => -25.4284,
+            'longitude' => -49.2733,
+            'photo_path' => $file,
+            'stage' => 'adult',
+            'gender' => 'female',
+            // 'observed_at' omitido intencionalmente
+        ]);
+
+        $response->assertStatus(201);
+        $this->assertDatabaseHas('araucaria_observations', [
+            'user_id' => $user->id,
+            'stage' => 'adult',
+            'gender' => 'female',
+        ]);
+        
+        $observation = AraucariaObservation::where('user_id', $user->id)->first();
+        $this->assertNotNull($observation->observed_at);
+    }
 }

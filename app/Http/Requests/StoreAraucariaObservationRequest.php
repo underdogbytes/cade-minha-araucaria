@@ -25,10 +25,10 @@ class StoreAraucariaObservationRequest extends FormRequest
         return [
             'latitude' => ['required', 'numeric', 'between:-90,90'],
             'longitude' => ['required', 'numeric', 'between:-180,180'],
-            'photo_path' => 'required|image|mimes:jpeg,png,jpg,webp|max:10240',
+            'photo_path' => ['required', 'image', 'mimes:jpeg,png,jpg,webp', 'max:20480'],
             'stage' => ['required', 'in:seedling,sapling,adult,dead'],
             'gender' => ['required', 'in:male,female,unknown'],
-            'observed_at' => ['required', 'date'],
+            'observed_at' => ['sometimes', 'nullable', 'date'],
         ];
     }
     /**
