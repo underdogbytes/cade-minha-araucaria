@@ -16,6 +16,7 @@
             @vite(['resources/css/app.css', 'resources/js/app.js'])
         @else
         @endif
+        @livewireStyles
 
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
         <link rel="stylesheet" href="https://app.unpkg.com/leaflet.markercluster@1.4.1/files/dist/MarkerCluster.css" />
@@ -116,6 +117,27 @@
                     <div id="map"></div>
                 </div>
             </section>
+
+            <section id="perguntas-frequentes">
+                <x-faq.accordion :items="[
+                    [
+                        'question' => 'O que esse site faz?',
+                        'answer' => '<b>Cade minha Araucária</b> é um projeto para mapear, monitorar e proteger as Araucárias nativas da nossa região.'
+                    ],
+                    [
+                        'question' => 'Por quê é importante cuidar das Araucárias?',
+                        'answer' => 'Resta realmente muito pouco da mata original e a gente precisa fazer algo. Cuide da Araucária da sua vizinhança e registre ela aqui para que possamos conhecê-la e monitorar contigo!'    
+                    ],
+                    [
+                        'question' => 'Quanto resta da mata original?',
+                        'answer' => 'Segundo uma pesquisa publicada em 2025, restam 4,3% da cobertura de mata original.
+                        <br>Leia mais em:<br>
+                        How much Araucaria Mixed Forest remains? Novel perspectives on conservation status based on satellite imagery and policy review
+                        <a href=\'https://www.sciencedirect.com/science/article/pii/S0006320724002854\' target=\'_blank\'>
+                            https://www.sciencedirect.com/science/article/pii/S0006320724002854</a>'
+                    ]
+                ]" />
+            </section>
         </main>
 
         <footer>
@@ -133,5 +155,6 @@
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
         <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
         <script type="module" src="{{ asset('js/map/world-map.js') }}"></script>
+        @livewireScripts
     </body>
 </html>
