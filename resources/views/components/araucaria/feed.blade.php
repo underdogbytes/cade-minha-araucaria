@@ -53,6 +53,11 @@
                 <span class="px-2.5 py-1 text-xs font-bold rounded-lg shadow-sm border backdrop-blur-md {{ $stageInfo['class'] }}">
                     {{ $stageInfo['label'] }}
                 </span>
+                @if($obs->is_shared)
+                    <span class="px-2.5 py-1 text-[11px] font-bold rounded-lg shadow-sm border backdrop-blur-md bg-emerald-900/80 text-white border-emerald-700">
+                        👥 Colaborativa
+                    </span>
+                @endif
             </div>
 
             <!-- Bottom Left Author Overlay -->

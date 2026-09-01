@@ -16,11 +16,13 @@ class AraucariaObservation extends Model
         'photo_path',
         'stage',
         'gender',
+        'is_shared',
         'observed_at'
     ];
 
     protected $casts = [
         'observed_at' => 'datetime',
+        'is_shared' => 'boolean',
     ];
 
     public function user(): BelongsTo
@@ -31,5 +33,10 @@ class AraucariaObservation extends Model
     public function reports(): HasMany
     {
         return $this->hasMany(AraucariaObservationReport::class, 'araucaria_observation_id');
+    }
+
+    public function updates(): HasMany
+    {
+        return $this->hasMany(AraucariaObservationUpdate::class, 'araucaria_observation_id')->latest();
     }
 }

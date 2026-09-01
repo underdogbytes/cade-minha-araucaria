@@ -5,6 +5,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AraucariaObservationController;
 use App\Http\Controllers\UserProfileController;
 
+use App\Http\Controllers\AraucariaObservationUpdateController;
+
 Route::get('/', function () { return view('welcome'); });
 Route::get('/perfil/{username}', [UserProfileController::class, 'showByUsername'])->name('profile.username');
 
@@ -21,6 +23,11 @@ Route::middleware([
     Route::put('/observations/{observation}', [AraucariaObservationController::class, 'update'])->name('observations.update');
     Route::delete('/observations/{observation}', [AraucariaObservationController::class, 'destroy']);
     Route::post('/observations/report/{observation}', [AraucariaObservationController::class, 'report'])->name('observations.report');
+
+    // Atualizações Colaborativas de Fotos e Cuidados
+    Route::post('/observations/{observation}/updates', [AraucariaObservationUpdateController::class, 'store'])->name('observations.updates.store');
+    Route::delete('/observation-updates/{update}', [AraucariaObservationUpdateController::class, 'destroy'])->name('observations.updates.destroy');
+    Route::patch('/observations/{observation}/toggle-shared', [AraucariaObservationUpdateController::class, 'toggleShared'])->name('observations.toggle-shared');
 
     // Moderação
     Route::middleware(['role:admin,staff'])->group(function () {

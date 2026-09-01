@@ -91,6 +91,19 @@ $sufixo = $modo === 'criar' ? 'create' : 'edit';
         <input type="datetime-local" id="observed_at-{{ $sufixo }}" name="observed_at" required x-model="editObservedAt" class="w-full text-xs rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 p-2.5 focus:ring-emerald-500 focus:border-emerald-500">
       </div>
 
+      <div class="p-3 bg-gray-100 dark:bg-gray-700/50 rounded-xl border border-gray-200 dark:border-gray-600 flex items-center space-x-3">
+        <input
+          type="checkbox"
+          id="is_shared-{{ $sufixo }}"
+          name="is_shared"
+          value="1"
+          checked
+          class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500 h-4 w-4 cursor-pointer">
+        <label for="is_shared-{{ $sufixo }}" class="text-xs font-semibold text-gray-800 dark:text-gray-200 cursor-pointer">
+          👥 Permitir que a comunidade anexe fotos de acompanhamento desta árvore
+        </label>
+      </div>
+
       <div class="flex gap-2 pt-2">
         <button type="submit"
           class="flex-1 bg-emerald-700 hover:bg-emerald-800 dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white font-bold text-sm py-2.5 px-4 rounded-xl shadow-md shadow-emerald-700/20 transition duration-200 disabled:opacity-50 flex items-center justify-center space-x-2">
