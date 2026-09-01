@@ -1,3 +1,5 @@
+@props(['observations' => null, 'myObservations' => null])
+
 @php
   $estagiosTraducao = [
     'seedling' => 'Muda',
@@ -5,6 +7,7 @@
     'adult' => 'Adulta',
     'dead' => 'Morta'
   ];
+  $lista = $myObservations ?? ($observations ? $observations->where('user_id', auth()->id()) : collect());
 @endphp
 
 <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-sm text-left">
@@ -18,7 +21,7 @@
     </tr>
   </thead>
   <tbody class="divide-y divide-gray-200 dark:divide-gray-700 text-gray-900 dark:text-gray-100">
-    @forelse($observations->where('user_id', auth()->id()) as $obs)
+    @forelse($lista as $obs)
     <tr>
       <td class="px-6 py-4">
         {{ $obs->id }}

@@ -77,26 +77,47 @@ function updateCoordinates(lat, lng, mapId) {
   lngInput.dispatchEvent(new Event('input', { bubbles: true }));
 }
 
-async function loadExistingPoints(map) {
+let observationLayers = {};
+
+async function loadExistingPoints(map, mapId = 'map') {
+  await reloadGlobalMapPoints(mapId);
+}
+
+export async function reloadGlobalMapPoints(mapId = 'map') {
+  const map = maps[mapId];
+  if (!map) return;
+
+  if (observationLayers[mapId]) {
+    observationLayers[mapId].clearLayers();
+  } else {
+    observationLayers[mapId] = L.layerGroup().addTo(map);
+  }
+
   try {
     const response = await fetchObservations();
     const observations = response.data || response;
 
     if (Array.isArray(observations)) {
       observations.forEach(observation => {
-        addObservationMarker(map, observation);
+        const marker = addObservationMarker(map, observation);
+        if (marker && observationLayers[mapId]) {
+          observationLayers[mapId].addLayer(marker);
+        }
       });
     }
-
   } catch (error) {
-    console.error('[Map Service Error] Falha ao carregar observações existentes:', error);
+    console.error('[Map Service Error] Falha ao carregar/recarregar observações existentes:', error);
   }
 }
 
 export function addNewObservationToMap(observation, mapId = 'map-create') { 
   const map = maps[mapId] || maps['map'] || Object.values(maps)[0];
   if (!map) { return; }
-  addObservationMarker(map, observation);
+  const targetMapId = maps[mapId] ? mapId : 'map';
+  const marker = addObservationMarker(map, observation);
+  if (marker && observationLayers[targetMapId]) {
+    observationLayers[targetMapId].addLayer(marker);
+  }
 }
 
 export function clearClickMarker(mapId = 'map-create') {
@@ -206,4 +227,5 @@ if (typeof window !== 'undefined') {
   window.updateMarkerFromInputs = updateMarkerFromInputs;
   window.clearClickMarker = clearClickMarker;
   window.updateMarkerPosition = updateMarkerPosition;
+  window.reloadGlobalMapPoints = reloadGlobalMapPoints;
 }

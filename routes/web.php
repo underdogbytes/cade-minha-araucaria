@@ -14,6 +14,8 @@ Route::middleware([
     'verified',
 ])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/feed-partial', [DashboardController::class, 'feedPartial'])->name('dashboard.feed-partial');
+    Route::get('/dashboard/my-obs-partial', [DashboardController::class, 'myObsPartial'])->name('dashboard.my-obs-partial');
     Route::post('/observations', [AraucariaObservationController::class, 'store'])->name('observations.store');
     Route::get('/observations/{observation}', [AraucariaObservationController::class, 'show'])->name('observations.show');
     Route::put('/observations/{observation}', [AraucariaObservationController::class, 'update'])->name('observations.update');
