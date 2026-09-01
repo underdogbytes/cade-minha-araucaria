@@ -14,16 +14,42 @@ class AraucariaObservationResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $formatPhoto = function (?string $path) {
+            if (!$path) return null;
+            if (str_starts_with($path, 'data:') || str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+                return $path;
+            }
+            return Storage::disk('public')->url($path);
+        };
+
+        $photosList = [];
+        if ($this->relationLoaded('photos') && $this->photos->isNotEmpty()) {
+            foreach ($this->photos as $photo) {
+                $photosList[] = [
+                    'id' => $photo->id,
+                    'url' => $formatPhoto($photo->photo_path),
+                    'is_primary' => (bool) $photo->is_primary,
+                ];
+            }
+        } elseif ($this->photo_path) {
+            $photosList[] = [
+                'id' => null,
+                'url' => $formatPhoto($this->photo_path),
+                'is_primary' => true,
+            ];
+        }
+
         return [
             'id' => $this->id,
             'latitude' => (float) $this->latitude,
             'longitude' => (float) $this->longitude,
-            'photo_path' => Storage::disk('public')->url($this->photo_path),
+            'photo_path' => $formatPhoto($this->photo_path),
+            'photos' => $photosList,
             'stage' => $this->stage,
             'gender' => $this->gender,
-            'observer' => $this->user->username,
-            'created_at' => $this->created_at->toIso8601String(),
-            'observed_at' => $this->observed_at->toIso8601String(),
+            'observer' => $this->user ? ($this->user->username ?? $this->user->name) : 'Desconhecido',
+            'created_at' => $this->created_at?->toIso8601String(),
+            'observed_at' => $this->observed_at?->toIso8601String(),
         ];
     }
 }

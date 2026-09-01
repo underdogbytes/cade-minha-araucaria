@@ -55,6 +55,7 @@
     }"
     @observation-saved="
         showAlert = true; alertMessage = 'Araucária salva com sucesso!'; alertType = 'success'; setTimeout(() => showAlert = false, 3000);
+        editLat = ''; editLng = ''; editPhotoUrl = '';
         refreshFeed();
         refreshMyObs();
         refreshMap();
@@ -103,7 +104,8 @@
                     editStage = 'adult';
                     editGender = 'unknown';
                     editPhotoUrl = '';
-                    document.getElementById('araucariaForm')?.reset();
+                    document.getElementById('araucariaForm-create')?.reset();
+                    window.dispatchEvent(new CustomEvent('reset-form-photos'));
                     $dispatch('mudar-aba', 'create')"
                     :class="tab === 'create' ? 'bg-white dark:bg-emerald-700 text-emerald-900 dark:text-white shadow-md font-bold' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-white/40 dark:hover:bg-gray-700/40'"
                     class="flex-1 min-w-[130px] flex items-center justify-center space-x-2 py-2.5 px-4 rounded-xl text-xs sm:text-sm transition duration-200 focus:outline-none">

@@ -27,6 +27,7 @@ class AraucariaObservationController extends Controller
      */
     public function show(AraucariaObservation $observation)
     {
+        $observation->load(['photos', 'updates.user', 'user']);
         return view('observations.show', compact('observation'));
     }
 
@@ -43,16 +44,43 @@ class AraucariaObservationController extends Controller
         DB::beginTransaction();
 
         try {
-            if ($request->hasFile('photo_path')) {
-                $validated['photo_path'] = $this->processImage(
-                    $request->file('photo_path')
-                );
+            $files = [];
+            if ($request->hasFile('photos')) {
+                $rawFiles = $request->file('photos');
+                $files = is_array($rawFiles) ? $rawFiles : [$rawFiles];
             }
+            if ($request->hasFile('photo_path')) {
+                $files[] = $request->file('photo_path');
+            }
+
+            $processedPhotos = [];
+            foreach ($files as $index => $file) {
+                $processedPhotos[] = [
+                    'path' => $this->processImage($file),
+                    'is_primary' => $index === 0,
+                ];
+            }
+
+            if (!empty($processedPhotos)) {
+                $validated['photo_path'] = $processedPhotos[0]['path'];
+            } else {
+                $validated['photo_path'] = '';
+            }
+
+            // Remove a chave photos de $validated pois ela não pertence a tabela de observações
+            unset($validated['photos']);
 
             $observation = $request
                 ->user()
                 ->araucariaObservations()
                 ->create($validated);
+
+            foreach ($processedPhotos as $photoData) {
+                $observation->photos()->create([
+                    'photo_path' => $photoData['path'],
+                    'is_primary' => $photoData['is_primary'],
+                ]);
+            }
 
             DB::commit();
 
@@ -63,7 +91,7 @@ class AraucariaObservationController extends Controller
 
             return response()->json([
                 'message' => 'Observação de Araucária registrada com sucesso!',
-                'data' => new AraucariaObservationResource($observation),
+                'data' => new AraucariaObservationResource($observation->load('photos')),
             ], 201);
 
         } catch (\Throwable $e) {
@@ -96,18 +124,37 @@ class AraucariaObservationController extends Controller
         DB::beginTransaction();
 
         try {
+            $files = [];
+            if ($request->hasFile('photos')) {
+                $rawFiles = $request->file('photos');
+                $files = is_array($rawFiles) ? $rawFiles : [$rawFiles];
+            }
             if ($request->hasFile('photo_path')) {
+                $files[] = $request->file('photo_path');
+            }
 
-                if ($observation->photo_path) {
-                    Storage::disk('public')->delete(
-                        $observation->photo_path
-                    );
+            if (!empty($files)) {
+                $processedPhotos = [];
+                foreach ($files as $index => $file) {
+                    $processedPhotos[] = [
+                        'path' => $this->processImage($file),
+                        'is_primary' => $index === 0,
+                    ];
                 }
 
-                $validated['photo_path'] = $this->processImage(
-                    $request->file('photo_path')
-                );
+                $validated['photo_path'] = $processedPhotos[0]['path'];
+
+                // Atualiza/Substitui fotos vinculadas ao registro
+                $observation->photos()->delete();
+                foreach ($processedPhotos as $photoData) {
+                    $observation->photos()->create([
+                        'photo_path' => $photoData['path'],
+                        'is_primary' => $photoData['is_primary'],
+                    ]);
+                }
             }
+
+            unset($validated['photos']);
 
             $observation->update($validated);
 
@@ -116,7 +163,7 @@ class AraucariaObservationController extends Controller
             return response()->json([
                 'message' => 'Observação atualizada com sucesso!',
                 'data' => new AraucariaObservationResource(
-                    $observation->fresh()
+                    $observation->fresh(['photos', 'user'])
                 ),
             ]);
 

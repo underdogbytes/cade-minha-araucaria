@@ -178,4 +178,33 @@ class AraucariaObservationTest extends TestCase
         $observation = AraucariaObservation::where('user_id', $user->id)->first();
         $this->assertNotNull($observation->observed_at);
     }
+
+    public function test_can_create_observation_with_multiple_photos(): void
+    {
+        \Illuminate\Support\Facades\Storage::fake('public');
+        $user = User::factory()->create();
+
+        $file1 = \Illuminate\Http\UploadedFile::fake()->image('araucaria1.jpg', 600, 600);
+        $file2 = \Illuminate\Http\UploadedFile::fake()->image('araucaria2.jpg', 600, 600);
+
+        $response = $this->actingAs($user)->postJson('/api/observations', [
+            'latitude' => -25.4284,
+            'longitude' => -49.2733,
+            'photos' => [$file1, $file2],
+            'stage' => 'adult',
+            'gender' => 'female',
+        ]);
+
+        $response->assertStatus(201);
+        $observation = AraucariaObservation::where('user_id', $user->id)->first();
+        $this->assertNotNull($observation);
+
+        $this->assertDatabaseHas('araucaria_observation_photos', [
+            'araucaria_observation_id' => $observation->id,
+            'is_primary' => true,
+        ]);
+        $this->assertCount(2, $observation->photos);
+        $response->assertJsonCount(2, 'data.photos');
+    }
 }
+

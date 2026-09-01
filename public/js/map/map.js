@@ -142,24 +142,37 @@ export async function reloadGlobalMapPoints(mapId = 'map') {
   }
 }
 
-export function addNewObservationToMap(observation, mapId = 'map-create') {
-  const map = maps[mapId] || maps['map'] || Object.values(maps)[0];
-  if (!map) { return; }
-  const targetMapId = maps[mapId] ? mapId : 'map';
+export function addNewObservationToMap(observation, mapId = 'map') {
+  if (mapId === 'map-create') return;
+
+  const map = maps[mapId];
+  if (!map) return;
+
   const marker = addObservationMarker(map, observation);
-  if (marker && observationLayers[targetMapId]) {
-    observationLayers[targetMapId].addLayer(marker);
+  if (marker && observationLayers[mapId]) {
+    observationLayers[mapId].addLayer(marker);
   }
 }
 
 export function clearClickMarker(mapId = 'map-create') {
   const map = maps[mapId];
-  const clickMarker = clickMarkers[mapId];
+  if (!map) return;
 
-  if (!clickMarker || !map) { return; }
+  if (clickMarkers[mapId]) {
+    map.removeLayer(clickMarkers[mapId]);
+    clickMarkers[mapId] = null;
+  }
 
-  map.removeLayer(clickMarker);
-  clickMarkers[mapId] = null;
+  if (observationLayers[mapId]) {
+    observationLayers[mapId].clearLayers();
+  }
+
+  // Garante a remoção de qualquer marcador remanescente no mapa especificado
+  map.eachLayer((layer) => {
+    if (layer instanceof L.Marker) {
+      map.removeLayer(layer);
+    }
+  });
 }
 
 export function invalidateMapSize(mapId = 'map') {

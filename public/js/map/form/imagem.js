@@ -29,23 +29,24 @@ export async function handleSelecaoImagem(isChecked, file, formElement, mapId) {
 }
 
 export function validarImagem(form) {
-  const input = form.querySelector('[name="photo_path"]') || form.querySelector('input[type="file"]');
+  const input = form.querySelector('[name="photos[]"]') || form.querySelector('[name="photo_path"]') || form.querySelector('input[type="file"]');
   const isEdit = form.id === 'araucariaForm-edit';
 
   if (!input?.files?.length) {
     if (isEdit) return;
-    throw new Error('Selecione uma imagem.');
+    throw new Error('Selecione pelo menos uma imagem.');
   }
 
-  const file = input.files[0];
   const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
-
-  if (!allowedTypes.includes(file.type)) {
-    throw new Error('Formato de imagem inválido. Formatos aceitos: JPEG, PNG, WEBP.');
-  }
-
   const maxSize = 20 * 1024 * 1024; // 20MB
-  if (file.size > maxSize) {
-    throw new Error('A imagem deve ter no máximo 20MB.');
+
+  for (const file of input.files) {
+    if (!allowedTypes.includes(file.type)) {
+      throw new Error(`Formato de imagem inválido em "${file.name}". Formatos aceitos: JPEG, PNG, WEBP.`);
+    }
+
+    if (file.size > maxSize) {
+      throw new Error(`A imagem "${file.name}" excede o limite máximo de 20MB.`);
+    }
   }
 }

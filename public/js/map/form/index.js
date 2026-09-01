@@ -38,8 +38,7 @@ async function handleGlobalSubmit(event) {
     const successMessage = response.message || 'Observação salva com sucesso!';
 
     if (observation) {
-      const currentMapId = form.id === 'araucariaForm-edit' ? 'map-edit' : 'map-create';
-      addNewObservationToMap(observation, currentMapId);
+      addNewObservationToMap(observation, 'map');
     }
 
     dispatchAlert('saved', successMessage);
@@ -47,15 +46,17 @@ async function handleGlobalSubmit(event) {
     // ✨ Se for CRIAÇÃO, limpa tudo para o próximo registro
     if (form.id === 'araucariaForm-create') {
       form.reset();
+      window.dispatchEvent(new CustomEvent('reset-form-photos'));
       clearClickMarker('map-create');
 
-      const latInput = form.querySelector('#latitude');
-      const lngInput = form.querySelector('#longitude');
-      if (latInput) latInput.value = '';
-      if (lngInput) lngInput.value = '';
+      const latInput = form.querySelector('#latitude-create') || form.querySelector('[name="latitude"]');
+      const lngInput = form.querySelector('#longitude-create') || form.querySelector('[name="longitude"]');
+      if (latInput) { latInput.value = ''; latInput.dispatchEvent(new Event('input', { bubbles: true })); }
+      if (lngInput) { lngInput.value = ''; lngInput.dispatchEvent(new Event('input', { bubbles: true })); }
+    } else {
+      window.dispatchEvent(new CustomEvent('reset-form-photos'));
+      clearClickMarker('map-edit');
     }
-    // Se for EDIÇÃO, não resetamos o form! 
-    // Limpa o estado de clique antigo se houver, mantendo os dados salvos na tela
 
   } catch (error) {
     let message = error.message || 'Erro inesperado.';

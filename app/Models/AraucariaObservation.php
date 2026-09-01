@@ -30,6 +30,11 @@ class AraucariaObservation extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function photos(): HasMany
+    {
+        return $this->hasMany(AraucariaObservationPhoto::class, 'araucaria_observation_id');
+    }
+
     public function reports(): HasMany
     {
         return $this->hasMany(AraucariaObservationReport::class, 'araucaria_observation_id');
@@ -40,3 +45,4 @@ class AraucariaObservation extends Model
         return $this->hasMany(AraucariaObservationUpdate::class, 'araucaria_observation_id')->latest();
     }
 }
+

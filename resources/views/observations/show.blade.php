@@ -37,7 +37,7 @@
           <div class="flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-900 rounded-xl p-3 border border-gray-100 dark:border-gray-700 relative group">
             @include('observations.partials.image', ['observation' => $observation])
             <span class="absolute bottom-5 left-5 bg-black/60 backdrop-blur-md text-white text-[11px] font-semibold px-2.5 py-1 rounded-lg">
-              Foto Original do Registro
+              {{ $observation->photos->count() > 1 ? $observation->photos->count() . ' Fotos Registradas' : 'Foto Original do Registro' }}
             </span>
           </div>
 

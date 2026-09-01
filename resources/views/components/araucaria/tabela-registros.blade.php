@@ -31,6 +31,11 @@
           <span class="font-mono text-xs font-bold text-gray-400">#{{ $obs->id }}</span>
           <div class="relative w-12 h-12 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 shadow-sm shrink-0">
             <img src="{{ $obs->photo_path }}" alt="Miniatura" class="w-full h-full object-cover">
+            @if($obs->photos && $obs->photos->count() > 1)
+              <span class="absolute bottom-0 right-0 bg-emerald-700 text-white text-[9px] font-bold px-1 py-0.2 rounded-tl-md shadow-xs" title="{{ $obs->photos->count() }} fotos no registro">
+                +{{ $obs->photos->count() - 1 }}
+              </span>
+            @endif
           </div>
         </div>
       </td>
