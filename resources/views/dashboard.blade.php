@@ -27,22 +27,22 @@
                 <span x-text="alertMessage"></span>
             </div>
     
-            <div class="flex border-b border-gray-200 dark:border-gray-700 mb-6 space-x-4">
+            <div class="flex overflow-x-auto whitespace-nowrap border-b border-gray-200 dark:border-gray-700 mb-6 space-x-1 sm:space-x-4 scrollbar-none [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                 <button @click="tab = 'feed'; $dispatch('mudar-aba', 'feed')"
                     :class="tab === 'feed' ? 'border-emerald-500 text-emerald-600 dark:text-emerald-400 font-semibold' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
-                    class="py-3 px-4 border-b-2 text-sm font-medium transition duration-200 focus:outline-none">
+                    class="flex-shrink-0 whitespace-nowrap py-3 px-3 sm:px-4 border-b-2 text-xs sm:text-sm font-medium transition duration-200 focus:outline-none">
                     🌲 Feed da Comunidade
                 </button>
     
                 <button @click="tab = 'mapa-mundi'; $dispatch('mudar-aba', 'mapa-mundi')"
                     :class="tab === 'mapa-mundi' ? 'border-emerald-500 text-emerald-600 dark:text-emerald-400 font-semibold' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
-                    class="py-3 px-4 border-b-2 text-sm font-medium transition duration-200 focus:outline-none">
+                    class="flex-shrink-0 whitespace-nowrap py-3 px-3 sm:px-4 border-b-2 text-xs sm:text-sm font-medium transition duration-200 focus:outline-none">
                     🌎 Araucárias do Mundo
                 </button>
 
                 <button @click="tab = 'my-obs'; subAba = 'tabela'; $dispatch('mudar-aba', 'my-obs')"
                     :class="tab === 'my-obs' ? 'border-emerald-500 text-emerald-600 dark:text-emerald-400 font-semibold' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
-                    class="py-3 px-4 border-b-2 text-sm font-medium transition duration-200 focus:outline-none">
+                    class="flex-shrink-0 whitespace-nowrap py-3 px-3 sm:px-4 border-b-2 text-xs sm:text-sm font-medium transition duration-200 focus:outline-none">
                     👤 Minhas Observações
                 </button>
     
@@ -57,7 +57,7 @@
                     document.getElementById('araucariaForm')?.reset();
                     $dispatch('mudar-aba', 'create')"
                     :class="tab === 'create' ? 'border-emerald-500 text-emerald-600 dark:text-emerald-400 font-semibold' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
-                    class="py-3 px-4 border-b-2 text-sm font-medium transition duration-200 focus:outline-none">
+                    class="flex-shrink-0 whitespace-nowrap py-3 px-3 sm:px-4 border-b-2 text-xs sm:text-sm font-medium transition duration-200 focus:outline-none">
                     ➕ Registrar Araucária
                 </button>
             </div>
