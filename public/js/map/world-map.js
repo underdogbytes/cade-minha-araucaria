@@ -51,6 +51,7 @@ async function loadObservations() {
     markers.addLayers(markerList);
     map.addLayer(markers);
   } catch (error) {
+    console.error('[World Map Service Error] Falha ao carregar observações:', error);
     showErrorMessage(error);
   } finally {
     hideSpinner('mapSpinner');

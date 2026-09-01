@@ -1,11 +1,7 @@
 import { updateMarkerPosition, clearClickMarker } from '../map.js';
 
 export function atualizaPinsMapa(lat, lng, mapId) {
-  if (typeof updateMarkerPosition === 'function') {
-    updateMarkerPosition(lat, lng, mapId);
-  } else if (window.updateMarkerPosition) {
-    window.updateMarkerPosition(lat, lng, mapId);
-  }
+  updateMarkerPosition(lat, lng, mapId);
 }
 
 export function atualizaCoordenadas(formElement, coordenadas, mapId) {
@@ -28,9 +24,5 @@ export function atualizaCoordenadas(formElement, coordenadas, mapId) {
 }
 
 export function limparPinsMapa(mapId) {
-  if (typeof clearClickMarker === 'function') {
-    clearClickMarker(mapId);
-  } else if (window.clearClickMarker) {
-    window.clearClickMarker(mapId);
-  }
+  clearClickMarker(mapId);
 }

@@ -50,9 +50,7 @@
             }
         },
         refreshMap() {
-            if (window.reloadGlobalMapPoints) {
-                window.reloadGlobalMapPoints('map');
-            }
+            window.dispatchEvent(new CustomEvent('reload-map', { detail: { mapId: 'map' } }));
         }
     }"
     @observation-saved="
@@ -142,7 +140,7 @@
                             <h3 class="text-lg font-medium text-gray-900 dark:text-white">
                                 Editar Registro #<span x-text="idEdicao"></span>
                             </h3>
-                            <button @click="subAba = 'tabela'; idEdicao = null; editLat = ''; editLng = ''; editStage = 'adult'; editGender = 'unknown';"
+                            <button @click="subAba = 'tabela'; idEdicao = null; editLat = ''; editLng = ''; editStage = 'adult'; editGender = 'unknown'; $dispatch('destroy-map', { mapId: 'map-edit' });"
                                 class="text-sm bg-gray-500 hover:bg-gray-600 text-white font-bold py-1 px-3 rounded transition">
                                 Voltar para Tabela
                             </button>

@@ -1,5 +1,6 @@
 import { setupFormListener } from './form/index.js';
-import { initializeEditMarker, initMap, invalidateMapSize, reloadGlobalMapPoints } from './map.js';
+import { initializeEditMarker, initMap, invalidateMapSize, reloadGlobalMapPoints, destroyMap } from './map.js';
+import { handleSelecaoImagem } from './form/imagem.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   setupFormListener();
@@ -38,4 +39,23 @@ window.addEventListener('mudar-aba', async event => {
   setTimeout(() => {
     setupFormListener();
   }, 100);
+});
+
+window.addEventListener('destroy-map', event => {
+  const { mapId } = event.detail || {};
+  if (mapId) {
+    destroyMap(mapId);
+  }
+});
+
+window.addEventListener('reload-map', async event => {
+  const { mapId = 'map' } = event.detail || {};
+  await reloadGlobalMapPoints(mapId);
+});
+
+window.addEventListener('process-image-exif', async event => {
+  const { isChecked, file, formElement, mapId } = event.detail || {};
+  if (formElement) {
+    await handleSelecaoImagem(isChecked, file, formElement, mapId);
+  }
 });

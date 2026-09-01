@@ -39,16 +39,18 @@ $sufixo = $modo === 'criar' ? 'create' : 'edit';
             const fileInput = form.querySelector('[name=\'photo_path\']') || form.querySelector('input[type=\'file\']');
             const file = fileInput ? fileInput.files[0] : null;
         
-            if (window.handleSelecaoImagem) {
-              await window.handleSelecaoImagem($event.target.checked, file, form, `map-${sufixo}`);
-              
+            window.dispatchEvent(new CustomEvent('process-image-exif', {
+              detail: { isChecked: $event.target.checked, file, formElement: form, mapId: `map-${sufixo}` }
+            }));
+            
+            setTimeout(() => {
               const latEl = form.querySelector('[name=\'latitude\']');
               const lngEl = form.querySelector('[name=\'longitude\']');
               const obsEl = form.querySelector('[name=\'observed_at\']');
-              editLat = latEl ? latEl.value : '';
-              editLng = lngEl ? lngEl.value : '';
-              editObservedAt = obsEl ? obsEl.value : '';
-            }
+              if (latEl && latEl.value) editLat = latEl.value;
+              if (lngEl && lngEl.value) editLng = lngEl.value;
+              if (obsEl && obsEl.value) editObservedAt = obsEl.value;
+            }, 50);
           })()">
         <span>Aceito usar os dados EXIF da foto</span>
       </div>

@@ -1,9 +1,23 @@
 import { fetchObservations } from './api.js';
 import { addObservationMarker } from './markers.js';
 import { makeTiles } from './utils/maps.js';
+import { dispatchAlert } from './utils/alerts.js';
 
 let maps = {};
 let clickMarkers = {};
+let observationLayers = {};
+let pendingObservationsPromise = null;
+
+async function fetchObservationsDeduped() {
+  if (!pendingObservationsPromise) {
+    pendingObservationsPromise = fetchObservations().finally(() => {
+      setTimeout(() => {
+        pendingObservationsPromise = null;
+      }, 1000);
+    });
+  }
+  return pendingObservationsPromise;
+}
 
 export async function initMap(mapId = 'map') {
   if (maps[mapId]) { return maps[mapId]; }
@@ -23,10 +37,29 @@ export async function initMap(mapId = 'map') {
   maps[mapId] = map;
 
   if (mapId !== 'map-create' && mapId !== 'map-edit') {
-    await loadExistingPoints(map);
+    await loadExistingPoints(map, mapId);
   }
 
   return map;
+}
+
+export function destroyMap(mapId = 'map') {
+  if (clickMarkers[mapId]) {
+    if (maps[mapId]) {
+      maps[mapId].removeLayer(clickMarkers[mapId]);
+    }
+    delete clickMarkers[mapId];
+  }
+  if (observationLayers[mapId]) {
+    if (maps[mapId]) {
+      maps[mapId].removeLayer(observationLayers[mapId]);
+    }
+    delete observationLayers[mapId];
+  }
+  if (maps[mapId]) {
+    maps[mapId].remove();
+    delete maps[mapId];
+  }
 }
 
 function handleMapClick(event, mapId) {
@@ -57,13 +90,13 @@ function handleMarkerMove(event, mapId) {
 }
 
 function updateCoordinates(lat, lng, mapId) {
-  const sufixo = mapId === 'map-edit' ? 'edit' : 'create';
-  const form = document.getElementById(`araucariaForm-${sufixo}`);
+  const sufixo = mapId === 'map-edit' ? 'edit' : (mapId === 'map-create' ? 'create' : 'create');
+  const form = document.getElementById(`araucariaForm-${sufixo}`) || document.getElementById('araucariaForm');
 
   if (!form) return;
 
-  const latInput = form.querySelector('[name="latitude"]') || form.querySelector('[id^="latitude"]');
-  const lngInput = form.querySelector('[name="longitude"]') || form.querySelector('[id^="longitude"]');
+  const latInput = form.querySelector(`#latitude-${sufixo}`) || form.querySelector('[name="latitude"]') || form.querySelector('[id^="latitude"]');
+  const lngInput = form.querySelector(`#longitude-${sufixo}`) || form.querySelector('[name="longitude"]') || form.querySelector('[id^="longitude"]');
 
   if (!latInput || !lngInput) return;
 
@@ -76,8 +109,6 @@ function updateCoordinates(lat, lng, mapId) {
   latInput.dispatchEvent(new Event('input', { bubbles: true }));
   lngInput.dispatchEvent(new Event('input', { bubbles: true }));
 }
-
-let observationLayers = {};
 
 async function loadExistingPoints(map, mapId = 'map') {
   await reloadGlobalMapPoints(mapId);
@@ -94,7 +125,7 @@ export async function reloadGlobalMapPoints(mapId = 'map') {
   }
 
   try {
-    const response = await fetchObservations();
+    const response = await fetchObservationsDeduped();
     const observations = response.data || response;
 
     if (Array.isArray(observations)) {
@@ -106,11 +137,12 @@ export async function reloadGlobalMapPoints(mapId = 'map') {
       });
     }
   } catch (error) {
-    console.error('[Map Service Error] Falha ao carregar/recarregar observações existentes:', error);
+    console.error(`[Map Service Error] Falha ao carregar/recarregar observações existentes no mapa '${mapId}':`, error);
+    dispatchAlert('error', 'Não foi possível carregar os pontos das observações.');
   }
 }
 
-export function addNewObservationToMap(observation, mapId = 'map-create') { 
+export function addNewObservationToMap(observation, mapId = 'map-create') {
   const map = maps[mapId] || maps['map'] || Object.values(maps)[0];
   if (!map) { return; }
   const targetMapId = maps[mapId] ? mapId : 'map';
@@ -135,7 +167,9 @@ export function invalidateMapSize(mapId = 'map') {
   if (!map) { return; }
 
   requestAnimationFrame(() => {
-    map.invalidateSize();
+    requestAnimationFrame(() => {
+      map.invalidateSize();
+    });
   });
 }
 
@@ -146,8 +180,8 @@ export function initializeEditMarker(mapId = 'map-edit') {
   const formEdit = document.getElementById('araucariaForm-edit');
   if (!formEdit) return;
 
-  const latInput = formEdit.querySelector('[name="latitude"]') || formEdit.querySelector('[id^="latitude"]');
-  const lngInput = formEdit.querySelector('[name="longitude"]') || formEdit.querySelector('[id^="longitude"]');
+  const latInput = formEdit.querySelector('#latitude-edit') || formEdit.querySelector('[name="latitude"]') || formEdit.querySelector('[id^="latitude"]');
+  const lngInput = formEdit.querySelector('#longitude-edit') || formEdit.querySelector('[name="longitude"]') || formEdit.querySelector('[id^="longitude"]');
 
   if (!latInput || !lngInput || !latInput.value || !lngInput.value) {
     return;
@@ -178,12 +212,12 @@ export function updateMarkerFromInputs(mapId) {
   const map = maps[mapId];
   if (!map) return;
 
-  const sufixo = mapId === 'map-edit' ? 'edit' : 'create';
+  const sufixo = mapId === 'map-edit' ? 'edit' : (mapId === 'map-create' ? 'create' : 'create');
   const form = document.getElementById(`araucariaForm-${sufixo}`);
   if (!form) return;
 
-  const latInput = form.querySelector('[name="latitude"]') || form.querySelector('[id^="latitude"]');
-  const lngInput = form.querySelector('[name="longitude"]') || form.querySelector('[id^="longitude"]');
+  const latInput = form.querySelector(`#latitude-${sufixo}`) || form.querySelector('[name="latitude"]') || form.querySelector('[id^="latitude"]');
+  const lngInput = form.querySelector(`#longitude-${sufixo}`) || form.querySelector('[name="longitude"]') || form.querySelector('[id^="longitude"]');
   if (!latInput || !lngInput || !latInput.value || !lngInput.value) return;
 
   const lat = Number(latInput.value);
@@ -221,11 +255,4 @@ export function updateMarkerPosition(lat, lng, mapId) {
     clickMarker.on('moveend', (e) => handleMarkerMove(e, mapId));
     clickMarkers[mapId] = clickMarker;
   }
-}
-
-if (typeof window !== 'undefined') {
-  window.updateMarkerFromInputs = updateMarkerFromInputs;
-  window.clearClickMarker = clearClickMarker;
-  window.updateMarkerPosition = updateMarkerPosition;
-  window.reloadGlobalMapPoints = reloadGlobalMapPoints;
 }

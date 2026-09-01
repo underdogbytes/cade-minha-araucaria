@@ -28,10 +28,6 @@ export async function handleSelecaoImagem(isChecked, file, formElement, mapId) {
   }
 }
 
-if (typeof window !== 'undefined') {
-  window.handleSelecaoImagem = handleSelecaoImagem;
-}
-
 export function validarImagem(form) {
   const input = form.querySelector('[name="photo_path"]') || form.querySelector('input[type="file"]');
   const isEdit = form.id === 'araucariaForm-edit';

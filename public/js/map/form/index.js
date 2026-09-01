@@ -118,7 +118,7 @@ async function handleReportSubmit(event) {
   }
 }
 
-window.deletarObservacao = async function (id, elementoLinha) {
+export async function deletarObservacao(id, elementoLinha) {
   try {
     const response = await deleteObservation(id);
     const successMessage = response.message || 'Registro excluído com sucesso!';
@@ -139,4 +139,13 @@ window.deletarObservacao = async function (id, elementoLinha) {
     let message = error.message || 'Não foi possível excluir.';
     dispatchAlert('error', message);
   }
-};
+}
+
+if (typeof window !== 'undefined') {
+  window.addEventListener('deletar-observacao', async (event) => {
+    const { id, elementoLinha } = event.detail || {};
+    if (id) {
+      await deletarObservacao(id, elementoLinha);
+    }
+  });
+}

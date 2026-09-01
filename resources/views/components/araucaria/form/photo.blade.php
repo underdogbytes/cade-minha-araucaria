@@ -36,16 +36,18 @@
         const checkboxAtual = form.querySelector('[name=\'dataexif\']') || form.querySelector('#dataexif');
         const isChecked = checkboxAtual ? checkboxAtual.checked : false;
 
-        if (window.handleSelecaoImagem) {
-          await window.handleSelecaoImagem(isChecked, file, form, currentMapId);
-          
+        window.dispatchEvent(new CustomEvent('process-image-exif', {
+          detail: { isChecked, file, formElement: form, mapId: currentMapId }
+        }));
+        
+        setTimeout(() => {
           const latEl = form.querySelector('[name=\'latitude\']');
           const lngEl = form.querySelector('[name=\'longitude\']');
           const obsEl = form.querySelector('[name=\'observed_at\']');
-          editLat = latEl ? latEl.value : '';
-          editLng = lngEl ? lngEl.value : '';
-          editObservedAt = obsEl ? obsEl.value : '';
-        }
+          if (latEl && latEl.value) editLat = latEl.value;
+          if (lngEl && lngEl.value) editLng = lngEl.value;
+          if (obsEl && obsEl.value) editObservedAt = obsEl.value;
+        }, 50);
       }
     })()"
     >

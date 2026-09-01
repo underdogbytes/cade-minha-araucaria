@@ -61,7 +61,7 @@
           class="flex justify-end items-center space-x-2 text-xs bg-red-50 dark:bg-red-950/30 p-1.5 rounded" x-transition>
           <span class="text-red-700 dark:text-red-300 font-medium">Tem certeza?</span>
         
-          <button type="button" @click="deletarObservacao('{{ $obs->id }}', $el.closest('tr'))"
+          <button type="button" @click="$dispatch('deletar-observacao', { id: '{{ $obs->id }}', elementoLinha: $el.closest('tr') })"
             class="bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded font-bold transition shadow-sm">
             Sim
           </button>
