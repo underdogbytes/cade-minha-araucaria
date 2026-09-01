@@ -85,22 +85,6 @@
                             </a>
                         @endauth
                     </div>
-
-                    <!-- Impact Stats Cards -->
-                    <div class="mt-14 grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto">
-                        <div class="p-4 rounded-xl bg-white/70 dark:bg-gray-800/70 border border-gray-100 dark:border-gray-700/50 shadow-sm backdrop-blur-sm">
-                            <span class="block font-display text-3xl font-extrabold text-emerald-700 dark:text-emerald-400">4,3%</span>
-                            <span class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Cobertura Original Remanescente</span>
-                        </div>
-                        <div class="p-4 rounded-xl bg-white/70 dark:bg-gray-800/70 border border-gray-100 dark:border-gray-700/50 shadow-sm backdrop-blur-sm">
-                            <span class="block font-display text-3xl font-extrabold text-teal-700 dark:text-teal-400">100%</span>
-                            <span class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Colaborativo & Open-Source</span>
-                        </div>
-                        <div class="p-4 rounded-xl bg-white/70 dark:bg-gray-800/70 border border-gray-100 dark:border-gray-700/50 shadow-sm backdrop-blur-sm">
-                            <span class="block font-display text-3xl font-extrabold text-pine-600 dark:text-pine-400">GPS & EXIF</span>
-                            <span class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Extração Automática de Foto</span>
-                        </div>
-                    </div>
                 </div>
             </section>
 
