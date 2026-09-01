@@ -26,9 +26,6 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
                 <a href="{{ url('/') }}" class="flex items-center space-x-3 group">
                     <x-application-mark class="h-9 w-auto transform group-hover:scale-105 transition duration-200" />
-                    <span class="font-display font-extrabold text-xl bg-gradient-to-r from-emerald-800 via-emerald-600 to-teal-700 dark:from-emerald-400 dark:to-teal-300 bg-clip-text text-transparent">
-                        Cadê minha Araucária?
-                    </span>
                 </a>
 
                 <div class="flex items-center space-x-3">

@@ -7,9 +7,6 @@
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}" class="flex items-center space-x-2 group">
                         <x-application-mark class="block h-9 w-auto transform group-hover:scale-105 transition duration-200" />
-                        <span class="font-display font-bold text-lg text-emerald-900 dark:text-emerald-400 hidden sm:inline-block">
-                            Cadê minha Araucária?
-                        </span>
                     </a>
                 </div>
             </div>
