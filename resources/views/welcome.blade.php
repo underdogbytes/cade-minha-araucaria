@@ -63,11 +63,13 @@
 
                     <!-- Main Headline -->
                     <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-gray-900 dark:text-white max-w-4xl mx-auto leading-tight">
-                        Mapear, monitorar e proteger as <span class="bg-gradient-to-r from-emerald-700 via-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-300 bg-clip-text text-transparent">Araucárias nativas</span> da nossa terra.
+                        Mapear, monitorar e proteger as <span class="bg-gradient-to-r from-emerald-700 via-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-300 bg-clip-text text-transparent">Araucárias</span> da nossa terra.
                     </h1>
 
                     <p class="mt-6 text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
-                        Ajude a construir um mapa vivo das nossas florestas. Cadastre observações, fotos e localizações para proteger a *Araucaria angustifolia* e preservar o ecossistema.
+                        Ajude a construir um mapa vivo das nossas florestas!
+                        <br>
+                        Cadastre observações, fotos e localizações para proteger a <i>Araucaria angustifolia</i> e preservar o ecossistema.
                     </p>
 
                     <!-- CTA Buttons -->
@@ -106,7 +108,7 @@
                             <div class="flex items-center space-x-2">
                                 <span class="w-3 h-3 rounded-full bg-emerald-500 inline-block animate-ping"></span>
                                 <span class="text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-gray-300">
-                                    Visualização de Geo-Mapeamento ao Vivo
+                                    Geo-Mapeamento atual
                                 </span>
                             </div>
                             <span class="text-xs text-gray-400 hidden sm:inline">Leaflet.js + MarkerCluster</span>
@@ -121,36 +123,25 @@
             </section>
 
             <!-- FAQ Section -->
-            <section class="py-16 lg:py-24 bg-slate-50 dark:bg-gray-900/50" id="perguntas-frequentes">
-                <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div class="text-center mb-12">
-                        <span class="text-emerald-700 dark:text-emerald-400 text-xs font-bold uppercase tracking-wider">Perguntas Frequentes</span>
-                        <h2 class="font-display text-3xl font-bold text-gray-900 dark:text-white mt-1">
-                            Tudo o que você precisa saber
-                        </h2>
-                    </div>
-
-                    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200/80 dark:border-gray-700/80 p-6 sm:p-8">
-                        <x-faq.accordion :items="[
-                            [
-                                'question' => 'O que é o projeto Cadê minha Araucária?',
-                                'answer' => '<b>Cadê minha Araucária</b> é uma plataforma cidadã aberta desenvolvida para mapear, monitorar e promover a conservação das Araucárias nativas (<i>Araucaria angustifolia</i>) e da Mata dos Pinhais.'
-                            ],
-                            [
-                                'question' => 'Por que é vital monitorar as Araucárias?',
-                                'answer' => 'Resta uma fração mínima da cobertura original de Mata de Araucárias. O registro individual nos permite mapear espécimes adultas reprodutoras, mudas e áreas com risco de desmatamento ilegal.'    
-                            ],
-                            [
-                                'question' => 'Quanto resta da floresta original?',
-                                'answer' => 'Estudos recentes (2025) estimam que restam apenas <b>4,3%</b> da floresta original de Araucárias.<br><br>Leia a pesquisa completa:<br><a href=\'https://www.sciencedirect.com/science/article/pii/S0006320724002854\' target=\'_blank\' class=\'text-emerald-600 dark:text-emerald-400 underline font-medium\'>How much Araucaria Mixed Forest remains? Novel perspectives on conservation status (ScienceDirect)</a>'
-                            ],
-                            [
-                                'question' => 'Como posso enviar fotos com coordenadas GPS automaticamente?',
-                                'answer' => 'Ao tirar fotos com seu celular com o GPS/Localização ativado, o arquivo da imagem armazena dados EXIF de latitude e longitude. Nossa plataforma lê estes dados automaticamente ao enviar a imagem!'
-                            ]
-                        ]" />
-                    </div>
-                </div>
+            <section id="perguntas-frequentes">
+                <x-faq.accordion :items="[
+                    [
+                        'question' => 'O que é o projeto Cadê minha Araucária?',
+                        'answer' => '<b>Cadê minha Araucária</b> é uma plataforma cidadã aberta desenvolvida para mapear, monitorar e promover a conservação das Araucárias nativas (<i>Araucaria angustifolia</i>) e da Mata dos Pinhais.'
+                    ],
+                    [
+                        'question' => 'Por que é vital monitorar as Araucárias?',
+                        'answer' => 'Resta uma fração mínima da cobertura original de Mata de Araucárias. O registro individual nos permite mapear espécimes adultas reprodutoras, mudas e áreas com risco de desmatamento ilegal.'    
+                    ],
+                    [
+                        'question' => 'Quanto resta da floresta original?',
+                        'answer' => 'Estudos recentes (2025) estimam que restam apenas <b>4,3%</b> da floresta original de Araucárias.<br><br>Leia a pesquisa completa:<br><a href=\'https://www.sciencedirect.com/science/article/pii/S0006320724002854\' target=\'_blank\' class=\'text-emerald-600 dark:text-emerald-400 underline font-medium\'>How much Araucaria Mixed Forest remains? Novel perspectives on conservation status (ScienceDirect)</a>'
+                    ],
+                    [
+                        'question' => 'Como posso enviar fotos com coordenadas GPS automaticamente?',
+                        'answer' => 'Ao tirar fotos com seu celular com o GPS/Localização ativado, o arquivo da imagem armazena dados EXIF de latitude e longitude. Nossa plataforma lê estes dados automaticamente ao enviar a imagem!'
+                    ]
+                ]" />
             </section>
         </main>
 
