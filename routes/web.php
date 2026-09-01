@@ -28,6 +28,7 @@ Route::middleware([
     Route::post('/observations/{observation}/updates', [AraucariaObservationUpdateController::class, 'store'])->name('observations.updates.store');
     Route::delete('/observation-updates/{update}', [AraucariaObservationUpdateController::class, 'destroy'])->name('observations.updates.destroy');
     Route::patch('/observations/{observation}/toggle-shared', [AraucariaObservationUpdateController::class, 'toggleShared'])->name('observations.toggle-shared');
+    Route::post('/observation-updates/{update}/report', [AraucariaObservationUpdateController::class, 'report'])->name('observations.updates.report');
 
     // Moderação
     Route::middleware(['role:admin,staff'])->group(function () {

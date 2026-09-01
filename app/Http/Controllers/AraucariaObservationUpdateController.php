@@ -144,6 +144,44 @@ class AraucariaObservationUpdateController extends Controller
     }
 
     /**
+     * Reporta/denuncia uma foto de acompanhamento colaborativa.
+     */
+    public function report(Request $request, AraucariaObservationUpdate $update)
+    {
+        $request->validate([
+            'reason'  => 'required|string|in:inappropriate_image,ownership,other',
+            'details' => 'nullable|string|max:144',
+        ]);
+
+        try {
+            $update->observation->reports()->create([
+                'araucaria_observation_update_id' => $update->id,
+                'user_id' => $request->user()->id,
+                'reason'  => $request->input('reason'),
+                'details' => $request->input('details'),
+                'status'  => 'pending',
+            ]);
+
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'message' => 'Foto colaborativa denunciada com sucesso! A equipe de moderação irá analisar.',
+                ], 201);
+            }
+
+            return redirect()->back()->with('status', 'Foto colaborativa denunciada com sucesso! A moderação analisará o conteúdo.');
+
+        } catch (\Throwable $e) {
+            report($e);
+
+            if ($request->wantsJson()) {
+                return response()->json(['message' => 'Erro ao reportar foto colaborativa.'], 500);
+            }
+
+            return redirect()->back()->with('error', 'Erro ao reportar foto colaborativa.');
+        }
+    }
+
+    /**
      * Processa e comprime a imagem para Data URL Base64.
      */
     private function processImage(\Illuminate\Http\UploadedFile $file): string

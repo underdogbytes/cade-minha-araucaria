@@ -237,7 +237,7 @@ class AraucariaObservationController extends Controller
 
     public function moderationIndex()
     {
-        $groupedReports = AraucariaObservationReport::with(['observation.user', 'user'])
+        $groupedReports = AraucariaObservationReport::with(['observation.user', 'user', 'updateObservation.user'])
             ->latest()
             ->get()
             ->groupBy('araucaria_observation_id');
