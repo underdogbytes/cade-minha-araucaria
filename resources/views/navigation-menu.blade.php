@@ -1,12 +1,15 @@
-<nav x-data="{ open: false }" class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
+<nav x-data="{ open: false }" class="sticky top-0 z-40 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md border-b border-emerald-500/10 dark:border-emerald-500/20 shadow-sm transition-colors duration-200">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
-            <div class="flex">
+            <div class="flex items-center space-x-3">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
-                        <x-application-mark class="block h-9 w-auto" />
+                    <a href="{{ route('dashboard') }}" class="flex items-center space-x-2 group">
+                        <x-application-mark class="block h-9 w-auto transform group-hover:scale-105 transition duration-200" />
+                        <span class="font-display font-bold text-lg text-emerald-900 dark:text-emerald-400 hidden sm:inline-block">
+                            Cadê minha Araucária?
+                        </span>
                     </a>
                 </div>
             </div>

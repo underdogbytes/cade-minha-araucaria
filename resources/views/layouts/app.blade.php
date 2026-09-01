@@ -9,7 +9,7 @@
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        <link href="https://fonts.bunny.net/css?family=plus-jakarta-sans:400,500,600,700|outfit:500,600,700&display=swap" rel="stylesheet" />
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -22,7 +22,10 @@
             .map-flex-container {
                 display: flex;
                 flex-direction: column;
-                height: 550px;
+                min-height: 520px;
+                border-radius: 1rem;
+                overflow: hidden;
+                box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
             }
         
             @media (min-width: 768px) {
@@ -35,37 +38,42 @@
             #map-create,
             #map-edit {
                 flex: 2;
-                min-height: 350px;
+                min-height: 380px;
                 height: 100%;
-                border-radius: 8px 0 0 8px;
                 z-index: 1;
             }
         
             #form-container {
                 flex: 1;
-                padding: 20px;
-                background: white;
+                padding: 1.5rem;
                 overflow-y: auto;
-                border-radius: 0 8px 8px 0;
             }
         
             .form-group {
-                margin-bottom: 15px;
+                margin-bottom: 1rem;
             }
         
             .form-group label {
                 display: block;
-                margin-bottom: 5px;
-                font-weight: bold;
+                margin-bottom: 0.375rem;
+                font-weight: 600;
+                font-size: 0.875rem;
             }
         
             .form-group input,
             .form-group select {
                 width: 100%;
-                padding: 8px;
+                padding: 0.625rem 0.875rem;
                 box-sizing: border-box;
-                border-radius: 4px;
-                border: 1px solid #ccc;
+                border-radius: 0.5rem;
+                border: 1px solid #d1d5db;
+                transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            }
+            .form-group input:focus,
+            .form-group select:focus {
+                outline: none;
+                border-color: #327a55;
+                box-shadow: 0 0 0 3px rgba(50, 122, 85, 0.2);
             }
         </style>
     </head>

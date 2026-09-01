@@ -4,17 +4,18 @@
 $sufixo = $modo === 'criar' ? 'create' : 'edit';
 @endphp
 
-<div class="map-flex-container">
+<div class="map-flex-container rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-xl">
 
-  <div id="map-{{ $sufixo }}"></div>
+  <div id="map-{{ $sufixo }}" class="relative min-h-[380px]">
+    <div class="absolute top-3 left-3 z-10 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md px-3 py-1.5 rounded-lg border border-emerald-500/20 shadow-sm text-xs font-semibold text-emerald-800 dark:text-emerald-300">
+      📍 Clique no mapa para marcar a localização
+    </div>
+  </div>
 
-  <div id="form-container">
-    <p class="text-sm text-gray-600">
-      Clique no mapa para definir a localização exata da árvore.
-    </p>
+  <div id="form-container" class="bg-gray-50/50 dark:bg-gray-900/50 p-6 overflow-y-auto">
 
     <form id="araucariaForm-{{ $sufixo }}" method="POST"
-      :action="idEdicao ? '/observations/' + idEdicao : '/observations'" enctype="multipart/form-data">
+      :action="idEdicao ? '/observations/' + idEdicao : '/observations'" enctype="multipart/form-data" class="space-y-4">
       @csrf
 
       <template x-if="idEdicao">
@@ -23,15 +24,12 @@ $sufixo = $modo === 'criar' ? 'create' : 'edit';
 
       <x-araucaria.form.photo ::required="!idEdicao" />
 
-      <div class="form-group">
-        <label for="dataexif-{{ $sufixo }}" class="font-medium text-gray-700 dark:text-gray-300 cursor-pointer">
-          Preencher usando dados EXIF da foto?
-        </label>
+      <div class="p-3 bg-emerald-50/80 dark:bg-emerald-950/40 rounded-xl border border-emerald-200 dark:border-emerald-800/60 flex items-center space-x-3">
         <input
           type="checkbox"
           id="dataexif-{{ $sufixo }}"
           name="dataexif"
-          class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500" style="max-width: 1.5rem; max-height: 1.5rem;"
+          class="rounded border-emerald-300 text-emerald-600 focus:ring-emerald-500 h-4 w-4 cursor-pointer"
           @change="(async () => {
             const sufixo = idEdicao ? 'edit' : 'create';
             const form = document.getElementById(`araucariaForm-${sufixo}`);
@@ -52,52 +50,56 @@ $sufixo = $modo === 'criar' ? 'create' : 'edit';
               if (obsEl && obsEl.value) editObservedAt = obsEl.value;
             }, 50);
           })()">
-        <span>Aceito usar os dados EXIF da foto</span>
+        <label for="dataexif-{{ $sufixo }}" class="text-xs font-semibold text-emerald-900 dark:text-emerald-200 cursor-pointer">
+          Usar dados EXIF (Data/GPS) da foto enviada
+        </label>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div class="form-group">
+          <label for="latitude-{{ $sufixo }}" class="block text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-1">Latitude</label>
+          <input type="text" id="latitude-{{ $sufixo }}" name="latitude" required x-model="editLat" class="w-full text-xs font-mono rounded-lg border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 p-2.5">
+        </div>
+        
+        <div class="form-group">
+          <label for="longitude-{{ $sufixo }}" class="block text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-1">Longitude</label>
+          <input type="text" id="longitude-{{ $sufixo }}" name="longitude" required x-model="editLng" class="w-full text-xs font-mono rounded-lg border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 p-2.5">
+        </div>
       </div>
 
       <div class="form-group">
-        <label for="latitude-{{ $sufixo }}">Latitude</label>
-        <input type="text" id="latitude-{{ $sufixo }}" name="latitude" required x-model="editLat" class="bg-gray-100">
-      </div>
-      
-      <div class="form-group">
-        <label for="longitude-{{ $sufixo }}">Longitude</label>
-        <input type="text" id="longitude-{{ $sufixo }}" name="longitude" required x-model="editLng" class="bg-gray-100">
-      </div>
-
-      <div class="form-group">
-        <label for="stage-{{ $sufixo }}">Estágio de Desenvolvimento</label>
-        <select id="stage-{{ $sufixo }}" name="stage" required x-model="editStage">
-          <option value="seedling">Muda</option>
-          <option value="sapling">Jovem</option>
-          <option value="adult">Adulta</option>
-          <option value="dead">Morta/Cortada</option>
+        <label for="stage-{{ $sufixo }}" class="block text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-1">Estágio de Desenvolvimento</label>
+        <select id="stage-{{ $sufixo }}" name="stage" required x-model="editStage" class="w-full text-xs rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 p-2.5 focus:ring-emerald-500 focus:border-emerald-500">
+          <option value="seedling">🌱 Muda (Plântula)</option>
+          <option value="sapling">🌿 Jovem (Desenvolvimento)</option>
+          <option value="adult">🌲 Adulta (Copa Formada)</option>
+          <option value="dead">🪵 Morta / Cortada</option>
         </select>
       </div>
 
       <div class="form-group">
-        <label for="gender-{{ $sufixo }}">Gênero</label>
-        <select id="gender-{{ $sufixo }}" name="gender" required x-model="editGender">
-          <option value="unknown">Desconhecido</option>
-          <option value="male">Macho (Produz Pólen)</option>
-          <option value="female">Fêmea (Produz Pinhas)</option>
+        <label for="gender-{{ $sufixo }}" class="block text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-1">Gênero</label>
+        <select id="gender-{{ $sufixo }}" name="gender" required x-model="editGender" class="w-full text-xs rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 p-2.5 focus:ring-emerald-500 focus:border-emerald-500">
+          <option value="unknown">❓ Desconhecido / Não Identificado</option>
+          <option value="male">♂️ Macho (Produz Estimais de Pólen)</option>
+          <option value="female">♀️ Fêmea (Produz Pinhas/Pinhões)</option>
         </select>
       </div>
 
       <div class="form-group">
-        <label for="observed_at-{{ $sufixo }}">Data da Observação</label>
-        <input type="datetime-local" id="observed_at-{{ $sufixo }}" name="observed_at" required x-model="editObservedAt">
+        <label for="observed_at-{{ $sufixo }}" class="block text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-1">Data & Hora da Observação</label>
+        <input type="datetime-local" id="observed_at-{{ $sufixo }}" name="observed_at" required x-model="editObservedAt" class="w-full text-xs rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 p-2.5 focus:ring-emerald-500 focus:border-emerald-500">
       </div>
 
-      <div class="flex gap-2 mt-2">
+      <div class="flex gap-2 pt-2">
         <button type="submit"
-          class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded transition disabled:opacity-50">
-          <span x-text="idEdicao ? 'Salvar Alterações' : 'Salvar Observação'"></span>
+          class="flex-1 bg-emerald-700 hover:bg-emerald-800 dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white font-bold text-sm py-2.5 px-4 rounded-xl shadow-md shadow-emerald-700/20 transition duration-200 disabled:opacity-50 flex items-center justify-center space-x-2">
+          <span x-text="idEdicao ? '💾 Salvar Alterações' : '🌱 Registrar Observação'"></span>
         </button>
 
         <template x-if="idEdicao">
           <button type="button" @click="subAba = 'tabela'; idEdicao = null;"
-            class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded transition whitespace-nowrap">
+            class="bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 font-semibold text-xs py-2.5 px-4 rounded-xl transition whitespace-nowrap">
             Cancelar
           </button>
         </template>
