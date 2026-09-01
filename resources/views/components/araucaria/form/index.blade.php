@@ -70,10 +70,10 @@ $sufixo = $modo === 'criar' ? 'create' : 'edit';
       <div class="form-group">
         <label for="stage-{{ $sufixo }}" class="block text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-1">Estágio de Desenvolvimento</label>
         <select id="stage-{{ $sufixo }}" name="stage" required x-model="editStage" class="w-full text-xs rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 p-2.5 focus:ring-emerald-500 focus:border-emerald-500">
-          <option value="seedling">🌱 Muda (Plântula)</option>
-          <option value="sapling">🌿 Jovem (Desenvolvimento)</option>
-          <option value="adult">🌲 Adulta (Copa Formada)</option>
-          <option value="dead">🪵 Morta / Cortada</option>
+          <option value="seedling">Muda (Plântula)</option>
+          <option value="sapling">Jovem (Desenvolvimento)</option>
+          <option value="adult">Adulta (Copa Formada)</option>
+          <option value="dead">Morta / Cortada</option>
         </select>
       </div>
 
@@ -100,7 +100,7 @@ $sufixo = $modo === 'criar' ? 'create' : 'edit';
           checked
           class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500 h-4 w-4 cursor-pointer">
         <label for="is_shared-{{ $sufixo }}" class="text-xs font-semibold text-gray-800 dark:text-gray-200 cursor-pointer">
-          👥 Permitir que a comunidade anexe fotos de acompanhamento desta árvore
+          Permitir que a comunidade anexe fotos de acompanhamento desta árvore
         </label>
       </div>
 

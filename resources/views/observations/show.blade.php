@@ -6,11 +6,11 @@
       <div class="flex items-center space-x-3">
         @if($observation->is_shared)
           <span class="inline-flex items-center space-x-1 px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 text-xs font-bold border border-emerald-300 dark:border-emerald-700">
-            <span>👥 Árvore Colaborativa</span>
+            <span>Árvore Colaborativa</span>
           </span>
         @else
           <span class="inline-flex items-center space-x-1 px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-xs font-bold border border-gray-300 dark:border-gray-600">
-            <span>🔒 Registro Privado</span>
+            <span>Registro Privado</span>
           </span>
         @endif
 
@@ -110,45 +110,88 @@
             <div class="relative pl-6 border-l-2 border-gray-200 dark:border-gray-700 pb-4">
               <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-emerald-600 border-4 border-white dark:border-gray-800"></div>
               
-              <div class="bg-gray-50/80 dark:bg-gray-900/60 p-4 rounded-xl border border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row items-start justify-between gap-4">
-                <div class="flex flex-col sm:flex-row items-start gap-4 flex-1">
-                  <div class="w-28 h-28 rounded-xl overflow-hidden shrink-0 border border-gray-200 dark:border-gray-700 shadow-sm relative group">
-                    <img src="{{ $update->photo_path }}" alt="Foto de Acompanhamento" class="w-full h-full object-cover">
-                  </div>
-
-                  <div class="space-y-1.5 flex-1">
-                    <div class="flex flex-wrap items-center gap-2">
-                      <span class="text-xs font-bold text-gray-900 dark:text-white">
-                        📷 Atualização por {{ $update->user->username ? '@'.$update->user->username : $update->user->name }}
-                      </span>
-                      @if($update->stage)
-                        <span class="px-2 py-0.5 text-[10px] font-bold rounded-md bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 border border-emerald-200">
-                          Estágio: {{ $update->stage }}
-                        </span>
-                      @endif
+              <div x-data="{ openReport: false }" class="bg-gray-50/80 dark:bg-gray-900/60 p-4 rounded-xl border border-gray-200 dark:border-gray-700">
+                <div class="flex flex-col sm:flex-row items-start justify-between gap-4">
+                  <div class="flex flex-col sm:flex-row items-start gap-4 flex-1">
+                    <div class="w-28 h-28 rounded-xl overflow-hidden shrink-0 border border-gray-200 dark:border-gray-700 shadow-sm relative group">
+                      <img src="{{ $update->photo_path }}" alt="Foto de Acompanhamento" class="w-full h-full object-cover">
                     </div>
 
-                    <p class="text-xs text-gray-400 font-mono">
-                      Data da foto: {{ \Carbon\Carbon::parse($update->observed_at)->format('d/m/Y H:i') }}
-                    </p>
-
-                    @if($update->notes)
-                      <div class="p-2.5 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-xs text-gray-700 dark:text-gray-300 italic">
-                        "{{ $update->notes }}"
+                    <div class="space-y-1.5 flex-1">
+                      <div class="flex flex-wrap items-center gap-2">
+                        <span class="text-xs font-bold text-gray-900 dark:text-white">
+                          📷 Atualização por {{ $update->user->username ? '@'.$update->user->username : $update->user->name }}
+                        </span>
+                        @if($update->stage)
+                          <span class="px-2 py-0.5 text-[10px] font-bold rounded-md bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 border border-emerald-200">
+                            Estágio: {{ $update->stage }}
+                          </span>
+                        @endif
                       </div>
+
+                      <p class="text-xs text-gray-400 font-mono">
+                        Data da foto: {{ \Carbon\Carbon::parse($update->observed_at)->format('d/m/Y H:i') }}
+                      </p>
+
+                      @if($update->notes)
+                        <div class="p-2.5 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-xs text-gray-700 dark:text-gray-300 italic">
+                          "{{ $update->notes }}"
+                        </div>
+                      @endif
+                    </div>
+                  </div>
+
+                  <div class="flex items-center space-x-3 shrink-0">
+                    @if(auth()->id() !== $update->user_id)
+                      <button type="button" @click="openReport = !openReport" class="text-xs font-semibold text-rose-600 dark:text-rose-400 hover:underline flex items-center space-x-1">
+                        <span>🚩 Denunciar</span>
+                      </button>
+                    @endif
+
+                    @if(auth()->id() === $update->user_id || auth()->id() === $observation->user_id || in_array(auth()->user()->role ?? 'user', ['admin', 'staff']))
+                      <form method="POST" action="{{ route('observations.updates.destroy', $update->id) }}" onsubmit="return confirm('Deseja remover esta foto da linha do tempo?')">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="text-xs font-semibold text-gray-500 hover:text-rose-600 dark:text-gray-400 dark:hover:text-rose-400 hover:underline">
+                          Excluir
+                        </button>
+                      </form>
                     @endif
                   </div>
                 </div>
 
-                @if(auth()->id() === $update->user_id || auth()->id() === $observation->user_id || in_array(auth()->user()->role ?? 'user', ['admin', 'staff']))
-                  <form method="POST" action="{{ route('observations.updates.destroy', $update->id) }}" onsubmit="return confirm('Deseja remover esta foto da linha do tempo?')">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="text-xs font-semibold text-rose-600 dark:text-rose-400 hover:underline">
-                      Excluir
+                <!-- Formulário de Denúncia Expansível Inline -->
+                <div x-show="openReport" style="display: none;" class="mt-4 pt-3 border-t border-rose-200 dark:border-rose-900/60 bg-rose-50/70 dark:bg-rose-950/30 p-4 rounded-xl space-y-3">
+                  <div class="flex justify-between items-center text-xs font-bold text-rose-900 dark:text-rose-300">
+                    <span>🚩 Denunciar Foto Colaborativa</span>
+                    <button type="button" @click="openReport = false" class="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                      ✕ Cancelar
                     </button>
+                  </div>
+
+                  <form method="POST" action="{{ route('observations.updates.report', $update->id) }}" onsubmit="return confirm('Confirmar denúncia desta foto?');" class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-end">
+                    @csrf
+                    <div>
+                      <label class="block text-[11px] font-semibold text-gray-700 dark:text-gray-300 mb-1">Motivo da Denúncia</label>
+                      <select name="reason" required class="w-full text-xs rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 p-2">
+                        <option value="inappropriate_image">Imagem imprópria / Irrelevante</option>
+                        <option value="ownership">Violação de autoria / Falsa</option>
+                        <option value="other">Outros motivos</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label class="block text-[11px] font-semibold text-gray-700 dark:text-gray-300 mb-1">Detalhes (Opcional)</label>
+                      <input type="text" name="details" maxlength="144" placeholder="Máximo 144 caracteres..." class="w-full text-xs rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 p-2">
+                    </div>
+
+                    <div class="sm:col-span-2 flex justify-end pt-1">
+                      <button type="submit" class="bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs px-4 py-2 rounded-lg transition shadow-sm">
+                        Enviar Denúncia para Moderação
+                      </button>
+                    </div>
                   </form>
-                @endif
+                </div>
               </div>
             </div>
           @empty
@@ -216,10 +259,10 @@
               </label>
               <select name="stage" class="w-full text-xs rounded-xl border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 p-2.5">
                 <option value="">Manter estágio atual</option>
-                <option value="seedling">🌱 Muda (Plântula)</option>
-                <option value="sapling">🌿 Jovem (Desenvolvimento)</option>
-                <option value="adult">🌲 Adulta (Copa Formada)</option>
-                <option value="dead">🪵 Morta / Cortada</option>
+                <option value="seedling">Muda (Plântula)</option>
+                <option value="sapling">Jovem (Desenvolvimento)</option>
+                <option value="adult">Adulta (Copa Formada)</option>
+                <option value="dead">Morta / Cortada</option>
               </select>
             </div>
 

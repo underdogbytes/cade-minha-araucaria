@@ -2,10 +2,10 @@
 
 @php
   $estagiosConfig = [
-    'seedling' => ['label' => '🌱 Muda', 'class' => 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'],
-    'sapling'  => ['label' => '🌿 Jovem', 'class' => 'bg-teal-100 text-teal-800 dark:bg-teal-950 dark:text-teal-300'],
-    'adult'    => ['label' => '🌲 Adulta', 'class' => 'bg-emerald-800 text-white dark:bg-emerald-600 dark:text-white'],
-    'dead'     => ['label' => '🪵 Morta', 'class' => 'bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-300'],
+    'seedling' => ['label' => 'Muda', 'class' => 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'],
+    'sapling'  => ['label' => 'Jovem', 'class' => 'bg-teal-100 text-teal-800 dark:bg-teal-950 dark:text-teal-300'],
+    'adult'    => ['label' => 'Adulta', 'class' => 'bg-emerald-800 text-white dark:bg-emerald-600 dark:text-white'],
+    'dead'     => ['label' => 'Morta', 'class' => 'bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-300'],
   ];
   $lista = $myObservations ?? ($observations ? $observations->where('user_id', auth()->id()) : collect());
 @endphp
