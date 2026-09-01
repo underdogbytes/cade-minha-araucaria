@@ -63,10 +63,6 @@ return Application::configure(basePath: dirname(__DIR__))
                     'message' => 'Ocorreu uma falha de integridade ou erro no banco de dados.',
                 ], 500);
             }
-
-            if (!config('app.debug')) {
-                return response()->view('errors.500', ['exception' => $e], 500);
-            }
         });
 
         $exceptions->render(function (\Throwable $e, \Illuminate\Http\Request $request) {
@@ -76,15 +72,11 @@ return Application::configure(basePath: dirname(__DIR__))
 
             \Illuminate\Support\Facades\Log::error('Exceção Não Tratada: ' . $e->getMessage(), ['exception' => $e]);
 
-            if (!config('app.debug')) {
-                if ($request->is('api/*') || $request->expectsJson()) {
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'Ocorreu um erro interno no servidor.',
-                    ], 500);
-                }
-
-                return response()->view('errors.500', ['exception' => $e], 500);
+            if ($request->is('api/*') || $request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Ocorreu um erro interno no servidor.',
+                ], 500);
             }
         });
     })->create();
