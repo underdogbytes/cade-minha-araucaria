@@ -31,7 +31,8 @@ class AraucariaObservationController extends Controller
         }
 
         $observations = AraucariaObservation::with(['user', 'photos'])
-            ->latest();
+            ->latest()
+            ->paginate();
 
         return AraucariaObservationResource::collection($observations);
     }
