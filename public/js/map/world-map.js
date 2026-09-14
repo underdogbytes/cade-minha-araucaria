@@ -19,17 +19,21 @@ const markers = L.markerClusterGroup({
 
 async function loadObservations() {
   try {
-    const response = await fetch(apiUrl);
+    const response = await fetch(apiUrl, {
+      headers: { Accept: 'application/json' },
+    });
     if (!response.ok) throw new Error('Erro na requisição');
 
     const data = await response.json();
     const observations = data.data;
     const markerList = [];
-    
 
     observations.forEach(obs => {
       // Ignorar por falta de coordenadas:
-      if (!obs.latitude || !obs.longitude) { return; }
+      if (!obs.latitude || !obs.longitude) {
+        console.warn(`[World Map] Observação ${obs.id} ignorada: coordenadas ausentes (lat=${obs.latitude}, lng=${obs.longitude}).`);
+        return;
+      }
 
       const formattedLifeStage = lifeStage[obs.stage] || obs.stage;
       const formattedGender = gender[obs.gender] || obs.gender;

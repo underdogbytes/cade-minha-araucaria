@@ -22,19 +22,13 @@ class AraucariaObservationController extends Controller
      */
     public function index(Request $request): AnonymousResourceCollection
     {
-        if ($request->boolean('all')) {
-            $observations = AraucariaObservation::with(['user', 'photos'])
-                ->latest()
-                ->get();
+        $query = AraucariaObservation::with(['user', 'photos'])->latest();
 
-            return AraucariaObservationResource::collection($observations);
+        if ($request->boolean('all') || $request->has('all')) {
+            return AraucariaObservationResource::collection($query->get());
         }
 
-        $observations = AraucariaObservation::with(['user', 'photos'])
-            ->latest()
-            ->paginate();
-
-        return AraucariaObservationResource::collection($observations);
+        return AraucariaObservationResource::collection($query->paginate());
     }
 
     /**
