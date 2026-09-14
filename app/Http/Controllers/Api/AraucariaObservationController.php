@@ -17,18 +17,21 @@ use Illuminate\Support\Facades\Storage;
 class AraucariaObservationController extends Controller
 {
     /**
-     * Retorna todas as observações cadastradas com paginação.
+     * Retorna todas as observações cadastradas.
+     * Retorna todos os registros quando `all=1`
      */
     public function index(Request $request): AnonymousResourceCollection
     {
-        $perPage = min(
-            (int) $request->query('per_page', 15),
-            100
-        );
+        if ($request->boolean('all')) {
+            $observations = AraucariaObservation::with(['user', 'photos'])
+                ->latest()
+                ->get();
+
+            return AraucariaObservationResource::collection($observations);
+        }
 
         $observations = AraucariaObservation::with(['user', 'photos'])
-            ->latest()
-            ->paginate($perPage);
+            ->latest();
 
         return AraucariaObservationResource::collection($observations);
     }

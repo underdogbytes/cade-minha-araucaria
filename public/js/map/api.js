@@ -1,5 +1,5 @@
 export async function fetchObservations() {
-  const response = await fetch('/api/observations', {
+  const response = await fetch('/api/observations?all=1', {
     headers: {
       Accept: 'application/json',
     },

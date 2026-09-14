@@ -1,7 +1,7 @@
 import { hideSpinner, showErrorMessage } from '../utils.js';
 import { gender, generateMap, generateMarkerHTML, generatePhotoPath, lifeStage, makeTiles } from './utils/maps.js';
 
-const apiUrl = '/api/observations';
+const apiUrl = '/api/observations?all=1';
 const tiles = makeTiles();
 const latlng = L.latLng(-25.4323, -49.2712);
 const map = generateMap('map', latlng, tiles);
