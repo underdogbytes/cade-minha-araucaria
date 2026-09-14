@@ -33,7 +33,7 @@
 
             <div class="mt-4">
                 <x-label for="email" value="{{ __('E-mail') }}" />
-                <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required
+                <x-input id="email" placeholder="Digite seu e-mail" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required
                     autocomplete="email" />
             </div>
 
