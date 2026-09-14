@@ -39,14 +39,24 @@
 
             <div class="mt-4">
                 <x-label for="password" value="{{ __('Senha') }}" />
-                <x-input id="password" class="block mt-1 w-full" type="password" name="password" required
-                    autocomplete="new-password" />
+                <x-utils.password-input 
+                    id="password" 
+                    name="password" 
+                    class="block mt-1 w-full" 
+                    required 
+                    autocomplete="new-password" 
+                />
             </div>
 
             <div class="mt-4">
                 <x-label for="password_confirmation" value="{{ __('Confirmar Senha') }}" />
-                <x-input id="password_confirmation" class="block mt-1 w-full" type="password"
-                    name="password_confirmation" required autocomplete="new-password" />
+                <x-utils.password-input 
+                    id="password_confirmation" 
+                    name="password_confirmation" 
+                    class="block mt-1 w-full" 
+                    required 
+                    autocomplete="new-password" 
+                />
             </div>
 
             @if (Laravel\Jetstream\Jetstream::hasTermsAndPrivacyPolicyFeature())

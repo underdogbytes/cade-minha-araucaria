@@ -32,7 +32,14 @@
 
             <div class="mt-4">
                 <x-label for="password" value="{{ __('Senha') }}" />
-                <x-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="current-password" />
+                <x-utils.password-input 
+                    id="password" 
+                    name="password" 
+                    class="block mt-1 w-full" 
+                    required 
+                    autocomplete="current-password" 
+                    placeholder="Digite sua senha" 
+                />
             </div>
 
             <div class="flex items-center justify-between mt-4">
