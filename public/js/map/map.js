@@ -1,7 +1,8 @@
 import { fetchObservations } from './api.js';
 import { addObservationMarker } from './markers.js';
-import { makeTiles } from './utils/maps.js';
+import { DEFAULT_CENTER, DEFAULT_ZOOM, makeTiles } from './utils/maps.js';
 import { dispatchAlert } from './utils/alerts.js';
+import { addLocateControl, flyToUserLocation } from './utils/geolocation.js';
 
 let maps = {};
 let clickMarkers = {};
@@ -27,7 +28,7 @@ export async function initMap(mapId = 'map') {
     return null;
   }
 
-  const map = L.map(mapId).setView([-25.4323, -49.2712], 12);
+  const map = L.map(mapId).setView(DEFAULT_CENTER, DEFAULT_ZOOM);
   const tiles = makeTiles();
 
   tiles.addTo(map);
@@ -38,6 +39,10 @@ export async function initMap(mapId = 'map') {
 
   if (mapId !== 'map-create' && mapId !== 'map-edit') {
     await loadExistingPoints(map, mapId);
+
+    // Geolocalização automática apenas no mapa global
+    addLocateControl(map);
+    flyToUserLocation(map);
   }
 
   return map;

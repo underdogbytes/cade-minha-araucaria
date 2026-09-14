@@ -1,4 +1,10 @@
 /**
+ * Constantes padrão do mapa
+ */
+export const DEFAULT_CENTER = [-25.4323, -49.2712];
+export const DEFAULT_ZOOM = 12;
+
+/**
  * Mapas e dicionários
  */
 export const lifeStage = {
@@ -34,7 +40,7 @@ export function makeTiles() {
 export function generateMap(mapId, latlng, tiles) {
   return L.map(mapId, {
     center: latlng,
-    zoom: 12,
+    zoom: DEFAULT_ZOOM,
     layers: [tiles]
   });
 }

@@ -1,9 +1,10 @@
 import { hideSpinner, showErrorMessage } from '../utils.js';
-import { gender, generateMap, generateMarkerHTML, generatePhotoPath, lifeStage, makeTiles } from './utils/maps.js';
+import { DEFAULT_CENTER, gender, generateMap, generateMarkerHTML, generatePhotoPath, lifeStage, makeTiles } from './utils/maps.js';
+import { addLocateControl, flyToUserLocation } from './utils/geolocation.js';
 
 const apiUrl = '/api/observations?all=1';
 const tiles = makeTiles();
-const latlng = L.latLng(-25.4323, -49.2712);
+const latlng = L.latLng(DEFAULT_CENTER[0], DEFAULT_CENTER[1]);
 const map = generateMap('map', latlng, tiles);
 const markers = L.markerClusterGroup({
   iconCreateFunction: function (cluster) {
@@ -63,3 +64,7 @@ async function loadObservations() {
 }
 
 loadObservations();
+
+// Adicionar controle de localização e tentar centralizar no usuário
+addLocateControl(map);
+flyToUserLocation(map);

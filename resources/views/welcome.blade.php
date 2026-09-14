@@ -19,6 +19,41 @@
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
         <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
         <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
+
+        <style>
+            /* Geolocalização — marcador do usuário */
+            .user-location-pulse {
+                animation: location-pulse 2s ease-in-out infinite;
+            }
+
+            @keyframes location-pulse {
+                0%, 100% { opacity: 0.3; }
+                50% { opacity: 0.6; }
+            }
+
+            .user-locate-control .user-locate-button {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 34px;
+                height: 34px;
+                font-size: 18px;
+                line-height: 34px;
+                text-decoration: none;
+                cursor: pointer;
+                background: white;
+            }
+
+            .user-locate-control .user-locate-button:hover {
+                background: #f4f4f4;
+            }
+
+            .user-location-tooltip {
+                font-size: 12px;
+                font-weight: 600;
+                color: #1a73e8;
+            }
+        </style>
     </head>
     <body class="font-sans antialiased bg-slate-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 selection:bg-emerald-500 selection:text-white">
         <!-- Top Navigation -->

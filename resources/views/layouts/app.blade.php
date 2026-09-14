@@ -75,6 +75,39 @@
                 border-color: #327a55;
                 box-shadow: 0 0 0 3px rgba(50, 122, 85, 0.2);
             }
+
+            /* Geolocalização — marcador do usuário */
+            .user-location-pulse {
+                animation: location-pulse 2s ease-in-out infinite;
+            }
+
+            @keyframes location-pulse {
+                0%, 100% { opacity: 0.3; }
+                50% { opacity: 0.6; }
+            }
+
+            .user-locate-control .user-locate-button {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 34px;
+                height: 34px;
+                font-size: 18px;
+                line-height: 34px;
+                text-decoration: none;
+                cursor: pointer;
+                background: white;
+            }
+
+            .user-locate-control .user-locate-button:hover {
+                background: #f4f4f4;
+            }
+
+            .user-location-tooltip {
+                font-size: 12px;
+                font-weight: 600;
+                color: #1a73e8;
+            }
         </style>
     </head>
     <body class="font-sans antialiased">
