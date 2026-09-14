@@ -47,12 +47,6 @@
             
             <div class="pt-4 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between">
               <x-araucaria.report-form :observation="$observation" />
-
-              @if($observation->is_shared || auth()->id() === $observation->user_id)
-                <button @click="showModal = true" type="button" class="inline-flex items-center space-x-2 bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs py-2.5 px-4 rounded-xl shadow-md transition transform hover:-translate-y-0.5">
-                  <span>📸 Anexar Foto de Cuidado</span>
-                </button>
-              @endif
             </div>
           </div>
         </div>
