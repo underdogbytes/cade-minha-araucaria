@@ -33,6 +33,17 @@ async function handleGlobalSubmit(event) {
     toggleSubmitButton(submitButton, true);
     validarImagem(form);
 
+    // Garante que o input oculto observed_at esteja com valor ISO antes de enviar
+    const displayInput = form.querySelector('[id^="observed_at_display"]');
+    const hiddenInput = form.querySelector('[name="observed_at"]');
+    if (displayInput && hiddenInput && displayInput.value && !hiddenInput.value) {
+      const match = displayInput.value.trim().match(/^(\d{2})\/(\d{2})\/(\d{4})(?:\s+(\d{2}):(\d{2}))?$/);
+      if (match) {
+        const [_, day, month, year, hours = '12', minutes = '00'] = match;
+        hiddenInput.value = `${year}-${month}-${day}T${hours}:${minutes}`;
+      }
+    }
+
     const response = await createObservation(form);
     const observation = response.data || response;
     const successMessage = response.message || 'Observação salva com sucesso!';
@@ -53,6 +64,11 @@ async function handleGlobalSubmit(event) {
       const lngInput = form.querySelector('#longitude-create') || form.querySelector('[name="longitude"]');
       if (latInput) { latInput.value = ''; latInput.dispatchEvent(new Event('input', { bubbles: true })); }
       if (lngInput) { lngInput.value = ''; lngInput.dispatchEvent(new Event('input', { bubbles: true })); }
+
+      const obsInput = form.querySelector('#observed_at-create') || form.querySelector('[name="observed_at"]');
+      if (obsInput) { obsInput.value = ''; obsInput.dispatchEvent(new Event('input', { bubbles: true })); }
+      const obsDisplay = form.querySelector('#observed_at_display-create');
+      if (obsDisplay) { obsDisplay.value = ''; obsDisplay.dispatchEvent(new Event('input', { bubbles: true })); }
     } else {
       window.dispatchEvent(new CustomEvent('reset-form-photos'));
       clearClickMarker('map-edit');

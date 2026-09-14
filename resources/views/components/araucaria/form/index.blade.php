@@ -86,9 +86,199 @@ $sufixo = $modo === 'criar' ? 'create' : 'edit';
         </select>
       </div>
 
-      <div class="form-group">
-        <label for="observed_at-{{ $sufixo }}" class="block text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-1">Data & Hora da Observação</label>
-        <input type="datetime-local" id="observed_at-{{ $sufixo }}" name="observed_at" required x-model="editObservedAt" class="w-full text-xs rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 p-2.5 focus:ring-emerald-500 focus:border-emerald-500">
+      <div class="form-group" x-data="{
+        displayDate: '',
+        fpInstance: null,
+        isoToBr(iso) {
+          if (!iso) return '';
+          const clean = String(iso).replace(' ', 'T');
+          const m = clean.match(/^(\d{4})-(\d{2})-(\d{2})(?:T(\d{2}):(\d{2}))?/);
+          if (!m) return '';
+          return `${m[3]}/${m[2]}/${m[1]}${m[4] && m[5] ? ' ' + m[4] + ':' + m[5] : ''}`;
+        },
+        brToIso(br) {
+          if (!br) return '';
+          const m = String(br).trim().match(/^(\d{2})\/(\d{2})\/(\d{4})(?:\s+(\d{2}):(\d{2}))?$/);
+          if (!m) return '';
+          const d = parseInt(m[1], 10), mo = parseInt(m[2], 10), y = parseInt(m[3], 10);
+          if (d < 1 || d > 31 || mo < 1 || mo > 12 || y < 1900 || y > 2100) return '';
+          const h = m[4] !== undefined ? m[4] : '12';
+          const min = m[5] !== undefined ? m[5] : '00';
+          return `${m[3]}-${m[2]}-${m[1]}T${h}:${min}`;
+        },
+        applyMask(val) {
+          const digits = String(val).replace(/\D/g, '').slice(0, 12);
+          let res = '';
+          if (digits.length > 0) res = digits.slice(0, 2);
+          if (digits.length > 2) res += '/' + digits.slice(2, 4);
+          if (digits.length > 4) res += '/' + digits.slice(4, 8);
+          if (digits.length > 8) res += ' ' + digits.slice(8, 10);
+          if (digits.length > 10) res += ':' + digits.slice(10, 12);
+          return res;
+        },
+        handleInput(e) {
+          const masked = this.applyMask(e.target.value);
+          this.displayDate = masked;
+          e.target.value = masked;
+          if (masked.length === 16) {
+            const iso = this.brToIso(masked);
+            if (iso) {
+              editObservedAt = iso;
+              this.syncHidden(iso);
+              if (this.fpInstance) this.fpInstance.setDate(iso, false);
+            }
+          } else if (!masked) {
+            editObservedAt = '';
+            this.syncHidden('');
+            if (this.fpInstance) this.fpInstance.clear();
+          }
+        },
+        handleBlur() {
+          if (this.displayDate && this.displayDate.length === 10) {
+            const now = new Date();
+            const h = String(now.getHours()).padStart(2, '0');
+            const min = String(now.getMinutes()).padStart(2, '0');
+            this.displayDate += ` ${h}:${min}`;
+            const iso = this.brToIso(this.displayDate);
+            if (iso) {
+              editObservedAt = iso;
+              this.syncHidden(iso);
+              if (this.fpInstance) this.fpInstance.setDate(iso, false);
+            }
+          }
+        },
+        setAgora() {
+          const now = new Date();
+          const y = now.getFullYear();
+          const m = String(now.getMonth() + 1).padStart(2, '0');
+          const d = String(now.getDate()).padStart(2, '0');
+          const h = String(now.getHours()).padStart(2, '0');
+          const min = String(now.getMinutes()).padStart(2, '0');
+          const iso = `${y}-${m}-${d}T${h}:${min}`;
+          const br = `${d}/${m}/${y} ${h}:${min}`;
+          this.displayDate = br;
+          editObservedAt = iso;
+          this.syncHidden(iso);
+          if (this.fpInstance) this.fpInstance.setDate(now, false);
+        },
+        openPicker() {
+          if (this.fpInstance) {
+            this.fpInstance.open();
+          } else if (this.$refs.displayInput) {
+            this.$refs.displayInput.focus();
+          }
+        },
+        syncHidden(iso) {
+          if (this.$refs.hiddenInput) {
+            this.$refs.hiddenInput.value = iso;
+            this.$refs.hiddenInput.dispatchEvent(new Event('change', { bubbles: true }));
+          }
+        },
+        init() {
+          if (editObservedAt) {
+            this.displayDate = this.isoToBr(editObservedAt);
+            this.syncHidden(editObservedAt);
+          } else if ('{{ $modo }}' === 'criar') {
+            this.setAgora();
+          }
+
+          this.$watch('editObservedAt', (val) => {
+            const expected = this.isoToBr(val);
+            if (expected !== this.displayDate) {
+              this.displayDate = expected;
+              this.syncHidden(val || '');
+              if (this.fpInstance) {
+                if (val) {
+                  this.fpInstance.setDate(val, false);
+                } else {
+                  this.fpInstance.clear();
+                }
+              }
+            }
+          });
+
+          this.$nextTick(() => {
+            if (window.flatpickr && this.$refs.displayInput) {
+              const ptLocale = (window.flatpickr.l10ns && window.flatpickr.l10ns.pt) ? window.flatpickr.l10ns.pt : {};
+              this.fpInstance = window.flatpickr(this.$refs.displayInput, {
+                locale: ptLocale,
+                dateFormat: 'd/m/Y H:i',
+                enableTime: true,
+                time_24hr: true,
+                allowInput: true,
+                defaultDate: editObservedAt ? new Date(editObservedAt) : null,
+                onChange: (selectedDates, dateStr) => {
+                  if (selectedDates.length > 0) {
+                    const d = selectedDates[0];
+                    const y = d.getFullYear();
+                    const m = String(d.getMonth() + 1).padStart(2, '0');
+                    const day = String(d.getDate()).padStart(2, '0');
+                    const h = String(d.getHours()).padStart(2, '0');
+                    const min = String(d.getMinutes()).padStart(2, '0');
+                    const iso = `${y}-${m}-${day}T${h}:${min}`;
+                    this.displayDate = dateStr;
+                    editObservedAt = iso;
+                    this.syncHidden(iso);
+                  } else {
+                    this.displayDate = '';
+                    editObservedAt = '';
+                    this.syncHidden('');
+                  }
+                }
+              });
+            }
+          });
+        }
+      }">
+        <div class="flex items-center justify-between mb-1">
+          <label for="observed_at_display-{{ $sufixo }}" class="block text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
+            Data & Hora da Observação
+          </label>
+          <button type="button" @click="setAgora()" class="text-[11px] font-semibold text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 transition flex items-center space-x-1 cursor-pointer">
+            <span>🕒 Preencher com Agora</span>
+          </button>
+        </div>
+
+        <div class="relative">
+          <input
+            type="text"
+            x-ref="displayInput"
+            id="observed_at_display-{{ $sufixo }}"
+            placeholder="dd/mm/aaaa hh:mm"
+            maxlength="16"
+            :value="displayDate"
+            @input="handleInput($event)"
+            @blur="handleBlur()"
+            required
+            class="w-full text-xs rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 p-2.5 pr-10 focus:ring-emerald-500 focus:border-emerald-500"
+          />
+
+          <button
+            type="button"
+            @click="openPicker()"
+            class="absolute inset-y-0 right-0 pr-3 flex items-center text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300 transition cursor-pointer"
+            title="Abrir calendário"
+          >
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Campo oculto enviado na requisição mantendo o padrão ISO exigido pelo back-end -->
+        <input
+          type="hidden"
+          x-ref="hiddenInput"
+          id="observed_at-{{ $sufixo }}"
+          name="observed_at"
+          :value="editObservedAt"
+          @input="if ($event.target.value !== editObservedAt) { editObservedAt = $event.target.value; displayDate = isoToBr($event.target.value); }"
+          @change="if ($event.target.value !== editObservedAt) { editObservedAt = $event.target.value; displayDate = isoToBr($event.target.value); }"
+        />
+
+        <p class="text-[10px] text-gray-500 dark:text-gray-400 mt-1">
+          Padrão brasileiro: dd/mm/aaaa hh:mm (Ex: 14/09/2026 15:30)
+        </p>
       </div>
 
       <div class="p-3 bg-gray-100 dark:bg-gray-700/50 rounded-xl border border-gray-200 dark:border-gray-600 flex items-center space-x-3">

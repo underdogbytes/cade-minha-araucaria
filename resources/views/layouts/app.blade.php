@@ -18,7 +18,68 @@
         @livewireStyles
 
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_green.css" />
         <style>
+            /* Flatpickr Custom Styling & Dark Mode */
+            .flatpickr-calendar {
+                font-family: inherit !important;
+                border-radius: 0.75rem !important;
+                box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
+                border: 1px solid #e5e7eb !important;
+            }
+
+            .dark .flatpickr-calendar {
+                background: #1f2937 !important;
+                border-color: #374151 !important;
+                color: #f3f4f6 !important;
+                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5) !important;
+            }
+
+            .dark .flatpickr-calendar .flatpickr-months,
+            .dark .flatpickr-calendar .flatpickr-weekdays,
+            .dark .flatpickr-calendar .flatpickr-time {
+                background: #111827 !important;
+                color: #f3f4f6 !important;
+            }
+
+            .dark .flatpickr-calendar span.flatpickr-weekday {
+                color: #9ca3af !important;
+            }
+
+            .dark .flatpickr-calendar .flatpickr-day {
+                color: #e5e7eb !important;
+            }
+
+            .dark .flatpickr-calendar .flatpickr-day.prevMonthDay,
+            .dark .flatpickr-calendar .flatpickr-day.nextMonthDay {
+                color: #4b5563 !important;
+            }
+
+            .dark .flatpickr-calendar .flatpickr-day:hover {
+                background: #374151 !important;
+            }
+
+            .dark .flatpickr-calendar .flatpickr-time input {
+                color: #f3f4f6 !important;
+            }
+
+            .dark .flatpickr-calendar .flatpickr-time input:hover,
+            .dark .flatpickr-calendar .flatpickr-time input:focus {
+                background: #374151 !important;
+            }
+
+            .dark .flatpickr-calendar .numInputWrapper span {
+                border-color: #374151 !important;
+            }
+
+            .flatpickr-day.selected,
+            .flatpickr-day.selected:hover {
+                background: #059669 !important;
+                border-color: #059669 !important;
+                color: #ffffff !important;
+            }
+
             .map-flex-container {
                 display: flex;
                 flex-direction: column;
@@ -140,6 +201,8 @@
         <script src="https://cdn.jsdelivr.net/npm/exifreader@4.41.0/dist/exif-reader.min.js"></script>
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
         <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/pt.js"></script>
         <script type="module" src="{{ asset('js/map/app.js') }}"></script>
         <script type="module" src="{{ asset('js/map/world-map.js') }}"></script>
     </body>

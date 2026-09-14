@@ -55,7 +55,7 @@
     }"
     @observation-saved="
         showAlert = true; alertMessage = 'Araucária salva com sucesso!'; alertType = 'success'; setTimeout(() => showAlert = false, 3000);
-        editLat = ''; editLng = ''; editPhotoUrl = '';
+        editLat = ''; editLng = ''; editPhotoUrl = ''; editObservedAt = '';
         refreshFeed();
         refreshMyObs();
         refreshMap();
@@ -104,6 +104,7 @@
                     editStage = 'adult';
                     editGender = 'unknown';
                     editPhotoUrl = '';
+                    editObservedAt = '';
                     document.getElementById('araucariaForm-create')?.reset();
                     window.dispatchEvent(new CustomEvent('reset-form-photos'));
                     $dispatch('mudar-aba', 'create')"
@@ -168,7 +169,7 @@
                                 </h3>
                                 <p class="text-xs text-gray-500 dark:text-gray-400">Atualize as informações da observação ou altere a localização no mapa.</p>
                             </div>
-                            <button @click="subAba = 'tabela'; idEdicao = null; editLat = ''; editLng = ''; editStage = 'adult'; editGender = 'unknown'; $dispatch('destroy-map', { mapId: 'map-edit' });"
+                            <button @click="subAba = 'tabela'; idEdicao = null; editLat = ''; editLng = ''; editStage = 'adult'; editGender = 'unknown'; editObservedAt = ''; $dispatch('destroy-map', { mapId: 'map-edit' });"
                                 class="text-xs font-semibold bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 py-2 px-4 rounded-lg transition border border-gray-300 dark:border-gray-600 flex items-center space-x-1">
                                 <span>← Voltar para Tabela</span>
                             </button>
