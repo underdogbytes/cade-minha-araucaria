@@ -178,6 +178,47 @@
                     ]
                 ]" />
             </section>
+
+            <!-- Apoiadores Section -->
+            <section class="py-16 bg-slate-50 dark:bg-gray-950 border-t border-gray-100 dark:border-gray-800">
+                <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+
+                    <!-- Section Label -->
+                    <div>
+                        <span>Nossos</span>
+                    </div>
+
+                    <h2 class="font-display text-3xl font-bold text-gray-900 dark:text-white mb-3">
+                        Apoiadores
+                    </h2>
+
+                    <!-- Logos -->
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-10 sm:gap-16">
+                        <!-- Gralharia -->
+                        <div class="group flex items-center justify-center bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md hover:-translate-y-1 transition duration-300 px-10 py-8 min-w-[200px]">
+                            <a href="https://gralharia.com.br" target="_blank">
+                                <img
+                                    src="{{ asset('images/apoiadores/gralharia.png') }}"
+                                    alt="Gralharia"
+                                    class="max-h-20 w-auto object-contain grayscale group-hover:grayscale-0 opacity-70 group-hover:opacity-100 transition duration-300"
+                                />
+                            </a>
+                        </div>
+
+                        <!-- Design CWB -->
+                        <div class="group flex items-center justify-center bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md hover:-translate-y-1 transition duration-300 px-10 py-8 min-w-[200px]">
+                            <a href="https://design.curitiba.br/" target="_blank">
+                                <img
+                                    src="{{ asset('images/apoiadores/logo-dsgn-cwb-horizontal.png') }}"
+                                    alt="Design CWB"
+                                    class="max-h-20 w-auto object-contain grayscale group-hover:grayscale-0 opacity-70 group-hover:opacity-100 transition duration-300"
+                                />
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
         </main>
 
         <!-- Footer -->
