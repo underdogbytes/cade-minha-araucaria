@@ -5,13 +5,11 @@ import {
   gender,
   generateAraucariaIcon,
   generateMap,
-  generatePhotoPath,
   lifeStage,
   makeTiles,
 } from './utils/maps.js';
 
 const API_URL = '/api/observations?all=1';
-const FALLBACK_IMAGE = '/images/auth-bg.jpeg';
 const VALID_PIN_TYPES = new Set(['normal', 'risco', 'protegida']);
 const CITY_LOCATIONS = new Map([
   ['curitiba', [-25.4323, -49.2712, 12]],
@@ -76,59 +74,40 @@ function getCoordinates(observation) {
   return [lat, lng];
 }
 
-function getObservationPhoto(observation) {
-  const photos = Array.isArray(observation?.photos) ? observation.photos : [];
-  const candidate = observation?.photo_path || photos[0]?.url || photos[0]?.photo_path;
-  if (typeof candidate !== 'string' || candidate.trim() === '') return FALLBACK_IMAGE;
+/**
+ * Obtém a URL da foto real cadastrada na observação (Base64, storage ou URL).
+ * Retorna null se não houver foto, sem imagens fictícias.
+ */
+function getObservationPhotoUrl(observation) {
+  if (!observation || typeof observation !== 'object') return null;
 
-  // O helper deve produzir um caminho local conhecido. Não aceitamos data:, javascript: ou URLs externas.
-  const generatedPath = generatePhotoPath(candidate.trim());
-  if (typeof generatedPath !== 'string') return FALLBACK_IMAGE;
-  try {
-    const url = new URL(generatedPath, window.location.origin);
-    if (url.origin !== window.location.origin || !['http:', 'https:'].includes(url.protocol)) {
-      return FALLBACK_IMAGE;
-    }
-    return `${url.pathname}${url.search}`;
-  } catch {
-    return FALLBACK_IMAGE;
+  let raw = observation.photo_path;
+  if (!raw && Array.isArray(observation.photos) && observation.photos.length > 0) {
+    raw = observation.photos[0]?.url || observation.photos[0]?.photo_path;
   }
+
+  if (typeof raw !== 'string') return null;
+  const trimmed = raw.trim();
+  if (!trimmed) return null;
+
+  // Imagem em formato Base64 enviada pelo usuário
+  if (trimmed.startsWith('data:image/')) {
+    return trimmed;
+  }
+  // URL absoluta externa
+  if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+    return trimmed;
+  }
+  // Caminho absoluto no servidor
+  if (trimmed.startsWith('/')) {
+    return trimmed;
+  }
+  // Caminho relativo no storage do Laravel
+  return '/storage/' + trimmed;
 }
 
 function safeText(value, fallback = '') {
   return typeof value === 'string' && value.trim() ? value.trim() : fallback;
-}
-
-function createPopupContent(observation, photoPath) {
-  const container = document.createElement('div');
-  container.className = 'araucaria-popup';
-
-  const image = document.createElement('img');
-  image.src = photoPath;
-  image.alt = 'Foto da observação';
-  image.loading = 'lazy';
-  image.referrerPolicy = 'no-referrer';
-  image.addEventListener('error', () => { image.src = FALLBACK_IMAGE; }, { once: true });
-  container.append(image);
-
-  const title = document.createElement('strong');
-  title.textContent = safeText(observation?.species_name, 'Araucária angustifolia');
-  container.append(title);
-
-  const details = document.createElement('p');
-  const stage = lifeStage[observation?.stage] || safeText(observation?.stage, 'Estado não informado');
-  const observer = safeText(observation?.observer, 'Colaborador comunitário');
-  details.textContent = `${stage} • ${observer}`;
-  container.append(details);
-
-  if (isValidObservationId(observation?.id)) {
-    const link = document.createElement('a');
-    link.href = `/observations/${encodeURIComponent(String(observation.id))}`;
-    link.textContent = 'Ver observação';
-    container.append(link);
-  }
-
-  return container;
 }
 
 function isValidObservationId(id) {
@@ -136,40 +115,104 @@ function isValidObservationId(id) {
     || (typeof id === 'number' && Number.isSafeInteger(id) && id >= 0);
 }
 
+/**
+ * Cria o conteúdo do popup com os dados REAIS da observação.
+ */
+function createPopupContent(observation) {
+  const container = document.createElement('div');
+  container.className = 'araucaria-popup';
+  container.style.cssText = 'font-family: sans-serif; min-width: 170px; line-height: 1.4;';
+
+  const photoUrl = getObservationPhotoUrl(observation);
+  if (photoUrl) {
+    const image = document.createElement('img');
+    image.src = photoUrl;
+    image.alt = 'Foto da observação';
+    image.loading = 'lazy';
+    image.style.cssText = 'width: 100%; max-width: 180px; max-height: 130px; object-fit: cover; border-radius: 8px; margin-bottom: 8px; display: block; border: 1px solid #e5e7eb;';
+    container.append(image);
+  }
+
+  const title = document.createElement('h4');
+  title.style.cssText = 'margin: 0 0 4px 0; color: #1b4332; font-size: 14px; font-weight: 700;';
+  title.textContent = safeText(observation?.species_name, 'Araucária angustifolia');
+  container.append(title);
+
+  if (observation?.observer) {
+    const observerDiv = document.createElement('div');
+    observerDiv.style.cssText = 'font-size: 11px; color: #4b5563; margin-bottom: 4px;';
+    const cleanObserver = safeText(observation.observer);
+    observerDiv.innerHTML = `<b>Colaborador:</b> <span style="color: #1b4332; font-weight: 700;">${cleanObserver.startsWith('@') ? cleanObserver : `@${cleanObserver}`}</span>`;
+    container.append(observerDiv);
+  }
+
+  const stage = lifeStage[observation?.stage] || safeText(observation?.stage, 'Não informado');
+  const observedGender = gender[observation?.gender] || safeText(observation?.gender, 'Não informado');
+
+  const details = document.createElement('div');
+  details.style.cssText = 'font-size: 12px; color: #374151; margin-bottom: 8px;';
+  details.innerHTML = `<b>Estágio:</b> ${stage}<br><b>Gênero:</b> ${observedGender}`;
+  container.append(details);
+
+  if (isValidObservationId(observation?.id)) {
+    const link = document.createElement('a');
+    link.href = `/observations/${encodeURIComponent(String(observation.id))}`;
+    link.textContent = 'Ver detalhes completos →';
+    link.style.cssText = 'display: block; background: #059669; color: white !important; font-size: 11px; font-weight: bold; text-align: center; padding: 6px 10px; border-radius: 6px; text-decoration: none;';
+    container.append(link);
+  }
+
+  return container;
+}
+
+/**
+ * Atualiza o card flutuante do Hero com a observação real clicada/selecionada.
+ */
 function updateFloatingCard(observation) {
   const card = document.getElementById('hero-floating-obs');
-  if (!card || !observation || typeof observation !== 'object') return;
+  if (!card) return;
+
+  if (!observation || typeof observation !== 'object') {
+    card.style.display = 'none';
+    return;
+  }
+  card.style.display = 'flex';
 
   const imageElement = document.getElementById('floating-obs-img');
+  const placeholderElement = document.getElementById('floating-obs-placeholder');
   const titleElement = document.getElementById('floating-obs-title');
   const subtitleElement = document.getElementById('floating-obs-subtitle');
   const badgeElement = document.getElementById('floating-obs-badge');
 
-  if (titleElement) titleElement.textContent = safeText(observation.species_name, 'Araucária angustifolia');
+  if (titleElement) {
+    titleElement.textContent = safeText(observation.species_name, 'Araucária angustifolia');
+  }
 
   if (subtitleElement) {
     const parsedDate = observation.observed_at ? new Date(observation.observed_at) : null;
     const dateText = parsedDate && !Number.isNaN(parsedDate.getTime())
       ? parsedDate.toLocaleDateString('pt-BR')
-      : 'Data não informada';
-    const observer = safeText(observation.observer, 'Colaborador comunitário');
+      : 'Data recente';
+    const observer = safeText(observation.observer, 'Colaborador');
     subtitleElement.textContent = `${observer.startsWith('@') ? observer : `@${observer}`} • ${dateText}`;
   }
 
   if (badgeElement) {
-    badgeElement.textContent = lifeStage[observation.stage] || safeText(observation.stage, 'Estado não informado');
+    badgeElement.textContent = lifeStage[observation.stage] || safeText(observation.stage, 'Saudável');
     badgeElement.className = 'inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold mt-0.5 ' +
       (observation.stage === 'dead'
         ? 'bg-red-100 text-red-800'
         : 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300');
   }
 
-  if (imageElement) {
-    imageElement.src = getObservationPhoto(observation);
-    imageElement.onerror = () => {
-      imageElement.onerror = null;
-      imageElement.src = FALLBACK_IMAGE;
-    };
+  const photoUrl = getObservationPhotoUrl(observation);
+  if (photoUrl && imageElement) {
+    imageElement.src = photoUrl;
+    imageElement.style.display = 'block';
+    if (placeholderElement) placeholderElement.style.display = 'none';
+  } else {
+    if (imageElement) imageElement.style.display = 'none';
+    if (placeholderElement) placeholderElement.style.display = 'flex';
   }
 
   card.onclick = () => {
@@ -187,6 +230,9 @@ function updateFloatingCard(observation) {
   };
 }
 
+/**
+ * Carrega EXCLUSIVAMENTE as observações reais cadastradas na base de dados.
+ */
 async function loadObservations() {
   loadController?.abort();
   loadController = new AbortController();
@@ -208,14 +254,12 @@ async function loadObservations() {
       const coordinates = getCoordinates(observation);
       if (!coordinates) continue;
 
-      const photoPath = getObservationPhoto(observation);
       const pinType = observation.stage === 'dead'
         ? 'risco'
         : (VALID_PIN_TYPES.has(observation.type) ? observation.type : 'normal');
-      const stage = lifeStage[observation.stage] || safeText(observation.stage, 'Não informado');
-      const observedGender = gender[observation.gender] || safeText(observation.gender, 'Não informado');
+
       const marker = L.marker(coordinates, { icon: generateAraucariaIcon(pinType) })
-        .bindPopup(createPopupContent(observation, photoPath));
+        .bindPopup(createPopupContent(observation));
 
       marker.obsData = observation;
       marker.pinType = pinType;
@@ -228,11 +272,28 @@ async function loadObservations() {
     markersGroup.addLayers(markerList);
     if (!map.hasLayer(markersGroup)) map.addLayer(markersGroup);
 
-    if (observations.length > 0) updateFloatingCard(observations[0]);
+    if (observations.length > 0) {
+      // Exibe a observação real cadastrada mais recente
+      updateFloatingCard(observations[0]);
+
+      // Enquadra o mapa nas observações reais cadastradas
+      if (markerList.length === 1) {
+        const coords = getCoordinates(observations[0]);
+        if (coords) map.setView(coords, 13);
+      } else if (markerList.length > 1) {
+        const group = L.featureGroup(markerList);
+        map.fitBounds(group.getBounds().pad(0.15));
+      }
+    } else {
+      // Se não há observações cadastradas, o card flutuante fica oculto
+      const card = document.getElementById('hero-floating-obs');
+      if (card) card.style.display = 'none';
+    }
+
     invalidateMapSize();
   } catch (error) {
     if (error?.name !== 'AbortError') {
-      console.error('[Mapa] Não foi possível carregar as observações.');
+      console.error('[Mapa] Falha ao carregar observações:', error);
       if (!map.hasLayer(markersGroup)) map.addLayer(markersGroup);
     }
   } finally {
@@ -329,7 +390,7 @@ getUserLocation()
     }
   })
   .catch(() => {
-    // Localização é opcional; não interrompe a experiência se for negada ou indisponível.
+    // Localização opcional; não interrompe a experiência se for negada ou indisponível.
   });
 
 window.addEventListener('pagehide', () => {

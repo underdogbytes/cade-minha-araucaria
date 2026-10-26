@@ -238,16 +238,17 @@
               </div>
             </div>
 
-            <!-- Bottom-Left: Floating Observation Preview Card -->
-            <div id="hero-floating-obs"
+            <!-- Bottom-Left: Floating Observation Preview Card (Exclusivo para dados reais) -->
+            <div id="hero-floating-obs" style="display: none;"
               class="pointer-events-auto absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-auto sm:max-w-xs flex items-center gap-3 rounded-2xl border border-gray-200/90 bg-white/95 p-2.5 shadow-xl backdrop-blur-md transition-all duration-300 hover:shadow-2xl dark:border-gray-700 dark:bg-gray-900/95 cursor-pointer">
-              <img id="floating-obs-img" src="/images/auth-bg.jpeg" alt="Araucária angustifolia"
-                class="h-12 w-12 rounded-xl object-cover ring-1 ring-black/5 flex-shrink-0" />
+              <img id="floating-obs-img" src="" alt="Foto da Araucária"
+                class="h-12 w-12 rounded-xl object-cover ring-1 ring-black/5 flex-shrink-0" style="display: none;" />
+              <div id="floating-obs-placeholder" class="h-12 w-12 rounded-xl bg-emerald-100/80 dark:bg-emerald-950/70 text-emerald-800 dark:text-emerald-300 flex items-center justify-center text-lg font-bold flex-shrink-0">
+                🌲
+              </div>
               <div class="flex-1 min-w-0">
-                <h4 id="floating-obs-title" class="truncate text-xs font-bold text-gray-900 dark:text-white">Araucária
-                  angustifolia</h4>
-                <p id="floating-obs-subtitle" class="text-[11px] text-gray-500 dark:text-gray-400">Observação de
-                  12/05/2025</p>
+                <h4 id="floating-obs-title" class="truncate text-xs font-bold text-gray-900 dark:text-white">Araucária angustifolia</h4>
+                <p id="floating-obs-subtitle" class="text-[11px] text-gray-500 dark:text-gray-400">Carregando dados...</p>
                 <span id="floating-obs-badge"
                   class="inline-block rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-semibold text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300 mt-0.5">Saudável</span>
               </div>
