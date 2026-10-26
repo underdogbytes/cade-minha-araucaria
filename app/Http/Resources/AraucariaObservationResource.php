@@ -48,6 +48,7 @@ class AraucariaObservationResource extends JsonResource
             'stage' => $this->stage,
             'gender' => $this->gender,
             'observer' => $this->user ? ($this->user->username ?? $this->user->name) : 'Desconhecido',
+            'is_shared' => (bool) $this->is_shared,
             'created_at' => $this->created_at?->toIso8601String(),
             'observed_at' => $this->observed_at?->toIso8601String(),
         ];

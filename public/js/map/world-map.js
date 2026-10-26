@@ -35,6 +35,14 @@ let loadController;
 const markersGroup = L.markerClusterGroup({
   showCoverageOnHover: false,
   maxClusterRadius: 40,
+  spiderfyDistanceMultiplier: 1.25,
+  spiderLegPolylineOptions: {
+    weight: 2.5,
+    color: '#1b4332',
+    opacity: 0.85,
+    dashArray: '5, 5',
+    lineCap: 'round',
+  },
   iconCreateFunction(cluster) {
     const count = document.createElement('span');
     count.textContent = String(cluster.getChildCount());
@@ -47,6 +55,28 @@ const markersGroup = L.markerClusterGroup({
       iconSize: new L.Point(46, 46),
     });
   },
+});
+
+markersGroup.on('spiderfied', event => {
+  if (event.cluster && event.cluster._icon) {
+    event.cluster._icon.classList.add('araucaria-cluster-spiderfied');
+  }
+  if (Array.isArray(event.markers)) {
+    event.markers.forEach(marker => {
+      marker._icon?.classList.add('araucaria-subpin');
+    });
+  }
+});
+
+markersGroup.on('unspiderfied', event => {
+  if (event.cluster && event.cluster._icon) {
+    event.cluster._icon.classList.remove('araucaria-cluster-spiderfied');
+  }
+  if (Array.isArray(event.markers)) {
+    event.markers.forEach(marker => {
+      marker._icon?.classList.remove('araucaria-subpin');
+    });
+  }
 });
 
 function invalidateMapSize() {
@@ -256,7 +286,7 @@ async function loadObservations() {
 
       const pinType = observation.stage === 'dead'
         ? 'risco'
-        : (VALID_PIN_TYPES.has(observation.type) ? observation.type : 'normal');
+        : (observation.is_shared ? 'protegida' : (VALID_PIN_TYPES.has(observation.type) ? observation.type : 'normal'));
 
       const marker = L.marker(coordinates, { icon: generateAraucariaIcon(pinType) })
         .bindPopup(createPopupContent(observation));

@@ -1,4 +1,5 @@
 import { escapeHtml } from './utils.js';
+import { generateAraucariaIcon } from './utils/maps.js';
 
 export function addObservationMarker(map, observation) {
   const lat = Number(observation.latitude);
@@ -9,7 +10,11 @@ export function addObservationMarker(map, observation) {
     return;
   }
 
-  const marker = L.marker([lat, lng]).addTo(map);
+  const pinType = observation.stage === 'dead'
+    ? 'risco'
+    : (observation.is_shared ? 'protegida' : (observation.type || 'normal'));
+
+  const marker = L.marker([lat, lng], { icon: generateAraucariaIcon(pinType) }).addTo(map);
 
   const stage = escapeHtml(observation.stage || 'Não informado');
   const gender = escapeHtml(observation.gender || 'Não informado');
