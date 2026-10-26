@@ -21,6 +21,10 @@ export function getUserLocation() {
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
+        if (!position || !position.coords || typeof position.coords.latitude !== 'number') {
+          resolve(null);
+          return;
+        }
         const location = {
           lat: position.coords.latitude,
           lng: position.coords.longitude,
@@ -196,34 +200,39 @@ export function addLocateControl(map) {
  * @returns {Promise<boolean>}
  */
 export async function flyToUserLocation(map) {
-  // Primeiro tenta cache para posicionar rapidamente
-  const cached = getCachedLocation();
-  if (cached) {
-    map.setView([cached.lat, cached.lng], USER_ZOOM);
-    addUserLocationMarker(map, cached.lat, cached.lng);
-  }
-
-  // Depois tenta localização real (mais precisa)
-  const location = await getUserLocation();
-
-  if (location) {
-    if (cached) {
-      // Se já moveu para cache, fazer flyTo suave para posição real
-      map.flyTo([location.lat, location.lng], USER_ZOOM, { duration: 1 });
-    } else {
-      // Primeira vez — animação mais visível
-      map.flyTo([location.lat, location.lng], USER_ZOOM, { duration: 1.5 });
+  try {
+    // Primeiro tenta cache para posicionar rapidamente
+    const cached = getCachedLocation();
+    if (cached && typeof cached.lat === 'number' && typeof cached.lng === 'number') {
+      map.setView([cached.lat, cached.lng], USER_ZOOM);
+      addUserLocationMarker(map, cached.lat, cached.lng);
     }
 
-    // Limpar marcador do cache e adicionar na posição real
-    map.eachLayer((layer) => {
-      if (layer instanceof L.CircleMarker) {
-        map.removeLayer(layer);
-      }
-    });
-    addUserLocationMarker(map, location.lat, location.lng);
-    return true;
-  }
+    // Depois tenta localização real (mais precisa)
+    const location = await getUserLocation();
 
-  return !!cached;
+    if (location && typeof location.lat === 'number' && typeof location.lng === 'number') {
+      if (cached && typeof cached.lat === 'number') {
+        // Se já moveu para cache, fazer flyTo suave para posição real
+        map.flyTo([location.lat, location.lng], USER_ZOOM, { duration: 1 });
+      } else {
+        // Primeira vez — animação mais visível
+        map.flyTo([location.lat, location.lng], USER_ZOOM, { duration: 1.5 });
+      }
+
+      // Limpar marcador do cache e adicionar na posição real
+      map.eachLayer((layer) => {
+        if (layer instanceof L.CircleMarker) {
+          map.removeLayer(layer);
+        }
+      });
+      addUserLocationMarker(map, location.lat, location.lng);
+      return true;
+    }
+
+    return !!cached;
+  } catch (err) {
+    console.warn('[Geolocation] Erro ao centralizar no usuário:', err);
+    return false;
+  }
 }
