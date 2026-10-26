@@ -4,10 +4,28 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AraucariaObservationController;
 use App\Http\Controllers\UserProfileController;
+use App\Models\User;
+use App\Models\AraucariaObservation;
+use Illuminate\Support\Facades\Cache;
 
 use App\Http\Controllers\AraucariaObservationUpdateController;
 
-Route::get('/', function () { return view('welcome'); });
+Route::get('/', function () {
+    // Guarda o resultado em cache por 60 segundos para equilíbrio ideal entre segurança e atualização rápida:
+    $usersCount = Cache::remember('users_count', 60, function () {
+        return User::count();
+    });
+
+    $observationsCount = Cache::remember('observations_count', 60, function () {
+        return AraucariaObservation::count();
+    });
+
+    $citiesCount = Cache::remember('cities_count', 60, function () {
+        return AraucariaObservation::count() > 0 ? 1 : 0;
+    });
+
+    return view('welcome', compact('usersCount', 'observationsCount', 'citiesCount'));
+});
 Route::get('/perfil/{username}', [UserProfileController::class, 'showByUsername'])->name('profile.username');
 
 Route::middleware([

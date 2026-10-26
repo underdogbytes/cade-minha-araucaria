@@ -103,7 +103,11 @@
 
         <main>
             <!-- Hero Section -->
-            <x-website.hero />
+            <x-website.hero 
+                :users-count="$usersCount" 
+                :observations-count="$observationsCount" 
+                :cities-count="$citiesCount" 
+            />
 
             <!-- FAQ Section -->
             <section id="perguntas-frequentes">

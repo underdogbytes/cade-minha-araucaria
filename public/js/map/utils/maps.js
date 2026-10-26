@@ -110,22 +110,32 @@ export function generateMap(mapId, latlng, tiles) {
  * @param string gender
  * @param int araucariaId
  * @param string imageHtml
+ * @param string|null observer
  * @returns string HTML do popup
  */
-export function generateMarkerHTML(stage, gender, araucariaId, imageHtml) {
+export function generateMarkerHTML(stage, gender, araucariaId, imageHtml, observer = null) {
+  const observerHtml = observer
+    ? `<div style="margin: 2px 0 6px 0; font-size: 11px; color: #4b5563;">
+         <b>Colaborador:</b> <span style="color: #1b4332; font-weight: 700;">@${observer}</span>
+       </div>`
+    : '';
+
   return `
-    <div style="font-family: sans-serif; min-width: 150px;">
-      <h4 style="margin: 0 0 5px 0; color: #1b4332;">Araucária Registrada</h4>
-      <b>Estágio:</b> ${stage}<br>
-      <b>Gênero:</b> ${gender}<br>
+    <div style="font-family: sans-serif; min-width: 160px; line-height: 1.4;">
+      <h4 style="margin: 0 0 4px 0; color: #1b4332; font-size: 14px; font-weight: bold;">Araucária Registrada</h4>
+      ${observerHtml}
+      <div style="font-size: 12px; margin-bottom: 6px;">
+        <b>Estágio:</b> ${stage}<br>
+        <b>Gênero:</b> ${gender}
+      </div>
       <a href="/observations/${araucariaId}"
-        class="inline-block bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-2 py-1 rounded transition text-center w-full"
-        style="color: white!important">
+        class="inline-block bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3 py-1.5 rounded transition text-center w-full"
+        style="color: white!important; text-decoration: none; display: block; margin-bottom: 6px;">
         Ver detalhes completos →
       </a>
       ${imageHtml}
     </div>
-  `
+  `;
 }
 
 /**

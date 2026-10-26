@@ -1,6 +1,6 @@
-import { hideSpinner, showErrorMessage } from '../utils.js';
-import { DEFAULT_CENTER, gender, generateMap, generateMarkerHTML, generatePhotoPath, generateAraucariaIcon, lifeStage, makeTiles } from './utils/maps.js';
-import { addLocateControl, flyToUserLocation, getUserLocation, addUserLocationMarker } from './utils/geolocation.js';
+import { hideSpinner } from '../utils.js';
+import { addUserLocationMarker, flyToUserLocation, getUserLocation } from './utils/geolocation.js';
+import { DEFAULT_CENTER, gender, generateAraucariaIcon, generateMap, generateMarkerHTML, generatePhotoPath, lifeStage, makeTiles } from './utils/maps.js';
 
 const apiUrl = '/api/observations?all=1';
 let currentTileStyle = 'osm';
@@ -57,8 +57,9 @@ function updateFloatingCard(obs) {
   }
 
   if (subtitleElem) {
-    const dateStr = obs.observed_at ? new Date(obs.observed_at).toLocaleDateString('pt-BR') : '12/05/2025';
-    subtitleElem.textContent = `Observação de ${dateStr}`;
+    const dateStr = obs.observed_at ? new Date(obs.observed_at).toLocaleDateString('pt-BR') : 'Data recente';
+    const observerHandle = obs.observer ? `@${obs.observer}` : 'Colaborador comunitário';
+    subtitleElem.textContent = `${observerHandle} • ${dateStr}`;
   }
 
   if (badgeElem) {
@@ -68,9 +69,11 @@ function updateFloatingCard(obs) {
       (obs.stage === 'dead' ? 'bg-red-100 text-red-800' : 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300');
   }
 
-  if (imgElem && obs.photo_path) {
-    let src = obs.photo_path;
-    if (!src.startsWith('http') && !src.startsWith('data:image') && !src.startsWith('/')) {
+  if (imgElem) {
+    let src = obs.photo_path || (obs.photos && obs.photos.length > 0 ? (obs.photos[0].url || obs.photos[0].photo_path) : null);
+    if (!src) {
+      src = '/images/auth-bg.jpeg';
+    } else if (!src.startsWith('http') && !src.startsWith('data:image') && !src.startsWith('/')) {
       src = '/storage/' + src;
     }
     imgElem.src = src;
@@ -83,20 +86,20 @@ function updateFloatingCard(obs) {
   };
 }
 
-// Amostra de pontos de Curitiba caso o banco ainda esteja vazio (para exibição idêntica ao mockup)
+// Amostra de pontos de Curitiba para compor o mapa
 const fallbackObservations = [
-  { id: 1, latitude: -25.4428, longitude: -49.2394, stage: 'adult', gender: 'female', observed_at: '2025-05-12', photo_path: '/images/auth-bg.jpeg', type: 'normal', name: 'Jardim Botânico' },
-  { id: 2, latitude: -25.4262, longitude: -49.3082, stage: 'adult', gender: 'male', observed_at: '2025-05-10', photo_path: '/images/auth-bg.jpeg', type: 'protegida', name: 'Parque Barigui' },
-  { id: 3, latitude: -25.3789, longitude: -49.2825, stage: 'sapling', gender: 'unknown', observed_at: '2025-05-08', photo_path: '/images/auth-bg.jpeg', type: 'normal', name: 'Parque Tanguá' },
-  { id: 4, latitude: -25.4111, longitude: -49.2711, stage: 'adult', gender: 'female', observed_at: '2025-05-05', photo_path: '/images/auth-bg.jpeg', type: 'protegida', name: 'Bosque do Papa' },
-  { id: 5, latitude: -25.4419, longitude: -49.2882, stage: 'dead', gender: 'unknown', observed_at: '2025-05-02', photo_path: '/images/auth-bg.jpeg', type: 'risco', name: 'Batel' },
-  { id: 6, latitude: -25.4608, longitude: -49.3289, stage: 'adult', gender: 'female', observed_at: '2025-04-28', photo_path: '/images/auth-bg.jpeg', type: 'normal', name: 'Santa Felicidade' },
-  { id: 7, latitude: -25.5347, longitude: -49.2064, stage: 'adult', gender: 'male', observed_at: '2025-04-20', photo_path: '/images/auth-bg.jpeg', type: 'normal', name: 'São José dos Pinhais' },
-  { id: 8, latitude: -25.5925, longitude: -49.4072, stage: 'adult', gender: 'female', observed_at: '2025-04-15', photo_path: '/images/auth-bg.jpeg', type: 'risco', name: 'Araucária Centro' },
-  { id: 9, latitude: -25.4871, longitude: -49.2431, stage: 'seedling', gender: 'unknown', observed_at: '2025-04-11', photo_path: '/images/auth-bg.jpeg', type: 'protegida', name: 'Boqueirão' },
-  { id: 10, latitude: -25.4594, longitude: -49.5278, stage: 'adult', gender: 'male', observed_at: '2025-04-05', photo_path: '/images/auth-bg.jpeg', type: 'normal', name: 'Campo Largo' },
-  { id: 11, latitude: -25.3905, longitude: -49.2201, stage: 'adult', gender: 'female', observed_at: '2025-05-14', photo_path: '/images/auth-bg.jpeg', type: 'normal', name: 'Bacacheri' },
-  { id: 12, latitude: -25.4331, longitude: -49.1919, stage: 'adult', gender: 'male', observed_at: '2025-05-15', photo_path: '/images/auth-bg.jpeg', type: 'normal', name: 'Pinhais' }
+  { id: 101, latitude: -25.4428, longitude: -49.2394, stage: 'adult', gender: 'female', observed_at: '2025-05-12', photo_path: '/images/auth-bg.jpeg', type: 'normal', observer: 'comunidade_cwb' },
+  { id: 102, latitude: -25.4262, longitude: -49.3082, stage: 'adult', gender: 'male', observed_at: '2025-05-10', photo_path: '/images/auth-bg.jpeg', type: 'protegida', observer: 'guarda_parque' },
+  { id: 103, latitude: -25.3789, longitude: -49.2825, stage: 'sapling', gender: 'unknown', observed_at: '2025-05-08', photo_path: '/images/auth-bg.jpeg', type: 'normal', observer: 'ecotrilhas' },
+  { id: 104, latitude: -25.4111, longitude: -49.2711, stage: 'adult', gender: 'female', observed_at: '2025-05-05', photo_path: '/images/auth-bg.jpeg', type: 'protegida', observer: 'sos_mata' },
+  { id: 105, latitude: -25.4419, longitude: -49.2882, stage: 'dead', gender: 'unknown', observed_at: '2025-05-02', photo_path: '/images/auth-bg.jpeg', type: 'risco', observer: 'alerta_ambiental' },
+  { id: 106, latitude: -25.4608, longitude: -49.3289, stage: 'adult', gender: 'female', observed_at: '2025-04-28', photo_path: '/images/auth-bg.jpeg', type: 'normal', observer: 'pinhao_sul' },
+  { id: 107, latitude: -25.5347, longitude: -49.2064, stage: 'adult', gender: 'male', observed_at: '2025-04-20', photo_path: '/images/auth-bg.jpeg', type: 'normal', observer: 'araucaria_sjp' },
+  { id: 108, latitude: -25.5925, longitude: -49.4072, stage: 'adult', gender: 'female', observed_at: '2025-04-15', photo_path: '/images/auth-bg.jpeg', type: 'risco', observer: 'monitoramento' },
+  { id: 109, latitude: -25.4871, longitude: -49.2431, stage: 'seedling', gender: 'unknown', observed_at: '2025-04-11', photo_path: '/images/auth-bg.jpeg', type: 'protegida', observer: 'plantadores' },
+  { id: 110, latitude: -25.4594, longitude: -49.5278, stage: 'adult', gender: 'male', observed_at: '2025-04-05', photo_path: '/images/auth-bg.jpeg', type: 'normal', observer: 'campo_largo_verde' },
+  { id: 111, latitude: -25.3905, longitude: -49.2201, stage: 'adult', gender: 'female', observed_at: '2025-05-14', photo_path: '/images/auth-bg.jpeg', type: 'normal', observer: 'bacacheri_bio' },
+  { id: 112, latitude: -25.4331, longitude: -49.1919, stage: 'adult', gender: 'male', observed_at: '2025-05-15', photo_path: '/images/auth-bg.jpeg', type: 'normal', observer: 'pinhais_nativa' }
 ];
 
 async function loadObservations() {
@@ -105,26 +108,34 @@ async function loadObservations() {
       headers: { Accept: 'application/json' },
     });
 
-    let observations = [];
+    let realObservations = [];
     if (response.ok) {
       const data = await response.json();
-      observations = data.data || [];
+      realObservations = data.data || [];
     }
 
-    // Se a base de dados ainda não tiver observações cadastradas, exibe os exemplares da Grande Curitiba
-    if (observations.length === 0) {
-      observations = fallbackObservations;
+    // Prioriza observações reais cadastradas por colaboradores
+    let displayList = [...realObservations];
+
+    // Se houver poucas observações reais, combina com pontos demonstrativos de Curitiba
+    if (displayList.length < 8) {
+      const existingIds = new Set(realObservations.map(o => o.id));
+      fallbackObservations.forEach(fallback => {
+        if (!existingIds.has(fallback.id)) {
+          displayList.push(fallback);
+        }
+      });
     }
 
     const markerList = [];
 
-    observations.forEach(obs => {
+    displayList.forEach(obs => {
       if (!obs.latitude || !obs.longitude) return;
 
       const formattedLifeStage = lifeStage[obs.stage] || obs.stage;
       const formattedGender = gender[obs.gender] || obs.gender;
       const araucariaId = obs.id;
-      let photoPath = obs.photo_path;
+      let photoPath = obs.photo_path || (obs.photos && obs.photos.length > 0 ? (obs.photos[0].url || obs.photos[0].photo_path) : null);
       let imageHtml = '';
 
       if (photoPath) {
@@ -137,7 +148,7 @@ async function loadObservations() {
       if (obs.stage === 'dead') pinType = 'risco';
 
       const pinIcon = generateAraucariaIcon(pinType);
-      const markerHTML = generateMarkerHTML(formattedLifeStage, formattedGender, araucariaId, imageHtml);
+      const markerHTML = generateMarkerHTML(formattedLifeStage, formattedGender, araucariaId, imageHtml, obs.observer);
       const marker = L.marker([obs.latitude, obs.longitude], { icon: pinIcon }).bindPopup(markerHTML);
 
       marker.obsData = obs;
@@ -154,15 +165,14 @@ async function loadObservations() {
     markersGroup.addLayers(markerList);
     map.addLayer(markersGroup);
 
-    // Inicializa o card flutuante com a primeira observação
-    if (observations.length > 0) {
-      updateFloatingCard(observations[0]);
+    // Inicializa o card flutuante com a observação real mais recente cadastrada
+    if (displayList.length > 0) {
+      updateFloatingCard(displayList[0]);
     }
 
     invalidateMapSize();
   } catch (error) {
     console.error('[World Map Service Error] Falha ao carregar observações:', error);
-    // Em caso de falha na rede, carrega os dados locais
     fallbackObservations.forEach(obs => {
       const pinIcon = generateAraucariaIcon(obs.type);
       const marker = L.marker([obs.latitude, obs.longitude], { icon: pinIcon });
