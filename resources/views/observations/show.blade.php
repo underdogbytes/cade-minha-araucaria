@@ -39,12 +39,8 @@
         class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl rounded-2xl border border-gray-200/80 dark:border-gray-700/80 p-6 lg:p-8">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div
-            class="flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-900 rounded-xl p-3 border border-gray-100 dark:border-gray-700 relative group">
+            class="flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-900 rounded-xl p-3 border border-gray-100 dark:border-gray-700 relative">
             @include('observations.partials.image', ['observation' => $observation])
-            <span
-              class="absolute bottom-5 left-5 bg-black/60 backdrop-blur-md text-white text-[11px] font-semibold px-2.5 py-1 rounded-lg">
-              {{ $observation->photos->count() > 1 ? $observation->photos->count() . ' Fotos Registradas' : 'Foto Original do Registro' }}
-            </span>
           </div>
 
           <div class="flex flex-col justify-between space-y-6">
@@ -95,8 +91,15 @@
             <div
               class="bg-emerald-50/50 dark:bg-emerald-950/20 p-4 rounded-xl border border-emerald-200/60 dark:border-emerald-900/60 flex flex-col sm:flex-row items-start gap-4">
               <div
-                class="w-24 h-24 rounded-lg overflow-hidden shrink-0 border border-gray-200 dark:border-gray-700 shadow-sm">
-                <img src="{{ $observation->photo_path }}" alt="Foto Inicial" class="w-full h-full object-cover">
+                @click="$dispatch('open-zoom-modal', { photo: '{{ addslashes($observation->photo_path) }}' })"
+                class="w-24 h-24 rounded-lg overflow-hidden shrink-0 border border-gray-200 dark:border-gray-700 shadow-sm relative group cursor-zoom-in"
+                title="Ampliar foto">
+                <img src="{{ $observation->photo_path }}" alt="Foto Inicial" class="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105">
+                <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white drop-shadow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7" />
+                  </svg>
+                </div>
               </div>
               <div class="flex-1">
                 <div class="flex items-center justify-between text-xs mb-1">
@@ -126,9 +129,16 @@
                 <div class="flex flex-col sm:flex-row items-start justify-between gap-4">
                   <div class="flex flex-col sm:flex-row items-start gap-4 flex-1">
                     <div
-                      class="w-28 h-28 rounded-xl overflow-hidden shrink-0 border border-gray-200 dark:border-gray-700 shadow-sm relative group">
+                      @click="$dispatch('open-zoom-modal', { photo: '{{ addslashes($update->photo_path) }}' })"
+                      class="w-28 h-28 rounded-xl overflow-hidden shrink-0 border border-gray-200 dark:border-gray-700 shadow-sm relative group cursor-zoom-in"
+                      title="Ampliar foto">
                       <img src="{{ $update->photo_path }}" alt="Foto de Acompanhamento"
-                        class="w-full h-full object-cover">
+                        class="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105">
+                      <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <svg class="w-5 h-5 text-white drop-shadow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7" />
+                        </svg>
+                      </div>
                     </div>
 
                     <div class="space-y-1.5 flex-1">
