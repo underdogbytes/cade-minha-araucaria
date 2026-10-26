@@ -103,11 +103,8 @@
 
         <main>
             <!-- Hero Section -->
-            <x-website.hero 
-                :users-count="$usersCount" 
-                :observations-count="$observationsCount" 
-                :cities-count="$citiesCount" 
-            />
+            <x-website.hero :users-count="$usersCount" :observations-count="$observationsCount"
+                :cities-count="$citiesCount" />
 
             <!-- FAQ Section -->
             <section id="perguntas-frequentes">
@@ -133,7 +130,7 @@
 
             <!-- Apoiadores Section -->
             <section class="py-16 bg-slate-50 dark:bg-gray-950 border-t border-gray-100 dark:border-gray-800">
-                <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <div class="max-w-5xl mx-auto px-4 sm:px-6 text-center">
 
                     <!-- Section Label -->
                     <div>
@@ -172,7 +169,7 @@
 
         <!-- Footer -->
         <footer class="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 py-12">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 text-center">
                 <div class="flex justify-center items-center space-x-2 mb-4">
                     <x-application-mark class="h-6 w-auto opacity-75" />
                     <span class="font-display font-bold text-gray-700 dark:text-gray-300">Cadê minha Araucária?</span>

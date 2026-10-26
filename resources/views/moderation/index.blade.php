@@ -5,8 +5,8 @@
 
   <x-toast-alert />
 
-  <div class="py-12">
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+  <div class="py-6 sm:py-12">
+    <div class="max-w-screen-2xl mx-auto space-y-6">
 
       @if ($groupedReports->isEmpty())
         <div class="bg-white dark:bg-gray-800 rounded-lg p-6 shadow">

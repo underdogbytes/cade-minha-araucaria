@@ -182,14 +182,14 @@
             <!-- Page Heading -->
             @if (isset($header))
                 <header class="bg-white dark:bg-gray-800 shadow">
-                    <div class="max-w-7xl mx-auto">
+                    <div class="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
                         {{ $header }}
                     </div>
                 </header>
             @endif
 
             <!-- Page Content -->
-            <main>
+            <main class="m-3 sm:m-0 sm:px-6 lg:px-8">
                 {{ $slot }}
             </main>
         </div>
