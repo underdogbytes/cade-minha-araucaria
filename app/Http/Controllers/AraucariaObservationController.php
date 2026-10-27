@@ -434,6 +434,38 @@ class AraucariaObservationController extends Controller
                         }
                     }
                 }
+
+                // Regra: se votou em 'risco', o voto em 'protegida' é removido automaticamente
+                if ($status === 'risco') {
+                    $protegidaVote = ObservationStatusVote::where('araucaria_observation_id', $observation->id)
+                        ->where('user_id', $user->id)
+                        ->where('status', 'protegida')
+                        ->first();
+                    if ($protegidaVote) {
+                        $protegidaVote->delete();
+                        $observation->decrement('votes_protegida_count');
+                        if ($observation->votes_protegida_count < 0) {
+                            $observation->votes_protegida_count = 0;
+                            $observation->saveQuietly();
+                        }
+                    }
+                }
+
+                // Regra: se votou em 'protegida', o voto em 'risco' é removido automaticamente
+                if ($status === 'protegida') {
+                    $riscoVote = ObservationStatusVote::where('araucaria_observation_id', $observation->id)
+                        ->where('user_id', $user->id)
+                        ->where('status', 'risco')
+                        ->first();
+                    if ($riscoVote) {
+                        $riscoVote->delete();
+                        $observation->decrement('votes_risco_count');
+                        if ($observation->votes_risco_count < 0) {
+                            $observation->votes_risco_count = 0;
+                            $observation->saveQuietly();
+                        }
+                    }
+                }
             }
 
             $observation->refresh();

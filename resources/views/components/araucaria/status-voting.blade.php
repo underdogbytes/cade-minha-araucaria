@@ -100,6 +100,20 @@
             this.counts['doente'] = Math.max(0, (this.counts['doente'] || 0) - 1);
           }
         }
+
+        // Regra: se votou em 'risco', o voto em 'protegida' é removido automaticamente
+        if (status === 'risco') {
+          if (this.userVotes.includes('protegida')) {
+            this.userVotes = this.userVotes.filter(s => s !== 'protegida');
+            this.counts['protegida'] = Math.max(0, (this.counts['protegida'] || 0) - 1);
+          }
+        } else if (status === 'protegida') {
+          // Regra: se votou em 'protegida', o voto em 'risco' é removido automaticamente
+          if (this.userVotes.includes('risco')) {
+            this.userVotes = this.userVotes.filter(s => s !== 'risco');
+            this.counts['risco'] = Math.max(0, (this.counts['risco'] || 0) - 1);
+          }
+        }
       }
 
       try {
