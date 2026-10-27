@@ -42,6 +42,7 @@ Route::middleware([
     Route::put('/observations/{observation}', [AraucariaObservationController::class, 'update'])->name('observations.update');
     Route::delete('/observations/{observation}', [AraucariaObservationController::class, 'destroy']);
     Route::post('/observations/report/{observation}', [AraucariaObservationController::class, 'report'])->name('observations.report');
+    Route::post('/observations/{observation}/vote', [AraucariaObservationController::class, 'toggleStatusVote'])->name('observations.vote');
 
     // Atualizações Colaborativas de Fotos e Cuidados
     Route::post('/observations/{observation}/updates', [AraucariaObservationUpdateController::class, 'store'])->name('observations.updates.store');

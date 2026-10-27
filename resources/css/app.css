@@ -54,12 +54,64 @@
     box-shadow: 0 6px 18px rgba(27, 67, 50, 0.6);
 }
 
+.araucaria-pin.normal {
+    background-color: #1b4332;
+}
+
 .araucaria-pin.risco {
     background-color: #d97706;
 }
 
 .araucaria-pin.protegida {
     background-color: #059669;
+}
+
+.araucaria-pin.doente {
+    background-color: #dc2626;
+}
+
+.araucaria-pin.morta {
+    background-color: #18181b;
+    border-color: #52525b;
+}
+
+/* Pino bicolor 50/50 para casos de empate */
+.araucaria-pin.araucaria-pin-bicolor {
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.araucaria-pin-bicolor .pin-half {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    z-index: 1;
+}
+
+.araucaria-pin-bicolor .pin-half.left {
+    padding-left: 2px;
+}
+
+.araucaria-pin-bicolor .pin-half.right {
+    padding-right: 2px;
+}
+
+.araucaria-pin-bicolor .pin-divider {
+    width: 1.5px;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.75);
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+    z-index: 2;
 }
 
 .araucaria-cluster {

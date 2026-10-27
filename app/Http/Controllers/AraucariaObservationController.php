@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateAraucariaObservationRequest;
 use App\Http\Resources\AraucariaObservationResource;
 use App\Models\AraucariaObservation;
 use App\Models\AraucariaObservationReport;
+use App\Models\ObservationStatusVote;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -27,7 +28,7 @@ class AraucariaObservationController extends Controller
      */
     public function show(AraucariaObservation $observation)
     {
-        $observation->load(['photos', 'updates.user', 'user']);
+        $observation->load(['photos', 'updates.user', 'user', 'statusVotes']);
         return view('observations.show', compact('observation'));
     }
 
@@ -356,5 +357,115 @@ class AraucariaObservationController extends Controller
             ], 500);
             return redirect()->back()->with('error', 'Erro ao atualizar status da denúncia.');
         }
+    }
+
+    /**
+     * Alterna o voto rápido (like/unlike) do usuário logado para um dos status da árvore.
+     */
+    public function toggleStatusVote(Request $request, AraucariaObservation $observation): JsonResponse
+    {
+        $validated = $request->validate([
+            'status' => 'required|string|in:normal,doente,risco,protegida,morta',
+        ]);
+
+        $status = $validated['status'];
+        $user = $request->user();
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'Faça login para votar no status desta árvore.',
+            ], 401);
+        }
+
+        $column = "votes_{$status}_count";
+
+        $vote = DB::transaction(function () use ($observation, $user, $status, $column) {
+            $existingVote = ObservationStatusVote::where('araucaria_observation_id', $observation->id)
+                ->where('user_id', $user->id)
+                ->where('status', $status)
+                ->first();
+
+            if ($existingVote) {
+                $existingVote->delete();
+                $observation->decrement($column);
+                if ($observation->$column < 0) {
+                    $observation->$column = 0;
+                    $observation->saveQuietly();
+                }
+                $voted = false;
+            } else {
+                ObservationStatusVote::create([
+                    'araucaria_observation_id' => $observation->id,
+                    'user_id' => $user->id,
+                    'status' => $status,
+                ]);
+                $observation->increment($column);
+                $voted = true;
+
+                // Regra: se votou em 'morta' ou 'doente', o voto em 'normal' é removido automaticamente
+                if ($status === 'morta' || $status === 'doente') {
+                    $normalVote = ObservationStatusVote::where('araucaria_observation_id', $observation->id)
+                        ->where('user_id', $user->id)
+                        ->where('status', 'normal')
+                        ->first();
+                    if ($normalVote) {
+                        $normalVote->delete();
+                        $observation->decrement('votes_normal_count');
+                        if ($observation->votes_normal_count < 0) {
+                            $observation->votes_normal_count = 0;
+                            $observation->saveQuietly();
+                        }
+                    }
+                }
+
+                // Regra: se votou em 'normal', votos prévios em 'morta' e 'doente' são removidos
+                if ($status === 'normal') {
+                    $conflictVotes = ObservationStatusVote::where('araucaria_observation_id', $observation->id)
+                        ->where('user_id', $user->id)
+                        ->whereIn('status', ['morta', 'doente'])
+                        ->get();
+                    foreach ($conflictVotes as $conflict) {
+                        $cCol = "votes_{$conflict->status}_count";
+                        $conflict->delete();
+                        $observation->decrement($cCol);
+                        if ($observation->$cCol < 0) {
+                            $observation->$cCol = 0;
+                            $observation->saveQuietly();
+                        }
+                    }
+                }
+            }
+
+            $observation->refresh();
+            $newStatus = $observation->recalculateStatus();
+
+            return [
+                'voted' => $voted,
+                'computed_status' => $newStatus,
+            ];
+        });
+
+        $userVotes = ObservationStatusVote::where('araucaria_observation_id', $observation->id)
+            ->where('user_id', $user->id)
+            ->pluck('status')
+            ->values();
+
+        return response()->json([
+            'success' => true,
+            'status' => $status,
+            'voted' => $vote['voted'],
+            'computed_status' => $vote['computed_status'],
+            'counts' => [
+                'normal' => (int) $observation->votes_normal_count,
+                'doente' => (int) $observation->votes_doente_count,
+                'risco' => (int) $observation->votes_risco_count,
+                'protegida' => (int) $observation->votes_protegida_count,
+                'morta' => (int) $observation->votes_morta_count,
+            ],
+            'user_votes' => $userVotes,
+            'message' => $vote['voted']
+                ? 'Voto registrado com sucesso!'
+                : 'Voto removido com sucesso!',
+        ]);
     }
 }

@@ -204,7 +204,16 @@
                     class="h-3.5 w-3.5 rounded border-gray-300 text-emerald-700 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-800" />
                   <span class="flex items-center gap-1 text-[11px] sm:text-xs">
                     <span>🌲</span>
-                    <span>Araucárias</span>
+                    <span>Normais</span>
+                  </span>
+                </label>
+
+                <label class="flex items-center gap-2 cursor-pointer select-none">
+                  <input type="checkbox" id="layer-toggle-protegidas" checked
+                    class="h-3.5 w-3.5 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-800" />
+                  <span class="flex items-center gap-1 text-[11px] sm:text-xs">
+                    <span>🛡️</span>
+                    <span>Protegidas</span>
                   </span>
                 </label>
 
@@ -218,11 +227,20 @@
                 </label>
 
                 <label class="flex items-center gap-2 cursor-pointer select-none">
-                  <input type="checkbox" id="layer-toggle-protegidas" checked
-                    class="h-3.5 w-3.5 rounded border-gray-300 text-teal-600 focus:ring-teal-500 dark:border-gray-600 dark:bg-gray-800" />
+                  <input type="checkbox" id="layer-toggle-doente" checked
+                    class="h-3.5 w-3.5 rounded border-gray-300 text-rose-600 focus:ring-rose-500 dark:border-gray-600 dark:bg-gray-800" />
                   <span class="flex items-center gap-1 text-[11px] sm:text-xs">
-                    <span>🛡️</span>
-                    <span>Protegidas</span>
+                    <span>🍃</span>
+                    <span>Doentes</span>
+                  </span>
+                </label>
+
+                <label class="flex items-center gap-2 cursor-pointer select-none">
+                  <input type="checkbox" id="layer-toggle-morta" checked
+                    class="h-3.5 w-3.5 rounded border-gray-300 text-zinc-800 focus:ring-zinc-600 dark:border-gray-600 dark:bg-gray-800" />
+                  <span class="flex items-center gap-1 text-[11px] sm:text-xs">
+                    <span>💀</span>
+                    <span>Mortas</span>
                   </span>
                 </label>
               </div>

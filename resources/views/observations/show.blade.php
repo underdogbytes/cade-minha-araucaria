@@ -45,6 +45,7 @@
 
           <div class="flex flex-col justify-between space-y-6">
             @include('observations.partials.features', ['observation' => $observation])
+            <x-araucaria.status-voting :observation="$observation" />
             @include('observations.partials.do-u-know')
 
             <div class="pt-4 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between">

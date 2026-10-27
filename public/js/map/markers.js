@@ -10,9 +10,8 @@ export function addObservationMarker(map, observation) {
     return;
   }
 
-  const pinType = observation.stage === 'dead'
-    ? 'risco'
-    : (observation.is_shared ? 'protegida' : (observation.type || 'normal'));
+  const pinType = observation.computed_status
+    || (observation.stage === 'dead' ? 'morta' : (observation.is_shared ? 'protegida' : 'normal'));
 
   const marker = L.marker([lat, lng], { icon: generateAraucariaIcon(pinType) }).addTo(map);
 

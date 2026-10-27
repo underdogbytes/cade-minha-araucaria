@@ -7,6 +7,7 @@ import {
   generateMap,
   lifeStage,
   makeTiles,
+  STATUS_CONFIG,
 } from './utils/maps.js';
 
 const API_URL = '/api/observations?all=1';
@@ -176,6 +177,29 @@ function createPopupContent(observation) {
     container.append(observerDiv);
   }
 
+  const statusKey = observation?.computed_status || (observation?.stage === 'dead' ? 'morta' : 'normal');
+  const statusParts = String(statusKey).split(/[_-]/);
+  const statusLabels = statusParts.map(p => STATUS_CONFIG[p]?.label || p).join(' & ');
+  const statusBadge = document.createElement('div');
+  const isBicolor = statusParts.length > 1;
+  const c1 = STATUS_CONFIG[statusParts[0]] || STATUS_CONFIG.normal;
+  const c2 = statusParts[1] ? (STATUS_CONFIG[statusParts[1]] || STATUS_CONFIG.risco) : c1;
+
+  statusBadge.style.cssText = `
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 9999px;
+    color: #ffffff;
+    margin-bottom: 6px;
+    background: ${isBicolor ? `linear-gradient(90deg, ${c1.color} 50%, ${c2.color} 50%)` : c1.color};
+  `;
+  statusBadge.textContent = statusLabels;
+  container.append(statusBadge);
+
   const stage = lifeStage[observation?.stage] || safeText(observation?.stage, 'Não informado');
   const observedGender = gender[observation?.gender] || safeText(observation?.gender, 'Não informado');
 
@@ -228,11 +252,16 @@ function updateFloatingCard(observation) {
   }
 
   if (badgeElement) {
-    badgeElement.textContent = lifeStage[observation.stage] || safeText(observation.stage, 'Saudável');
-    badgeElement.className = 'inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold mt-0.5 ' +
-      (observation.stage === 'dead'
-        ? 'bg-red-100 text-red-800'
-        : 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300');
+    const statusKey = observation?.computed_status || (observation?.stage === 'dead' ? 'morta' : 'normal');
+    const statusParts = String(statusKey).split(/[_-]/);
+    const label = statusParts.map(p => STATUS_CONFIG[p]?.label || p).join(' & ');
+    badgeElement.textContent = label;
+    const c1 = STATUS_CONFIG[statusParts[0]] || STATUS_CONFIG.normal;
+    const c2 = statusParts[1] ? (STATUS_CONFIG[statusParts[1]] || STATUS_CONFIG.risco) : c1;
+    badgeElement.className = 'inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold mt-0.5 text-white';
+    badgeElement.style.background = statusParts.length > 1
+      ? `linear-gradient(90deg, ${c1.color} 50%, ${c2.color} 50%)`
+      : c1.color;
   }
 
   const photoUrl = getObservationPhotoUrl(observation);
@@ -284,9 +313,8 @@ async function loadObservations() {
       const coordinates = getCoordinates(observation);
       if (!coordinates) continue;
 
-      const pinType = observation.stage === 'dead'
-        ? 'risco'
-        : (observation.is_shared ? 'protegida' : (VALID_PIN_TYPES.has(observation.type) ? observation.type : 'normal'));
+      const pinType = observation.computed_status
+        || (observation.stage === 'dead' ? 'morta' : (observation.is_shared ? 'protegida' : 'normal'));
 
       const marker = L.marker(coordinates, { icon: generateAraucariaIcon(pinType) })
         .bindPopup(createPopupContent(observation));
@@ -369,26 +397,46 @@ onClick('btn-toggle-tiles', event => {
 
 function filterMarkers() {
   const showAll = document.getElementById('layer-toggle-all')?.checked ?? true;
-  const showAraucarias = document.getElementById('layer-toggle-araucarias')?.checked ?? true;
-  const showRisk = document.getElementById('layer-toggle-risco')?.checked ?? true;
+  const showNormal = document.getElementById('layer-toggle-araucarias')?.checked ?? true;
   const showProtected = document.getElementById('layer-toggle-protegidas')?.checked ?? true;
+  const showRisk = document.getElementById('layer-toggle-risco')?.checked ?? true;
+  const showSick = document.getElementById('layer-toggle-doente')?.checked ?? true;
+  const showDead = document.getElementById('layer-toggle-morta')?.checked ?? true;
 
   markersGroup.clearLayers();
   if (!showAll) return;
+
   markersGroup.addLayers(allMarkers.filter(marker => {
-    if (marker.pinType === 'risco') return showRisk;
-    if (marker.pinType === 'protegida') return showProtected;
-    return showAraucarias;
+    const type = String(marker.pinType || 'normal').toLowerCase();
+    const parts = type.split(/[_-]/);
+
+    return parts.some(part => {
+      if (part === 'normal') return showNormal;
+      if (part === 'protegida') return showProtected;
+      if (part === 'risco') return showRisk;
+      if (part === 'doente') return showSick;
+      if (part === 'morta') return showDead;
+      return true;
+    });
   }));
 }
 
-['layer-toggle-all', 'layer-toggle-araucarias', 'layer-toggle-risco', 'layer-toggle-protegidas'].forEach(id => {
+const LAYER_TOGGLES = [
+  'layer-toggle-all',
+  'layer-toggle-araucarias',
+  'layer-toggle-protegidas',
+  'layer-toggle-risco',
+  'layer-toggle-doente',
+  'layer-toggle-morta',
+];
+
+LAYER_TOGGLES.forEach(id => {
   document.getElementById(id)?.addEventListener('change', event => {
     if (id === 'layer-toggle-all') {
-      for (const childId of ['layer-toggle-araucarias', 'layer-toggle-risco', 'layer-toggle-protegidas']) {
+      LAYER_TOGGLES.filter(childId => childId !== 'layer-toggle-all').forEach(childId => {
         const child = document.getElementById(childId);
         if (child) child.checked = event.currentTarget.checked;
-      }
+      });
     }
     filterMarkers();
   });

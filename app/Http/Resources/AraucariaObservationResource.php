@@ -49,6 +49,17 @@ class AraucariaObservationResource extends JsonResource
             'gender' => $this->gender,
             'observer' => $this->user ? ($this->user->username ?? $this->user->name) : 'Desconhecido',
             'is_shared' => (bool) $this->is_shared,
+            'computed_status' => $this->computed_status ?: ($this->stage === 'dead' ? 'morta' : 'normal'),
+            'votes' => [
+                'normal' => (int) ($this->votes_normal_count ?? 0),
+                'doente' => (int) ($this->votes_doente_count ?? 0),
+                'risco' => (int) ($this->votes_risco_count ?? 0),
+                'protegida' => (int) ($this->votes_protegida_count ?? 0),
+                'morta' => (int) ($this->votes_morta_count ?? 0),
+            ],
+            'user_votes' => $request->user() && $this->relationLoaded('statusVotes')
+                ? $this->statusVotes->where('user_id', $request->user()->id)->pluck('status')->values()->all()
+                : [],
             'created_at' => $this->created_at?->toIso8601String(),
             'observed_at' => $this->observed_at?->toIso8601String(),
         ];
